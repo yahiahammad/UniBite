@@ -1,3 +1,6 @@
+:root {
+    --brandOrange: #FF4B33;
+}
 body {
     font-family: Arial, sans-serif; /*Setting default font*/
 }
@@ -6,12 +9,14 @@ header {
     display: flex; 
     align-items: center;
     padding: 10px 20px;
-    background-color: #f8f8f8;
+    background-color: #F7F7F7;
 }
 
 header h1 {
+    font-family: Inter, sans-serif;
     font-size: 24px;
-    font-weight: bold;
+    font-style: normal;
+    font-weight: 700;
     margin: 0;
     color: #000;
 }
@@ -19,7 +24,8 @@ header h1 {
 header nav {
     display: flex;
     flex: 1;
-    justify-content: right;
+    justify-content: flex-end;
+    align-items: flex-start;
     gap: 20px;
 }
 
@@ -27,16 +33,19 @@ header nav ul {
     
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 34px;
     align-items: center;
     margin: 0;
+    justify-content: flex-end;
     padding: 0;
 }
 
 header nav ul li a {
     text-decoration: none;
-    color: #000;
+    color: #000000;
     font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
 }
 
 header nav ul li a:hover {
@@ -55,14 +64,15 @@ header nav div a {
     font-size: 14px;
     font-weight: bold;
     color: #fff;
+    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
 }
 
 header nav div a:first-child {
-    background-color: #ff4d4d;
+    background-color: var(--brandOrange);
 }
 
 header nav div a:last-child {
-    background-color: #e0e0e0;
+    background-color: #ffffff;
     color: #000;
 }
 
@@ -82,7 +92,7 @@ main {
 .background {
     width: 100%; /* Stretch from left to right */
     height: 100vh; /* Full height of the viewport */
-    background: url('Photos/back.jpeg') no-repeat center / cover; /* Proper background shorthand */
+    background: url('images/back.jpeg') no-repeat center / cover; /* Proper background shorthand */
     color: white; /* White text for contrast */
     text-align: center; /* Center text alignment */
     display: flex; /* Enable flex layout for centering content */
@@ -92,7 +102,7 @@ main {
 
 .title h1 {
     font-family: 'Inter', sans-serif; /* Example font */
-
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* Shadow effect */
     font-size: 100px; /*Big title sizing*/
     margin: 0 0 0px;
     color: #000;
@@ -119,22 +129,24 @@ mark {
     font-size: 30px;
     border-radius: 15px; 
     margin: 5px; 
-    text-align: center; 
+    text-align: center;
+
 }
 
 .login b {
     display: inline-block; 
-    background-color: #ff5e57; 
+    background-color: var(--brandOrange);
     color: #fff;
-    border-radius: 15px;
-    padding: 10px 20px; 
+    border-radius: 8px;
+    padding: 10px 20px;
+
 }
 
 .login a {
     display: inline-block; 
-    background-color: #e0e0e0; 
+    background-color: #E6E6E6;
     color: #000;
-    border-radius: 15px; 
+    border-radius: 8px;
     padding: 10px 20px; 
     text-align: center; 
     text-decoration: none; 
