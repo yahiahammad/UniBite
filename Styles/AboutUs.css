@@ -1,0 +1,167 @@
+:root {
+    --brandOrange: #FF4B33;
+}
+body {
+    font-family: Inter, sans-serif; /*Setting default font*/
+    font-weight: normal;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #F7F7F7;
+}
+
+header h1 {
+    font-family: Inter, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    margin: 0;
+    color: #000;
+}
+
+header nav {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+header nav ul {
+
+    list-style: none;
+    display: flex;
+    gap: 34px;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+
+
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+header nav div {
+    display: flex;
+    gap: 10px;
+}
+
+header nav div a {
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 15px; /* To round the edges of the button*/
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+header nav div a:first-child {
+    background-color: var(--brandOrange);
+}
+
+header nav div a:last-child {
+    background-color: #ffffff;
+    color: #000;
+}
+
+header nav div a:hover {
+    opacity: 0.8;
+}
+
+
+
+main {
+    text-align: center;
+    padding: 0px 0px;
+}
+
+
+
+.background {
+    width: 100%; /* Stretch from left to right */
+    height: 100vh; /* Full height of the viewport */
+    background: url('images/back.jpeg') no-repeat center / cover; /* Proper background shorthand */
+    color: white; /* White text for contrast */
+    text-align: center; /* Center text alignment */
+    display: flex; /* Enable flex layout for centering content */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
+}
+
+.title h1 {
+    font-family: 'Inter', sans-serif; /* Example font */
+    font-size: 90px; /*Big title sizing*/
+    color: #000;
+}
+.title h2 {
+     font-family: 'Inter', sans-serif; /* Example font */
+     font-size: 45px; /*Big title sizing*/
+     color: #000;
+ }
+section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+p {
+     align-content: center;
+     color: #000;
+     text-align: center;
+     font-family: Inter, sans-serif;
+     font-size: 28px;
+     font-style: normal;
+     font-weight: 500;
+     line-height: 150%; /* 48px */
+     width: 60%;
+
+}
+
+.login {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 30px;
+    border-radius: 15px;
+    margin: 5px;
+    text-align: center;
+
+}
+
+.login b {
+    display: inline-block;
+    background-color: var(--brandOrange);
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 20px;
+
+}
+
+.login a {
+    display: inline-block;
+    background-color: #E6E6E6;
+    color: #000;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 30px;
+}
