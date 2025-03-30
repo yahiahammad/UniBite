@@ -1,0 +1,214 @@
+
+.main-content {
+    flex: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px; 
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    flex-grow: 1; 
+}
+
+/* Navbar Links */
+.navbar .nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.navbar .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #FF4B33; 
+}
+
+
+.signup-btn {
+    margin-left: 40px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.signup-btn:hover {
+    transform: scale(1.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh; 
+    margin: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+            url("LoginBackGround.jpeg"); 
+    background-size: cover;  
+    background-repeat: no-repeat;  
+    background-position: center;  
+    background-attachment: fixed;
+}
+.background-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+}
+
+
+.login-container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    width: 450px;
+    position: relative;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+
+.button {
+    width: 48%;
+    padding: 10px;
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%); /* Given gradient */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s, background 0.3s ease;
+}
+
+
+.google-button {
+    width: 48%;
+    padding: 10px;
+    background: linear-gradient(to right, #FF4B33 0%, #992D1F 100%); /* Opposite gradient */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s, background 0.3s ease;
+}
+
+
+.button:hover, .google-button:hover {
+    transform: scale(1.05);
+    filter: brightness(110%);
+}
+
+.button:active, .google-button:active {
+    transform: scale(0.95);
+}
+
+.forgot-password {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    width: 100%;
+    background: rgba(20, 20, 20, 0.9);
+    color: white;
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-top: auto; 
+}
+
+
+.footer .logo {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+.footer .footer-links {
+    display: flex;
+    gap: 40px;
+}
+
+.footer .footer-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.footer .footer-links a:hover {
+    color: #FF4B33; 
+}
+
+
+.footer .credentials {
+    font-size: 14px;
+    opacity: 0.7;
+}

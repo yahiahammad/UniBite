@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBite - Login</title>
+    <link rel="stylesheet" href="Login.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">UniBite</div>
+        <div class="nav-links">
+            <a href="#">Restaurants</a>
+            <a href="#">About Us</a>
+            <a href="#">Help</a>
+        </div>
+        <button class="signup-btn">Sign Up</button>
+    </div>
+
+    <!-- Login Form Container -->
+    <div class="main-content">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form action="login.php" method="POST" onsubmit="return validateEmail()">
+                <input type="email" id="email" name="email" class="input-field" placeholder="example@miuegypt.edu.eg" required>
+                <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
+
+                <div class="button-container">
+                    <button type="submit" class="button">Login</button>
+                    <button type="button" class="google-button" onclick="continueWithGoogle()">Continue with Google</button>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="logo">UniBite</div>
+        <div class="footer-links">
+            <a href="#">Restaurants</a>
+            <a href="#">About Us</a>
+            <a href="#">Help</a>
+        </div>
+        <div class="credentials">© 2025 UniBite. All rights reserved.</div>
+    </div>
+
+    <script>
+        function validateEmail() {
+            let email = document.getElementById("email").value;
+            let regex = /^[a-zA-Z0-9._%+-]+@miuegypt\.edu\.eg$/;
+
+            if (!regex.test(email)) {
+                alert("Invalid email. Please use an @miuegypt.edu.eg email.");
+                return false; // Prevent form submission
+            }
+            return true; // Proceed with login
+        }
+
+        function continueWithGoogle() {
+            alert("Google login is not implemented yet!");
+        }
+    </script>
+
+</body>
+</html>
