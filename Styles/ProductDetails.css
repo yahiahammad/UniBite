@@ -197,7 +197,7 @@ section{
 
     aspect-ratio: 1 / 1; /* Ensure the image is square */
     object-fit: cover; /* Ensure the image covers the entire area */
-    border-radius: 12px; /* Keep the border radius */
+    border-radius: 6px; /* Keep the border radius */
 }
 
 .main-product-details {
@@ -255,6 +255,8 @@ section{
     aspect-ratio: 4 / 3;
     object-fit: cover; /* Ensure the image covers the entire area */
     border-radius: 6px; /* Keep the border radius */
+    box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
 
 }
+
 
