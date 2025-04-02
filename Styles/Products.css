@@ -136,7 +136,7 @@ nav .logIn{
     border: none;
 }
 
-
+/* end of navbar css ------------------------------------*/
 
 main {
     text-align: center;
@@ -195,7 +195,7 @@ section{
     color: #000;
     color: #F7F7F7;
 }
-.StoreEX h2{
+.store-cuisine{
 
     font-size: 30px;
     font-family: 'Inter', sans-serif;
@@ -203,81 +203,88 @@ section{
     color: #F7F7F7;
     text-align: center;
 }
-.Trending-container {
-    max-width: 900px;
-    margin: 0 auto;
 
-}
-.Trending-container h2{
-        font-size: 24px;
-        margin-bottom: 15px;
 
-}
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
+.trending-products{
+    display: block;
+    margin-top: 2%;
+    }
 
-.large-item {
-    position: relative;
-    border: 2px ;
-}
-
-.large-item img, .small-item img {
+.trending-products details {
     width: 100%;
-    border-radius: 8px;
 }
 
-.info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background: rgba(255, 255, 255, 0.9);
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-}
-
-.small-items {
-
-    flex-direction: column;
-    gap: 10px;
-}
-
-.small-item {
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 8px;
-}
-.large-item:hover{
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
-.small-item:hover {
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
-
-.small-item img {
-    width: 400px;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.text {
-    font-size: 14px;
-}
-
-.price {
+.trending-products summary {
+    font-size: 24px;
     font-weight: bold;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #F7F7F7;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    list-style: none;
+
 }
-.Products-Container h3{
+.trending-products summary::-webkit-details-marker {
+    display: none; /* Hides the default arrow in WebKit browsers */
+}
+
+.trending-products details {
+    width: 100%;
+    display: block;
+    justify-content: center;
+
+
+}
+
+.trending-products-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
+    gap: 5%; /* Adjust the gap between items */
+    width: 100%;
+    justify-content: center;
+    align-items: center; /* Center items vertically */
+}
+
+
+.trending-products-container {
+    display: grid;
+    grid-template-columns: repeat(3, 2fr); /* Create a 2x2 grid */
+    gap: 5%; /* Reduce the gap between items */
+    margin: 5% auto; /* Center the container horizontally */
+    width: 60%; /* Adjust the width as needed */
+    justify-content: center;
+    align-items: center; /* Center items vertically */
+}
+
+.trending-product{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
+    margin: 0;
+    border-radius: 6px;
+
 }
+
+.trending-product:hover {
+
+    transform: scale(1.05); /* Scale up the product on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+    box-shadow: 2px 2px 14px 2px rgba(0, 0, 0, 0.05);
+}
+
+.trending-product img{
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 6px; /* Keep the border radius */
+    box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
+
+}
+
+
 .Product-list {
     display: inline;
     position: relative;
@@ -321,3 +328,59 @@ section{
     display: inline-block; /* Ensure the button is inline */
 
 }
+
+.price{
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-align: left;
+}
+
+.main-product-details .description{
+    font-size: 16px;
+    color: #828282;
+}
+.addToCart{
+    width: 100%;
+    background-color: #FF4B33;
+    color: white;
+    padding: 10px 20px; /* Adjust padding to make text horizontal */
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+    border: 0;
+    text-align: center; /* Center the text horizontally */
+    display: inline-block; /* Ensure the button is inline */
+
+}
+
+.products-list{
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+
+    margin: 5%;
+}
+
+.products-list-container{
+    display: flex;
+    justify-content: left;
+    flex-direction: row; /* Stack the elements vertically */
+    align-items: flex-start;
+    text-align: left;
+    gap: 3%;
+}
+
+.products-list img{
+    width: 100%; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+    object-position: center; /* Center the image */
+    aspect-ratio: 4 / 3;
+    object-fit: cover; /* Ensure the image covers the entire area */
+    border-radius: 6px; /* Keep the border radius */
+    box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
+
+}
+
+
