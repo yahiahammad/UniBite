@@ -208,11 +208,8 @@ section{
 .trending-products{
     display: block;
     margin-top: 2%;
-    }
-
-.trending-products details {
-    width: 100%;
 }
+
 
 .trending-products summary {
     font-size: 24px;
@@ -233,8 +230,23 @@ section{
     width: 100%;
     display: block;
     justify-content: center;
+    transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
 
 
+
+}
+.trending-products details > div {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease, transform 0.5s ease;
+}
+
+.trending-products details[open] > div {
+    max-height: 500px; /* Adjust height based on content */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .trending-products-container {
