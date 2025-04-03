@@ -81,7 +81,7 @@ nav img:hover{
 .sidebar {
     position: fixed; /* Sticks to the left side */
     left: 0;
-    width: 3%; /* Adjust the width as needed */
+    width: 6%; /* Adjust the width as needed */
     height: 100vh; /* Full height of the viewport */
     background-color: #333; /* Dark background */
     color: white;
@@ -101,7 +101,8 @@ nav img:hover{
 }
 
 .sidebar a:hover {
-    background-color: #575757; /* Hover effect */
+    background-color: #575757;
+    border-radius: 4px;
 }
 
 .sidebar-button{
