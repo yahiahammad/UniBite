@@ -28,6 +28,10 @@
     color: white;
     flex-grow: 1; 
 }
+.logo a{
+    color:white;
+    text-decoration: none;
+}
 
 /* Navbar Links */
 .navbar .nav-links {
@@ -195,10 +199,10 @@ body {
 .footer .footer-links {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-
-    gap: 40px;
+    margin-left: 100px;
+    gap: 50px;
 }
 
 .footer .footer-links a {

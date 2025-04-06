@@ -29,6 +29,11 @@ header nav {
     align-items: center;
     gap: 20px;
 }
+.logo a{
+    color: #000000;
+    text-decoration: none;
+
+}
 
 header nav ul {
 
