@@ -23,26 +23,75 @@
   </nav>
 </header>
 
+<!-- Hero Section -->
+<div class="Hero-Section">
+  <h1>About-Us</h1>
+</div>
 
-<main>
+<!-- Section 1 -->
+<div class="Section1">
+  <h1>UniBite.</h1>
+  <h2>A story of hungry frustrated students</h2>
+  <div class="card-container">
+    <div class="Our-story">
+      <h2>OUR STORY</h2>
+      <p>"It all started with a shared frustration: long waiting lines to order food. We saw students and staff wasting valuable time just to grab a meal. Inspired to make a difference, we created UniBite!"</p>
+    </div>
 
+    <div class="Our-Mission">
+      <h2>OUR MISSION</h2>
+      <p>"We envisioned a platform that eliminates the need to wait altogether—something simple, fast, and convenient. With UniBite, browse menus, order your food online, and get notified the moment your meal is ready!"</p>
+    </div>
 
-  <div class="title">
-    <h1>UniBite.</h1>
+    <div class="Our-Vision">
+      <h2>OUR VISION</h2>
+      <p>"We aim to redefine campus dining by making food access smarter, faster, and more personal. Our vision is to expand UniBite into a seamless ecosystem where students can discover, customize, and enjoy meals—without the hassle!"</p>
+    </div>
   </div>
-  <div class="title">
-    <h2>About us</h2>
+</div>
+
+<!-- Section 2 -->
+<div class="Section2">
+  <h1>Need a quick bite?</h1>
+  <div class="process-cards">
+    <div class="process-card">
+      <div class="process-number">1</div>
+      <h3>Browse & Select</h3>
+      <p class="process-description">Explore restaurants, cafes, and food options available on your campus. Filter by cuisine, diet, or price range.</p>
+      <button class="view-toggle">View More</button>
+    </div>
+
+    <div class="process-card">
+      <div class="process-number">2</div>
+      <h3>Place Your Order</h3>
+      <p class="process-description">Customize your meal, add it to the cart, and checkout securely. Schedule for immediate delivery or for later!</p>
+      <button class="view-toggle">View More</button>
+    </div>
+
+    <div class="process-card">
+      <div class="process-number">3</div>
+      <h3>Enjoy Your Meal</h3>
+      <p class="process-description">Track your order in real-time and get notified when it's ready. Receive your food on time with no hassle!</p>
+      <button class="view-toggle">View More</button>
+    </div>
   </div>
+</div>
 
-    <section>
+<script>
+  document.querySelectorAll('.view-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+      const card = button.closest('.process-card');
+      const description = card.querySelector('.process-description');
+      const isVisible = description.classList.contains('show');
 
-        <p >Unibite is a creative food-ordering platform designed by frustrated university students fed up with long queues for meals.
-          <br><br>It delivers a straightforward interface for submitting orders using your phone and your preferred payment method, notifies you when your food is ready, and grants you unlimited browsing of menus without the usual rush.
-        </p>
-    </section>
+      card.classList.toggle('expanded', !isVisible);
+      description.classList.toggle('show', !isVisible);
 
-
-</main>
+      button.textContent = isVisible ? 'View More' : 'View Less';
+      button.classList.toggle('view-less', !isVisible);
+    });
+  });
+</script>
 
 <!-- Footer -->
 <div class="footer">

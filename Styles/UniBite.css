@@ -1,91 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+html, body {
+    overflow-x: hidden; /* Prevent horizontal overflow in some mobile dimensions */
+    font-size: 16px; /* Base font size for rem units */
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px; /* Smaller base size for better scaling on mobile */
+    }
+}
 
 
-.background {
+/* ========================================================================================= */
+
+/* NAV BAR STYLING */
+
+.nav {
+    position: fixed;
     width: 100%;
-    height: 100vh;
-    background: url('../images/back.jpeg') no-repeat center / cover;
-    color: white;
-    text-align: center;
+    height: 100px;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4em;
+    background-color: white  ;
+    z-index: 10;
+}
+
+.left-items {
+    flex: 1;
+    font-size: 50px;
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
 }
 
-.title h1 {
+.right-items {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.right-items button {
+    margin-left: 40px;
+    padding: 10px 20px;
+    font-size: 15px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    transition: transform 0.2s, background 0.2s;
+
+}
+
+.left-items a, .right-items button {
+    margin: 0 10px;
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
     font-family: 'Inter', sans-serif;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-size: 100px;
-    margin: 0 0 0px;
-    color: #000;
-}
-
-mark {
-    background-color: transparent;
-    color: rgb(247, 14, 14);
     font-weight: bold;
-}
-
-.title p {
-    font-size: 30px;
-    color: #666;
-    margin: 0px 0px 0px;
+    font-size: 20px;
 }
 
 
+/* HAMBURGER MENU STYLING */
+.hamburger {
+    display: none; /* Hide on large screens */
+}
 
-.login {
-    text-decoration: none;
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 30px;
-    border-radius: 15px;
-    margin: 5px;
+/* Mobile Styling */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        align-items: center;
+        padding: 1em;
+        height: auto;
+    }
+
+    .hamburger {
+        display: block;
+        align-self: flex-start;
+        font-size: 30px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        margin-bottom: 1em;
+    }
+
+    .left-items,
+    .right-items {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    .nav.open .left-items {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .nav.open .right-items {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 1em;
+    }
+
+    .right-items button {
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+}
+
+/* ========================================================================================= */
+
+/* SECTION 1 STYLING (BACKGROUND AND TITLE) */
+
+.logo-container {
+    display: flex;
+    align-items: center; /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    margin-top: 20px;
+}
+
+
+/* Main logo with GSAP animation */
+.Main-logo {
+    position: fixed; /* VERY IMPORTANT FOR SHRINK ON SCROLL ANIMATION (DON'T CHANGE!) */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20%; /* logo size */
+    z-index: 1000;
+}
+
+.Background-Container {
+    width: 100%;
+    height: 100vh;
+    background-image: url('../Images/k2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Mobile background */
+@media (max-width: 768px) {
+    .Background-Container {
+        background-image: url('../Images/MobileBack.png'); /* Different image for mobile (For orientation) */
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+
+
+
+
+/* ========================================================================================= */
+
+/* SECTION 2 STYLING (GRID LAYOUT) */
+.Section2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    height: 100vh;
+}
+
+/* Applies to all inner boxes EXCEPT .LogIn-SignUp-buttons */
+.Section2 div:not(.LogIn-SignUp-buttons) {
+    color: white;
     text-align: center;
-
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-.login b {
-    display: inline-block;
-    background-color: var(--brandOrange);
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px 20px;
-
-}
-
-.login a {
-    display: inline-block;
-    background-color: #E6E6E6;
-    color: #000;
-    border-radius: 8px;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 30px;
-}
-
-
-
-/* SECTION 2 STYLING (Our partners) */
-
-.section2 h2 {
-    text-align: left;
-    font-size: 2rem;
+.Section2 h1 {
+    font-size: 2.5rem;
     font-weight: bold;
-    color: #333;
-    margin-left: 5%;
-    margin-bottom: 1rem;
+    margin: 0;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+/* Layout for the first item (JOIN US section) */
+.LogIn-SignUp {
+    display: flex;
+    flex-direction: column;
+}
+
+.LogIn-SignUp h1 {
+    margin-bottom: 5px;
+}
+
+/* Flexbox for the buttons in JOIN US section (horizontal layout) */
+.LogIn-SignUp-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Shared styling for all buttons in Section2 */
+.Section2 button {
+    margin: 10px 5px 0;
+    padding: 10px 20px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.LogIn-SignUp {
+    background-image: url('../Images/Eat.jpg');
+}
+
+.Help {
+    background-image: url('../Images/Help.jpg');
+}
+
+.Restaurants {
+    background-image: url('../Images/Food.jpeg');
+}
+
+.Our-story {
+    background-image: url('../Images/aboutUs.jpg');
+}
+
+/* Overlay layer */
+.Section2 > div {    /* Selects div elements directly under .Section2*/
     position: relative;
+    overflow: hidden;
+
 }
-.partners{
+
+.Section2 > div::before {  /* USed to add the overlay before the content inside each div */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark transparent overlay */
+    z-index: 0;
+}
+
+/* Ensure content stays above overlay */
+.Section2 > div > * { /* Selects every element directly inside each direct child div of .Section2 */
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ========================================================================================= */
+/* SECTION 3 STYLING (Our partners) */
+.Section3 {
+    padding: 60px;
+    background: #f8f9fa;
+    overflow: hidden;
+    position: relative;
+    border-top: solid black;
+    border-bottom: solid black;
+    margin-bottom: 40px;
+}
+
+.Section-Title {
+    font-size: 2.5rem;
+    font-family: "Inter sans", sans-serif;
+    text-align: center;
+    color: #000000;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgb(255, 255, 255);
+    margin: 0;
+}
+
+.partners {
     width: 90%;
     max-width: 1536px;
     margin-inline: auto;
     position: relative;
-    height: 100px;
+    height: 150px;
     margin-top: 2rem;
     overflow: hidden;
-    /* FADING ANIMATION AT EDGES */
     mask-image: linear-gradient(
             to right,
             rgba(0, 0, 0, 0),
@@ -103,147 +327,151 @@ mark {
 }
 
 .item {
-    width: 200px;
-    height: 100px;
-    background-color: transparent;
-    border-radius: 6px;
+    width: 250px;
+    height: 150px;
     position: absolute;
-    left: max(calc(200px * 8), 100%);
+    margin-right: 20px; /* Horizontal spacing between cards */
+    left: max(calc((250px + 20px) * 9), 100%);
     animation-name: scrollLeft;
     animation-duration: 30s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    perspective: 1000px; /* Enable 3D space for flipping */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-.item img {
+
+.card-inner {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-}
-
-/* Equations to delay each image using 30s/NumOfImages *(8-x)*-1 */
-.item1 {
-    animation-delay: calc(30s / 8 * (8 - 1) * -1);
-}
-
-.item2 {
-    animation-delay: calc(30s / 8 * (8 - 2) * -1);
-}
-
-.item3 {
-    animation-delay: calc(30s / 8 * (8 - 3) * -1);
-}
-
-.item4 {
-    animation-delay: calc(30s / 8 * (8 - 4) * -1);
-}
-
-.item5 {
-    animation-delay: calc(30s / 8 * (8 - 5) * -1);
-}
-
-.item6 {
-    animation-delay: calc(30s / 8 * (8 - 6) * -1);
-}
-
-.item7 {
-    animation-delay: calc(30s / 8 * (8 - 7) * -1);
-}
-
-.item8 {
-    animation-delay: calc(30s / 8 * (8 - 8) * -1);
-}
-
-/* SCROLLING ANIMATION */
-
-@keyframes appear {
-    From{
-        opacity:0;
-        scale:0.5;
-    }
-    to{
-        opacity:1;
-        scale:1;
-    }
-}
-
-/* SECTION 3 STYLING (Our features) */
-
-.section3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 50px;
-    font-family: Arial, sans-serif;
-    text-align: left;
-}
-
-.text-content {
-    display: flex;
-    flex-direction: column;
-    max-width: 500px;
-    text-align: left;
-}
-
-.section3 h2 {
-    text-align: left;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-left: 5%;
-    margin-bottom: 1rem;
     position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
 }
 
-.feature {
-    margin-bottom: 20px;
+/* Flip with bounce effect */
+.item:hover .card-inner {
+    transform: rotateY(180deg);
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bounce effect */
 }
 
-.feature h1 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    font-weight: bold;
-}
 
-.feature p {
-    font-size: 16px;
-    color: #555;
-    line-height: 1.5;
-}
-
-.section3 .buttons {
-    margin-top: 20px;
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    overflow: hidden;
     display: flex;
     justify-content: center;
-    gap: 10px;
+    align-items: center;
 }
 
-.section3 .singUp,
-.section3 .logIn {
-    font-size: 16px; /* Increased font size */
-    padding: 10px 20px; /* Increased padding */
-    border-radius: 6px;
+.card-front {
+    background-color: white;
 }
 
-
-
-.img {
-    flex-shrink: 0;
-    margin-left: 40px;
+.card-front img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
+.card-back {
+    position: relative;
+    color: white;
+    transform: rotateY(180deg);
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+}
 
-.img img {
-    height: 540px;
-    width: 600px;
+.card-back img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    opacity: 0.5;
 }
 
-
-.feature{
-    animation:appear linear;
-    animation-timeline:view();
-    animation-range: entry 0% cover 20%;
+.card-back::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1;
 }
 
+.card-back p {
+    position: relative;
+    z-index: 2;
+    font-size: 15px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.card-back h2 {
+    position: relative;
+    z-index: 2;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    padding: 0.5rem 1rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.view-menu {
+    position: relative;
+    z-index: 2;
+    padding: 8px 16px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    transition: transform 0.2s, background 0.2s;
+    text-align: center;
+}
+
+.view-menu:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(to right, #FF4B33 0%, #992D1F 100%);
+}
+
+.item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation pause on hover */
+.partners:hover .item {
+    animation-play-state: paused;
+}
+
+.item1 { animation-delay: calc(30s / 9 * (9 - 1) * -1); }
+.item2 { animation-delay: calc(30s / 9 * (9 - 2) * -1); }
+.item3 { animation-delay: calc(30s / 9 * (9 - 3) * -1); }
+.item4 { animation-delay: calc(30s / 9 * (9 - 4) * -1); }
+.item5 { animation-delay: calc(30s / 9 * (9 - 5) * -1); }
+.item6 { animation-delay: calc(30s / 9 * (9 - 6) * -1); }
+.item7 { animation-delay: calc(30s / 9 * (9 - 7) * -1); }
+.item8 { animation-delay: calc(30s / 9 * (9 - 8) * -1); }
+.item9 { animation-delay: calc(30s / 9 * (9 - 9) * -1); }

@@ -1,100 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniBite</title>
-    <link rel="stylesheet" href="Styles/UniBite.css">
-    <link rel="stylesheet" href="Styles/Universalcss.css">
 
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="Styles/UniBite.css" />
+    <link rel="stylesheet" href="Styles/Universalcss.css" />
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="JavaScript/gsap.min.js"></script>
+    <script src="JavaScript/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Script -->
+    <script src="JavaScript/UniBite.js"></script>
 </head>
 
 <body>
-<header>
-    <h1 class="logo"><a href="UniBite.html">UniBite.</a></h1>
-    <nav>
-        <ul>
-            <li><a href="Stores.html">Restaurants</a></li>
-            <li><a href="About-us.html">About us</a></li>
-            <li><a href="Help.html">Help</a></li>
-        </ul>
-        <div>
-            <button class="singUp" onclick="window.location.href='SignUp.html'">Sign up</button>
-            <button class="logIn" onclick="window.location.href='Login.html'">Log in</button>
+
+<div class="nav">
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <div class="left-items">
+        <a href="About-us.html">About us</a>
+        <a href="Help.html">Help</a>
+        <a href="Stores.html">Restaurants</a>
+    </div>
+
+    <div class="right-items">
+        <button class="signUp" onclick="window.location.href='SignUp.html'">Sign up</button>
+        <button class="logIn" onclick="window.location.href='Login.html'">Log in</button>
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        document.querySelector('.nav').classList.toggle('open');
+    }
+</script>
+
+
+<!-- Section 1 -->
+<div class="Section1">
+        <div class="logo-container">
+            <img class="Main-logo" src="Images/LogoVF.png">
         </div>
-    </nav>
-</header>
+
+    <div class="Background-Container"> </div>
+
+</div>
 
 
-<main>
-    <div class="section1">
-        <div class="background">
-            <div class="title">
-                <h1>UniBite.</h1>
-                <p>Skip the <mark>line</mark>, Save <mark>time</mark>.</p>
-                <div class="login">
-                    <button class="singUp" onclick="window.location.href='SignUp.html'">Sign up</button>
-                    <button class="logIn" onclick="window.location.href='Login.html'">Log in</button>
+<!-- Section 2 -->
+<div class="Section2">
+
+    <div class="LogIn-SignUp">
+        <h1>TIME TO EAT?</h1>
+        <div class="LogIn-SignUp-buttons">
+            <button onclick="window.location.href='SignUp.html'">SIGN UP</button>
+            <button onclick="window.location.href='Login.html'">SIGN IN</button>
+        </div>
+    </div>
+
+    <div class="Help">
+        <h1>NEED HELP?</h1>
+        <button onclick="window.location.href='Help.html'">Inquiries</button>
+    </div>
+
+    <div class="Restaurants">
+        <h1>OUR RESTAURANTS</h1>
+        <button onclick="window.location.href='Stores.html'">VIEW RESTAURANTS</button>
+    </div>
+
+    <div class="Our-story">
+        <h1>OUR STORY</h1>
+        <button onclick="window.location.href='About-us.html'">ABOUT-US</button>
+    </div>
+
+</div>
+
+
+
+
+
+<div class="Section3">
+    <h2 class="Section-Title">OUR PARTNERS</h2>
+
+    <div class="partners">
+
+        <div class="item item1">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/farghaly.jpeg">
+                </div>
+                <div class="card-back">
+                    <img src="Images/FARGHALYback.jpg">
+                    <p>Feeling the heat?</p>
+                    <h2>Cool-Down at Farghaly</h2>
+                    <button class="view-menu">View Menu</button>
                 </div>
             </div>
         </div>
-    </div>
 
-
-
-    <div class="section2">
-        <h2> Our partners </h2>
-        <div class="partners">
-            <div class="item item1"><img src="Images/farghaly.jpeg"></div>
-            <div class="item item2"><img src="Images/sbarro.png"></div>
-            <div class="item item3"><img src="Images/gyro.jpeg"></div>
-            <div class="item item4"><img src="Images/zalabya.png"></div>
-            <div class="item item5"><img src="Images/corner.png"></div>
-            <div class="item item6"><img src="Images/gyro.jpeg"></div>
-            <div class="item item7"><img src="Images/corner.png"></div>
-            <div class="item item8"><img src="Images/zalabya.png"></div>
-
-        </div>
-    </div>
-
-
-    <div class="section3">
-        <div class="text-content">
-            <h2>Our features</h2>
-            <div class="feature">
-                <h1>Seamless Ordering</h1>
-                <p>Browse menus effortlessly and place your order within seconds—no more waiting in long lines or dealing with slow service.</p>
-            </div>
-            <div class="feature">
-                <h1>Personalized Experience</h1>
-                <p>Customize your meals to suit your taste and dietary preferences, all while using your preferred payment method for a hassle-free checkout</p>
-            </div>
-            <div class="feature">
-                <h1>Real Time Updates</h1>
-                <p>Receive instant notifications when your food is ready, so you can pick it up at the perfect time without unnecessary delays.</p>
-            </div>
-            <div class="buttons">
-                <button class="singUp">Sign up</button>
-                <button class="logIn">Login</button>
+        <div class="item item2">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/sbarro.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/SBARROback.jfif">
+                    <p>Craving a slice of pizza?</p>
+                    <h2>Head to Sbarro!</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
             </div>
         </div>
 
-        <div class="img">
-            <img src="Images/Sec3.jfif" alt="Real-Time Updates">
+        <div class="item item3">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/TBS.jpg">
+                </div>
+                <div class="card-back">
+                    <img src="Images/TBSback.jpg">
+                    <p>Freshly baked pastries and Exceptional drinks await!</p>
+                    <h2>The Bakery shop</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
         </div>
-    </div>
 
-
-    <!-- Footer -->
-    <div class="footer">
-        <div class="logo">UniBite.</div>
-        <div class="footer-links">
-            <a href="#">Restaurants</a>
-            <a href="#">About Us</a>
-            <a href="#">Help</a>
+        <div class="item item4">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/zalabya.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/ZALABYAback.jpg">
+                    <p>Quick Zalabya Snack?</p>
+                    <h2>Batates & Zalabya!</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
         </div>
-        <div class="credentials">© 2025 UniBite. All rights reserved.</div>
-    </div>
 
-</main>
+        <div class="item item5">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/Cinnabon.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/CINNABONback.jpeg">
+                    <p>Sweet and sticky desert?</p>
+                    <h2>Cinnabon is here!</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item item6">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/gyro.jpeg">
+                </div>
+                <div class="card-back">
+                    <img src="Images/GYROback.jpeg">
+                    <p>Hungry like a greek god?</p>
+                    <h2>Gyro for the rescue!</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item item7">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/corner.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/CORNERback.jpg">
+                    <p>Foul, Falafel, and more!</p>
+                    <h2>Only at My Corner</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item item8">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/Rtogo.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/RTOGOback.jpg">
+                    <p>Quick bite between lectures?</p>
+                    <h2>RtoGO got you</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="item item9">
+            <div class="card-inner">
+                <div class="card-front">
+                    <img src="Images/manoucheh-noBG.png">
+                </div>
+                <div class="card-back">
+                    <img src="Images/MANback.jpeg">
+                    <p>Quick trip to lebanon?</p>
+                    <h2>Visit Manoucheh</h2>
+                    <button class="view-menu">View Menu</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="footer">
+    <div class="logo">UniBite.</div>
+    <div class="footer-links">
+        <a href="#">Restaurants</a>
+        <a href="#">About Us</a>
+        <a href="#">Help</a>
+    </div>
+    <div class="credentials">© 2025 UniBite. All rights reserved.</div>
+</div>
+
+
 </body>
 </html>
