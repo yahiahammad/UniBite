@@ -666,6 +666,20 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0px 0px;
+}
+
+
+
+.background {
+    width: 100%; /* Stretch from left to right */
+    height: 100vh; /* Full height of the viewport */
+    background: url("/Public/Images/back.jpeg") no-repeat center / cover; /* Proper background shorthand */
+    color: white; /* White text for contrast */
+    text-align: center; /* Center text alignment */
+    display: flex; /* Enable flex layout for centering content */
+    justify-content: center; /* Horizontally center the content */
+    align-items: center; /* Vertically center the content */
 }
 
 .card-front {
