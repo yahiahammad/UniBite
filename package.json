@@ -1,27 +1,7 @@
 {
-  "name": "unibite",
-  "version": "1.0.0",
-  "description": "On-Campus food ordering app for students\r made by: Belal Ahmed, Mohamed Hany, Mohamed Sayed, Yahia Mohammed, Yehia Hany",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yahiahammad/UniBite.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/yahiahammad/UniBite/issues"
-  },
-  "homepage": "https://github.com/yahiahammad/UniBite#readme",
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "mongoose": "^8.15.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
   }
 }

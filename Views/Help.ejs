@@ -1,71 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniBite - Help</title>
-    <link rel="stylesheet" href="/Styles/Help.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center - UniBite</title>
+  <meta name="description" content="Find answers to common questions about using UniBite for campus food ordering.">
+  <link rel="stylesheet" href="Styles/styles.css">
+  <link rel="stylesheet" href="Styles/help.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Header -->
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <a href="/">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+            <path d="M7 2v20"></path>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+          </svg>
+          <span>UniBite</span>
+        </a>
+      </div>
 
-<!-- Navbar -->
-<div class="navbar">
-    <div class="logo"><a href="UniBite.ejs">UniBite.</a></div>
-    <div class="nav-links">
-        <a href="Stores.ejs">Restaurants</a>
-        <a href="About-us.ejs">About Us</a>
-        <a href="Help.html">Help</a>
-    </div>
-    <button class="signup-btn" onclick="window.location.href='SignUp.ejs'">Sign up</button>
-    <button class="login-btn" onclick="window.location.href='Login.ejs'">Log in</button></div>
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/stores">Stores</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/help" class="active">Help</a></li>
+        </ul>
+      </nav>
 
-<!-- request Form Container -->
-<div class="main-content">
-    <div class="request-container">
-        <h2>Request help</h2>
-        <form action="request.php" method="POST" onsubmit="return validateEmail()">
-            <input type="email" id="email" name="email" class="input-field" placeholder="example@miuegypt.edu.eg" required>
-            <input type="tel" id="phone" name="phone" class="input-field" placeholder="Phone Number" required>
-            <input type="text" id="firstName" name="firstName" class="input-field" placeholder="First Name" required>
-            <input type="text" id="lastName" name="lastName" class="input-field" placeholder="Last Name" required>
-            <textarea name="message" id="message" class="input-field" cols="30" rows="10" placeholder="Message" required></textarea>
-            <label class="termsAndConditions"> By submitting a request you agree to the Privacy Policy and to the terms of use</label>
-            <div class="button-container">
-                <button type="submit" class="button">Submit</button>
-            </div>
-        </form>
+      <!-- User Actions -->
+      <div class="user-actions">
+        <div class="auth-buttons">
+          <a href="/login" class="btn btn-ghost">Log in</a>
+          <a href="/signup" class="btn btn-primary">Sign up</a>
+        </div>
+        <button class="mobile-menu-toggle" aria-label="Toggle menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </div>
-</div>
+  </div>
+</header>
+
+<main>
+  <div class="container help-page">
+    <div class="page-header">
+      <h1>Help Center</h1>
+      <p class="subtitle">Find answers to common questions about using UniBite for campus food ordering</p>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container">
+      <div class="search-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" placeholder="Search for help..." class="search-input" id="searchInput">
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="quick-links">
+      <a href="#account-issues" class="quick-link-card">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>Account Issues</h3>
+          <p>Login problems, account verification, and profile settings</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-arrow">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+      <a href="#ordering-help" class="quick-link-card">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>Ordering Help</h3>
+          <p>How to place orders, payment methods, and order tracking</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-arrow">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+      <a href="#technical-support" class="quick-link-card">
+        <div class="card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+          </svg>
+        </div>
+        <div class="card-content">
+          <h3>Technical Support</h3>
+          <p>App problems, bugs, and technical difficulties</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="card-arrow">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <!-- FAQ Sections -->
+    <section id="account-issues" class="faq-section">
+      <h2>Account Issues</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>How do I create an account?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>To create an account on UniBite:</p>
+            <ol>
+              <li>Click on the "Sign Up" button in the top right corner of the website</li>
+              <li>Enter your MIU email address (must end with @miuegypt.edu.eg)</li>
+              <li>Create a password and fill in your details</li>
+              <li>Verify your email address by clicking the link sent to your inbox</li>
+              <li>Complete your profile by adding your student/faculty ID and preferences</li>
+            </ol>
+            <p>You can also sign up using your Google account linked to your MIU email.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>I can't log in to my account</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>If you're having trouble logging in:</p>
+            <ul>
+              <li>Make sure you're using the correct email address (your MIU email)</li>
+              <li>Check that you're entering the correct password</li>
+              <li>Try resetting your password by clicking "Forgot password?" on the login page</li>
+              <li>Ensure your account has been verified by checking your email</li>
+              <li>Clear your browser cache and cookies, then try again</li>
+            </ul>
+            <p>If you still can't log in, please contact our support team for assistance.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>How do I reset my password?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>To reset your password:</p>
+            <ol>
+              <li>Go to the login page</li>
+              <li>Click on "Forgot password?" below the password field</li>
+              <li>Enter your MIU email address</li>
+              <li>Check your email for a password reset link</li>
+              <li>Click the link and follow the instructions to create a new password</li>
+            </ol>
+            <p>The reset link is valid for 24 hours. If you don't receive the email, check your spam folder or request another reset link.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ordering-help" class="faq-section">
+      <h2>Ordering Help</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>How do I place an order?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>Placing an order on UniBite is easy:</p>
+            <ol>
+              <li>Log in to your UniBite account</li>
+              <li>Browse restaurants or search for specific items</li>
+              <li>Select the items you want to order</li>
+              <li>Add items to your cart</li>
+              <li>Review your order and proceed to checkout</li>
+              <li>Select your payment method</li>
+              <li>Confirm your order</li>
+            </ol>
+            <p>You'll receive a confirmation notification and can track your order status in real-time.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>What payment methods are accepted?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>UniBite accepts the following payment methods:</p>
+            <ul>
+              <li>Student Meal Plan</li>
+              <li>Campus Cash</li>
+              <li>Cash on pickup</li>
+            </ul>
+            <p>We're working on adding more payment options in the future, including credit/debit cards and mobile payment solutions.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>How do I track my order?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>You can track your order in real-time:</p>
+            <ol>
+              <li>Log in to your UniBite account</li>
+              <li>Go to "My Orders" in your account dashboard</li>
+              <li>Select the order you want to track</li>
+              <li>View the current status of your order</li>
+            </ol>
+            <p>You'll also receive notifications when your order is confirmed, being prepared, and ready for pickup.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>Can I cancel or modify my order?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>You can cancel or modify your order under certain conditions:</p>
+            <ul>
+              <li>Orders can be cancelled within 5 minutes of placement</li>
+              <li>Once preparation begins, orders cannot be cancelled</li>
+              <li>Contact the restaurant directly for urgent modifications</li>
+              <li>Refunds will be processed according to your payment method</li>
+            </ul>
+            <p>To cancel an order, go to "My Orders" and click "Cancel Order" if the option is available.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="technical-support" class="faq-section">
+      <h2>Technical Support</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>The app is not working properly</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>If you're experiencing issues with the app:</p>
+            <ol>
+              <li>Make sure you have the latest version installed</li>
+              <li>Try closing and reopening the app</li>
+              <li>Check your internet connection</li>
+              <li>Clear the app cache in your device settings</li>
+              <li>Restart your device</li>
+            </ol>
+            <p>If the problem persists, please contact our support team with details about the issue and your device information.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>I found a bug in the app</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>We appreciate your help in improving UniBite! To report a bug:</p>
+            <ol>
+              <li>Go to your account settings</li>
+              <li>Select "Report a Problem"</li>
+              <li>Choose "Bug Report" from the options</li>
+              <li>Describe the issue in detail, including what you were doing when it occurred</li>
+              <li>If possible, include screenshots or screen recordings</li>
+              <li>Submit the report</li>
+            </ol>
+            <p>Our development team will investigate the issue and work on a fix as soon as possible.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>How do I update the app?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>To update the UniBite app:</p>
+            <p><strong>For iOS devices:</strong></p>
+            <ol>
+              <li>Open the App Store</li>
+              <li>Tap on your profile icon in the top right</li>
+              <li>Scroll down to see pending updates</li>
+              <li>Find UniBite and tap "Update"</li>
+            </ol>
+            <p><strong>For Android devices:</strong></p>
+            <ol>
+              <li>Open the Google Play Store</li>
+              <li>Tap the menu icon and select "My apps & games"</li>
+              <li>Find UniBite in the list and tap "Update"</li>
+            </ol>
+            <p>You can also enable automatic updates in your device settings to always have the latest version.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>The website is loading slowly</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>If the UniBite website is loading slowly:</p>
+            <ul>
+              <li>Check your internet connection speed</li>
+              <li>Try refreshing the page (Ctrl+F5 or Cmd+Shift+R)</li>
+              <li>Clear your browser cache and cookies</li>
+              <li>Disable browser extensions temporarily</li>
+              <li>Try using a different browser</li>
+              <li>Check if other websites are loading normally</li>
+            </ul>
+            <p>If the issue persists, it might be due to high traffic. Please try again in a few minutes or contact support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional FAQ Section -->
+    <section class="faq-section">
+      <h2>General Questions</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>What is UniBite?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>UniBite is a campus food ordering platform designed specifically for the MIU community. It allows students, faculty, and staff to:</p>
+            <ul>
+              <li>Browse and order from campus restaurants and cafeterias</li>
+              <li>Pay using their meal plans or campus cash</li>
+              <li>Track orders in real-time</li>
+              <li>Skip lines by pre-ordering food</li>
+              <li>Discover new dining options on campus</li>
+            </ul>
+            <p>Our goal is to make campus dining more convenient and accessible for everyone.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>What are the operating hours?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>UniBite operates according to campus restaurant hours:</p>
+            <ul>
+              <li><strong>Monday - Friday:</strong> 7:00 AM - 10:00 PM</li>
+              <li><strong>Saturday:</strong> 9:00 AM - 9:00 PM</li>
+              <li><strong>Sunday:</strong> 10:00 AM - 8:00 PM</li>
+            </ul>
+            <p>Individual restaurant hours may vary. Check each restaurant's page for specific operating hours. During exam periods and holidays, hours may be extended or reduced.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span>Is there a minimum order amount?</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="accordion-icon">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="accordion-content">
+            <p>Minimum order requirements vary by restaurant:</p>
+            <ul>
+              <li>Most campus cafeterias have no minimum order</li>
+              <li>Some specialty restaurants may require a minimum of 20-30 EGP</li>
+              <li>Group orders may have different minimums</li>
+            </ul>
+            <p>The minimum order amount (if any) will be clearly displayed on each restaurant's page before you place your order.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Support Section -->
+    <section class="contact-support">
+      <h2>Still Need Help?</h2>
+      <p>Can't find the answer you're looking for? Our support team is here to help you with any questions or issues.</p>
+
+      <div class="support-options">
+        <a href="mailto:support@unibite.com" class="support-option">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <div>
+            <h3>Email Support</h3>
+            <p>Get help via email within 24 hours</p>
+          </div>
+        </a>
+
+        <a href="tel:+201234567890" class="support-option">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <div>
+            <h3>Phone Support</h3>
+            <p>Call us during business hours</p>
+          </div>
+        </a>
+
+        <a href="#" class="support-option">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <div>
+            <h3>Live Chat</h3>
+            <p>Chat with our support team instantly</p>
+          </div>
+        </a>
+
+        <a href="#" class="support-option">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <div>
+            <h3>Campus Office</h3>
+            <p>Visit us at Student Services Building</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </div>
+</main>
 
 <!-- Footer -->
-<div class="footer">
-    <div class="logo">UniBite.</div>
-    <div class="footer-links">
-        <a href="Stores.ejs">Restaurants</a>
-        <a href="About-us.ejs">About Us</a>
-        <a href="Help.html">Help</a>
-
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-copyright">
+        <p>&copy; 2024 UniBite. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
+      </div>
     </div>
-    <div class="credentials">© 2025 UniBite. All rights reserved.</div>
-</div>
-
-<script>
-    function validateEmail() {
-        let email = document.getElementById("email").value;
-        let regex = /^[a-zA-Z0-9._%+-]+@miuegypt\.edu\.eg$/;
-
-        if (!regex.test(email)) {
-            alert("Invalid email. Please use an @miuegypt.edu.eg email.");
-            return false; // Prevent form submission
-        }
-        return true; // Proceed with request
-    }
-
-    function continueWithGoogle() {
-        alert("Google login is not implemented yet!");
-    }
-</script>
-
+  </div>
+</footer>
+<script src="JavaScript/help.js"></script>
 </body>
 </html>
