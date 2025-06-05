@@ -3,25 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>About us</title>
-  <link rel="stylesheet" href="../Public/Styles/AboutUs.css">
-  <link rel="stylesheet" href="../Public/Styles/Universalcss.css">
+  <link rel="stylesheet" href="/Styles/AboutUs.css">
+  <link rel="stylesheet" href="/Styles/Universalcss.css">
 </head>
 
+
+
+
+<%- include('partials/navbar.ejs') %>
 <body>
-<header>
-  <h1 class="logo"><a href="UniBite.html">UniBite.</a></h1>
-  <nav>
-    <ul>
-      <li><a href="Stores.html">Restaurants</a></li>
-      <li><a href="About-us.html">About us</a></li>
-      <li><a href="Help.html">Help</a></li>
-    </ul>
-    <div>
-      <button class="singUp" onclick="window.location.href='SignUp.html'">Sign up</button>
-      <button class="logIn" onclick="window.location.href='Login.html'">Log in</button>
-    </div>
-  </nav>
-</header>
 
 <!-- Hero Section -->
 <div class="Hero-Section">
@@ -93,16 +83,7 @@
   });
 </script>
 
-<!-- Footer -->
-<div class="footer">
-  <div class="logo">UniBite.</div>
-  <div class="footer-links">
-    <a href="#">Restaurants</a>
-    <a href="#">About Us</a>
-    <a href="#">Help</a>
-  </div>
-  <div class="credentials">© 2025 UniBite. All rights reserved.</div>
-</div>
+<%- include('partials/Footer.ejs') %>
 
 </body>
 </html>

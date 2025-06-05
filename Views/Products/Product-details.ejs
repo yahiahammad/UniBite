@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Details</title>
+  <link rel="stylesheet" href="/Styles/ProductDetails.css">
+  <link rel="stylesheet" href="/Styles/Universalcss.css">
+</head>
+
+<body>
+<%- include('../partials/navbar.ejs') %>
+
+
+
+<main>
+
+  <section class="main-product">
+    <div class="main-product-image">
+      <img src="/Images/KiriFalafel.png" alt="KiriFalafel">
+    </div>
+    <div class="main-product-details">
+      <h1>Kiri Falafel Sandwich</h1>
+      <p class="price">30 EGP</p>
+      <p class="description">Delicious falafel sandwich filled with kiri cheese</p>
+      <button class="addToCart">Add to cart</button>
+    </div>
+  </section>
+
+  <section class="related-products">
+    <h2>Related Products</h2>
+    <div class="related-products-container">
+      <div class="related-product">
+        <img src="/Images/KiriFalafel.png" alt="KiriFalafel">
+        <h3>Kiri Falafel Sandwich</h3>
+        <p class="price">30 EGP</p>
+        <button class="addToCart">Add to cart</button>
+      </div>
+      <div class="related-product">
+        <img src="/Images/KiriFalafel.png" alt="KiriFalafel">
+        <h3>Kiri Falafel Sandwich</h3>
+        <p class="price">30 EGP</p>
+        <button class="addToCart">Add to cart</button>
+      </div>
+      <div class="related-product">
+        <img src="/Images/KiriFalafel.png" alt="KiriFalafel">
+        <h3>Kiri Falafel Sandwich</h3>
+        <p class="price">30 EGP</p>
+        <button class="addToCart">Add to cart</button>
+      </div>
+
+    </div>
+  </section>
+
+  <%- include('../partials/Footer.ejs') %>
+
+</main>
+</body>
+</html>

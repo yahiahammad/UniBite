@@ -7,147 +7,249 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Ensure the body takes up the full viewport height */
-    margin: 0;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #F7F7F7;
-}
-
-header h1 {
-    font-family: Inter, sans-serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 700;
-    margin: 0;
-    color: #000;
-}
-
-header nav {
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 20px;
-}
-.logo a{
-    color: #000000;
-    text-decoration: none;
 
 }
-
-header nav ul {
-
-    list-style: none;
-    display: flex;
-    gap: 34px;
-    align-items: center;
-    justify-content: flex-end;
+* {
     margin: 0;
     padding: 0;
-    height: 100%;
-
+    box-sizing: border-box;
 }
 
-header nav ul li a {
-    text-decoration: none;
-    color: #000000;
+html, body {
+    overflow-x: hidden;
     font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-
-
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
 }
 
-header nav div {
+/* NAV BAR STYLING */
+
+.nav {
+    position: fixed;
+    width: 100%;
+    height: 60px; /* Reduced height */
     display: flex;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+    padding: 0 2em;
+    background: rgba(255, 255, 255, 0.7); /* White transparent background */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-header nav div button {
+
+.logo {
+    flex: 0 0 auto; /* Prevent it from growing or shrinking */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem; /* Adjust spacing as needed */
+}
+
+.logo img {
+    height: 40px; /* Adjust height as needed */
+    width: auto; /* Maintain aspect ratio */
+}
+
+
+.left-items {
+    flex: 1;
+    font-size: 50px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.left-items a {
+    position: relative; /* Required because of the hover effect */
     text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 10px; /* To round the edges of the button*/
-    font-size: 14px;
+    color: black;
+    font-family: 'Inter', sans-serif;
     font-weight: bold;
-    color: #fff;
-    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+    font-size: 20px;
+}
+/* Changes text color on hover */
+.left-items a:hover {
+    color: #992D1F;
+}
+/* Underline effect on hover */
+.left-items a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0; /* Width is initially 0 */
+    height: 2px;
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    transition: width 0.8s ease;
+}
+.left-items a:hover::after {
+    width: 100%; /* Width becomes 100% on hover */
+}
 
+
+.right-items {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.right-items button {
+    padding: 10px 25px;
+    font-size: 15px;
+    color: white;
     border: none;
-
-}
-
-button{
-    transition: opacity 0.2s ease-in-out;
-}
-
-button:hover {
-    opacity: 0.6;
+    border-radius: 50px;
     cursor: pointer;
-
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    position: relative; /* Required because of the hover effect */
+    overflow: hidden;
+}
+.right-items button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(153, 45, 31, 0.3);
+}
+.right-items button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; /* Gradient start from the left outside the button */
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: 0.5s;
+}
+.right-items button:hover::before {
+    left: 100%; /* Gradient moves from -100 to 100 */
 }
 
-nav .singUp{
-    background-color: var(--brandOrange);
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 10px; /* To round the edges of the button*/
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
-
-    border: none;
-}
-nav .logIn{
-    background-color: #ffffff;
-    color: black;
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 10px; /* To round the edges of the button*/
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
-
-    border: none;
+.left-items a, .right-items button {
+    margin: 0 10px;
 }
 
-.logIn{
-    background-color: #F7F7F7;
-    color: black;
-    text-decoration: none;
-    padding: 22px 55px;
-    border-radius: 10px; /* To round the edges of the button*/
-    font-size: 24px;
-    font-weight: bold;
-    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
 
-    border: none;
+
+/* HAMBURGER MENU STYLING */
+.hamburger {
+    display: none;
 }
 
-.singUp{
-    background-color: var(--brandOrange);
-    text-decoration: none;
-    padding: 22px 55px;
-    border-radius: 10px; /* To round the edges of the button*/
-    font-size: 24px;
-    font-weight: bold;
-    color: #fff;
-    box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.05);
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 2rem;
+        cursor: pointer;
+    }
 
-    border: none;
-}
-body{
-    margin: 0;
-}
+    .nav:not(.open) .logo {
+        position: absolute;
+        top: 1rem; /* Maintain vertical alignment */
+        left: 48%; /* Center horizontally */
+        transform: translateX(-50%); /* Ensure centering */
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition for disappearance */
+    }
 
+    .nav.open .logo {
+        position: absolute;
+        top: 1rem; /* Maintain the same vertical alignment */
+        left: 50%; /* Keep it centered */
+        transform: translateX(-50%); /* Prevent horizontal movement */
+        visibility: hidden; /* Make it invisible */
+        opacity: 0; /* Fade out */
+        transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth fade-out effect */
+    }
+
+
+    /* X icon styling */
+    .nav.open .hamburger {
+        font-size: 0; /* Hide hamburger icon when menu is opened */
+    }
+
+    .nav.open .hamburger::before {
+        content: '×';
+        position: absolute;
+        left: 0;
+        font-size: 3.5rem;
+        color: #992D1F;
+        font-weight: bold;
+    }
+
+
+    .left-items {
+        position: fixed;
+        top: 7rem;
+        left: 0;
+        width: 100vw;
+        height: 60vh;
+        background: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: all 0.3s ease-in-out;
+    }
+    .left-items a {
+        font-size: 2rem;
+        font-weight: 800;
+        display: block;
+        margin: 1rem 0;
+    }
+
+    .right-items {
+        position: fixed;
+        top: auto;
+        bottom: 25vh;
+        left: 0;
+        width: 100vw;
+        background: white;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        z-index: 999;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.3s ease-in-out;
+    }
+    .right-items button {
+        font-size: 1.5rem;
+        padding: 1rem 2.5rem;
+        margin: 0 0.5rem;
+    }
+
+    .nav.open .left-items,
+    .nav.open .right-items {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        display: flex;
+    }
+
+    /* Menu slide animation */
+    .nav {
+        transition: height 0.5s ease-in-out;
+    }
+
+    .nav.open {
+        height: 100vh;
+    }
+}
 
 
 
