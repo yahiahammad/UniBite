@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBite</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/Styles/Universalcss.css" />
+
+</head>
+
+<body>
+
+<div class="nav">
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <div class="left-items">
+        <a href="/About-us">About us</a>
+        <a href="/Help">Help</a>
+        <a href="/Stores">Restaurants</a>
+    </div>
+
+    <div class="logo">
+        <a href="/">
+            <img src="/Images/LogoVF.png" alt="UniBite Logo"> <!-- UniBite Main Logo -->
+        </a>
+    </div>
+
+
+
+    <div class="right-items">
+        <button class="signUp" onclick="window.location.href='/SignUp'">Sign Up</button>
+        <button class="logIn" onclick="window.location.href='/login'">Log In</button>
+
+    </div>
+</div>
+
+<script>
+    function toggleMenu() {
+        document.querySelector('.nav').classList.toggle('open');
+    }
+</script>
+
+
+</body>
+</html>
+
