@@ -1,14 +1,15 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require("path");
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables from .env
 
 const app = express();
 
 app.set('view engine', 'ejs');
-app.set('views', '/Views');
-app.set('auth', 'Views/auth');
+app.set('views', path.join(__dirname, 'Views'));
+app.set('auth', 'Views/Auth');
 
 
 // Middleware
@@ -39,11 +40,48 @@ app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
 });
 
-app.get('/login' ,(req,res)=> {
 
-    res.render('auth/login')
 
+app.use(express.static(path.join(__dirname, 'Public')));
+
+//Routing
+app.get('/', (req, res) => {
+    res.render('UniBite');
 });
+
+app.get('/Login', (req, res) => {
+    res.render('Auth/Login');
+});
+
+app.get('/SignUp', (req, res) => {
+    res.render('Auth/SignUp');
+});
+
+app.get('/Product-details', (req, res) => {
+    res.render('Products/Product-details');
+});
+
+app.get('/Products', (req, res) => {
+    res.render('Products/Products');
+});
+
+app.get('/About-us', (req, res) => {
+    res.render('About-us');
+});
+
+app.get('/Admin', (req, res) => {
+    res.render('Admin');
+});
+
+app.get('/Help', (req, res) => {
+    res.render('Help');
+});
+
+
+app.get('/Stores', (req, res) => {
+    res.render('Stores');
+});
+
 
 
 const PORT = process.env.PORT || 5000;
