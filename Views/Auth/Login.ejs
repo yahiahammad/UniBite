@@ -23,19 +23,20 @@
     <div class="main-content">
         <div class="login-container">
             <h2>Login</h2>
-            <form action="login.php" method="POST" onsubmit="return validateEmail()">
-                <input type="email" id="email" name="email" class="input-field" placeholder="example@miuegypt.edu.eg" required>
-                <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
 
-                <div class="button-container">
-                    <button type="submit" class="button">Login</button>
-                    <button type="button" class="google-button" onclick="continueWithGoogle()">Continue with Google</button>
-                </div>
+            <input type="email" id="email" class="input-field" placeholder="example@miuegypt.edu.eg" required />
+            <input type="password" id="password" class="input-field" placeholder="Password" required />
 
-                <div class="forgot-password">
-                    <a href="#">Forgot password?</a>
-                </div>
-            </form>
+            <div class="button-container">
+                <button type="button" class="button" onclick="login()">Login</button>
+                <button type="button" class="google-button" onclick="continueWithGoogle()">Continue with Google</button>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <div class="message" id="loginMessage"></div>
         </div>
     </div>
 
@@ -51,6 +52,37 @@
     </div>
 
     <script src="/JavaScript/EmailValidation.js"></script>
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('loginMessage');
+            messageEl.textContent = 'Logging in...';
 
+            try {
+                const response = await fetch('http://localhost:5000/api/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageEl.textContent = '✅ ' + result.message;
+                    // Store token in localStorage
+                    localStorage.setItem('token', result.token);
+
+                    // Optional: Redirect to dashboard
+                    // window.location.href = '/dashboard.html';
+                } else {
+                    messageEl.textContent = '❌ ' + result.message;
+                }
+            } catch (error) {
+                console.error(error);
+                messageEl.textContent = '❌ Server error. Try again.';
+            }
+        }
+    </script>
 </body>
 </html>
