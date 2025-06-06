@@ -41,62 +41,130 @@ document.addEventListener("DOMContentLoaded", () => {
         return
       }
 
-      // Show loading state
-      const submitButton = this.querySelector('button[type="submit"]')
-      submitButton.classList.add("btn-loading")
-
-      // Simulate API call
-      setTimeout(() => {
-        // Simulate successful login
-        localStorage.setItem(
-          "unibite-user",
-          JSON.stringify({
-            id: "user-1",
-            name: email.split("@")[0].replace(".", " "),
-            email,
-            role: "student",
-          }),
-        )
-
-        // Redirect to stores page
-        window.location.href = "/stores.html"
-      }, 1500)
+      // Call login function
+      login(email, password, remember)
     })
   }
 
-  // Show error message
+  // Login function with API call
+  async function login(email, password, remember = false) {
+    const submitButton = document.querySelector('button[type="submit"]')
+
+    // Show loading state
+    if (submitButton) {
+      submitButton.classList.add("btn-loading")
+    }
+
+
+    try {
+      const response = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        // Store user data
+        const userData = {
+          id: result.user.id || result.user._id,
+          name: result.user.name || email.split("@")[0].replace(".", " "),
+          email: result.user.email,
+          role: result.user.role || "student",
+        }
+
+        localStorage.setItem("unibite-user", JSON.stringify(userData))
+
+        // Redirect to stores page after successful login
+        setTimeout(() => {
+          window.location.href = "/stores"
+        }, 1000)
+
+      } else {
+        showError("password", result.message)
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      const errorMessage = '❌ Server error. Please try again.'
+
+      showError("email", "Connection failed. Please check your internet connection.")
+    } finally {
+      // Remove loading state
+      if (submitButton) {
+        submitButton.classList.remove("btn-loading")
+      }
+    }
+  }
+
+  // Show error message function
   function showError(inputId, message) {
     const input = document.getElementById(inputId)
+    if (!input) return
+
     const errorElement = document.createElement("div")
     errorElement.className = "error-message"
     errorElement.textContent = message
 
-    // Remove existing error message
-    const existingError = input.parentElement.querySelector(".error-message")
+    // Find the correct container for the error message
+    let errorContainer = input.parentElement
+
+    // If input is inside a wrapper (like password-input-wrapper), go up one more level
+    if (errorContainer.classList.contains('password-input-wrapper')) {
+      errorContainer = errorContainer.parentElement
+    }
+
+    // Remove existing error message from the container
+    const existingError = errorContainer.querySelector(".error-message")
     if (existingError) {
       existingError.remove()
     }
 
-    // Add error styles
+    // Add error styles to input
     input.style.borderColor = "#e53935"
 
-    // Add error message
-    input.parentElement.appendChild(errorElement)
+    // Add error message to the correct container
+    errorContainer.appendChild(errorElement)
 
     // Focus input
     input.focus()
 
     // Remove error on input change
     input.addEventListener(
-      "input",
-      function () {
-        const error = this.parentElement.querySelector(".error-message")
-        if (error) {
-          error.remove()
-        }
-        this.style.borderColor = ""
-      },
-      { once: true },
+        "input",
+        function () {
+          const error = errorContainer.querySelector(".error-message")
+          if (error) {
+            error.remove()
+          }
+          this.style.borderColor = ""
+        },
+        { once: true }
     )
+  }
+
+  // Utility function to check if user is logged in
+  function isLoggedIn() {
+    const user = localStorage.getItem("unibite-user")
+    return user !== null
+  }
+
+  // Utility function to get current user
+  function getCurrentUser() {
+    const userStr = localStorage.getItem("unibite-user")
+    return userStr ? JSON.parse(userStr) : null
+  }
+
+  // Utility function to logout
+  function logout() {
+    localStorage.removeItem("unibite-user")
+    window.location.href = "/login.html"
+  }
+
+  // Make functions available globally if needed
+  window.authUtils = {
+    isLoggedIn,
+    getCurrentUser,
+    logout
   }
 })
