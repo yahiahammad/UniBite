@@ -54,7 +54,7 @@ html, body {
 }
 /* Changes text color on hover */
 .left-items a:hover {
-    color: #992D1F;
+    color: #ff8a00;
 }
 /* Underline effect on hover */
 .left-items a::after {
@@ -64,7 +64,7 @@ html, body {
     left: 0;
     width: 0; /* Width is initially 0 */
     height: 2px;
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     transition: width 0.8s ease;
 }
 .left-items a:hover::after {
@@ -85,7 +85,7 @@ html, body {
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     position: relative; /* Required because of the hover effect */
     overflow: hidden;
 }
@@ -138,7 +138,7 @@ html, body {
         position: absolute;
         left: 0;
         font-size: 3.5rem;
-        color: #992D1F;
+        color: #ff8a00;
         font-weight: bold;
     }
 
@@ -259,7 +259,7 @@ html, body {
 .hero-title {
     font-size: 2.5rem;
     font-weight: 800;
-    background: linear-gradient(45deg, #992D1F, #FF4B33);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.3rem;
@@ -293,15 +293,15 @@ html, body {
 }
 
 .primary-btn {
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     color: white;
     border: none;
 }
 
 .secondary-btn {
     background: transparent;
-    color: #992D1F;
-    border: 2px solid #992D1F;
+    color: #ff8a00;
+    border: 2px solid #ffa94d;
 }
 
 .hero-buttons button:hover {
@@ -367,7 +367,7 @@ html, body {
 .mouse {
     width: 25px;
     height: 40px;
-    border: 2px solid #992D1F;
+    border: 2px solid #ff8a00;
     border-radius: 15px;
     position: relative;
 }
@@ -380,7 +380,7 @@ html, body {
     transform: translateX(-50%);
     width: 4px;
     height: 4px;
-    background: #992D1F;
+    background: #ff8a00;
     border-radius: 50%;
     animation: scroll 1.5s infinite;
 }
@@ -527,7 +527,7 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     transition: transform 0.2s, background 0.2s;
 }
 
@@ -602,7 +602,7 @@ html, body {
     font-size: 3rem;
     font-family: "Inter", sans-serif;
     text-align: center;
-    background: linear-gradient(45deg, #992D1F, #FF4B33);
+    background: linear-gradient(45deg, #ff8a00 , #ffa94d);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -765,7 +765,7 @@ html, body {
     font-size: 0.9rem;
     border-radius: 15px;
     cursor: pointer;
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     transition: transform 0.2s, background 0.2s;
     text-align: center;
 }
@@ -773,7 +773,7 @@ html, body {
 
 .view-menu:hover {
     transform: translateY(-2px);
-    background: linear-gradient(to right, #FF4B33 0%, #992D1F 100%);
+    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
 }
 
 .item:hover {

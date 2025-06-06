@@ -82,6 +82,10 @@ app.get('/Stores', (req, res) => {
     res.render('Stores');
 });
 
+app.get('/Admin', (req, res) => {
+    res.render('Admin');
+});
+
 
 
 const PORT = process.env.PORT || 5000;
