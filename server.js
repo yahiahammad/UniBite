@@ -28,6 +28,7 @@ const vendorRoutes = require('./Routes/vendorRoutes');
 const menuItemRoutes = require('./Routes/menuItemRoutes');
 const orderRoutes = require('./Routes/orderRoutes');
 const reviewRoutes = require('./Routes/reviewRoutes');
+const adminRoutes = require('./Routes/adminRoutes');
 
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
@@ -35,6 +36,7 @@ app.use('/api/vendors', vendorRoutes);
 app.use('/api/menuitems', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/', require('./Routes/adminRoutes'));
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
@@ -49,7 +51,7 @@ app.get('/', (req, res) => {
     res.render('UniBite');
 });
 
-app.get('/Login', (req, res) => {
+app.get('/login', (req, res) => {
     res.render('Auth/Login');
 });
 
@@ -69,22 +71,14 @@ app.get('/About-us', (req, res) => {
     res.render('About-us');
 });
 
-app.get('/Admin', (req, res) => {
-    res.render('Admin');
-});
-
 app.get('/Help', (req, res) => {
     res.render('Help');
 });
-
 
 app.get('/Stores', (req, res) => {
     res.render('Stores');
 });
 
-app.get('/Admin', (req, res) => {
-    res.render('Admin');
-});
 
 
 

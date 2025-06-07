@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= vendor.name %> - Admin Dashboard</title>
+    <link rel="stylesheet" href="/Styles/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><%= vendor.name %></h2>
+                <div class="status-indicator status-<%= vendor.status %>" id="statusIndicator">
+                    <%= vendor.status.charAt(0).toUpperCase() + vendor.status.slice(1) %>
+                </div>
+            </div>
+            <div class="status-controls">
+                <button class="btn" data-status="open">
+                    <i class="fas fa-door-open"></i>
+                    Open
+                </button>
+                <button class="btn" data-status="busy">
+                    <i class="fas fa-clock"></i>
+                    Busy
+                </button>
+                <button class="btn" data-status="closed">
+                    <i class="fas fa-door-closed"></i>
+                    Closed
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </button>
+                <button class="nav-item" data-section="orders">
+                    <i class="fas fa-shopping-cart"></i>
+                    Orders
+                </button>
+                <button class="nav-item" data-section="menu">
+                    <i class="fas fa-utensils"></i>
+                    Menu
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Orders</h3>
+                        <p class="stat-value"><%= stats.totalOrders %></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Today's Orders</h3>
+                        <p class="stat-value"><%= stats.todayOrders %></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Revenue</h3>
+                        <p class="stat-value">$<%= stats.totalRevenue.toFixed(2) %></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Today's Revenue</h3>
+                        <p class="stat-value">$<%= stats.todayRevenue.toFixed(2) %></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Pickup Time</h3>
+                        <p class="stat-value"><%= vendor.averagePickupTime %> mins</p>
+                    </div>
+                </div>
+
+                <div class="recent-orders">
+                    <h2>Recent Orders</h2>
+                    <div class="orders-grid" id="recentOrdersGrid">
+                        <!-- Recent orders will be loaded here via AJAX -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="section">
+                <h2>All Orders</h2>
+                <div class="orders-grid" id="allOrdersGrid">
+                    <!-- All orders will be loaded here via AJAX -->
+                </div>
+            </section>
+
+            <!-- Menu Section -->
+            <section id="menu" class="section">
+                <div class="menu-management">
+                    <!-- Menu management will be implemented later -->
+                    <p>Menu management coming soon...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Status Confirmation Modal -->
+    <div id="statusConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Status Change</h3>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="statusConfirmMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelStatusChange">Cancel</button>
+                <button class="btn btn-primary" id="confirmStatusChange">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/JavaScript/admin.js"></script>
+</body>
+</html>
