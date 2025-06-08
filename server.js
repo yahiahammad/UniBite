@@ -7,7 +7,7 @@ const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 const cookieParser = require('cookie-parser');
-const { requireLogin } = require('./middleware/auth');
+const { requireLogin, checkAuth } = require('./middleware/auth');
 
 const app = express();
 
@@ -19,6 +19,16 @@ app.set('auth', 'Views/Auth');
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+
+// Add checkAuth middleware to all routes
+app.use(checkAuth);
+
+// Make isAuthenticated available to all views
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.isAuthenticated;
+    next();
+});
 
 // Connect to MongoDB (removed deprecated options)
 mongoose.connect(process.env.MONGO_URI)
@@ -132,6 +142,14 @@ app.get('/stores/:name', requireLogin, async (req, res) => {
 app.get('/logout', (req, res) => {
     res.clearCookie('jwt');
     res.redirect('/login');
+});
+
+// 404 handler - must be after all other routes
+app.use((req, res) => {
+    res.status(404).render('error', {
+        message: 'Page Not Found',
+        active: ''
+    });
 });
 
 const PORT = process.env.PORT || 5000;
