@@ -3,11 +3,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
 const Vendor = require('../Models/Vendor');
 
-// Vendor-specific auth middleware (hardcoded email)
+// Vendor-specific auth middleware
 const auth = async (req, res, next) => {
     try {
-        // Find the vendor by email
-        const vendor = await Vendor.findOne({ email: 'mycorner@unibitecanteam.com' });
+        const token = req.cookies.jwt;
+        if (!token) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const vendor = await Vendor.findById(decoded.id);
 
         if (!vendor) {
             console.log('Vendor not found in auth middleware');

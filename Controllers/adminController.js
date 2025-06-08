@@ -115,6 +115,20 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        // Create JWT token
+        const token = jwt.sign(
+            { id: vendor._id, email: vendor.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Set JWT token in cookie
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        });
+
         // Return success response with redirect URL
         res.json({
             message: 'Login successful',
