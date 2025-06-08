@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= vendor.name %> - UniBite</title>
+    <meta name="description" content="<%= vendor.description %>">
+    <link rel="stylesheet" href="/Styles/styles.css">
+    <link rel="stylesheet" href="/Styles/store-detail.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/JavaScript/mobile-menu.js"></script>
+    <script src="/JavaScript/store-detail.js"></script>
+</head>
+<body>
+<!-- Header -->
+<%- include('partials/header') %>
+
+<main>
+    <div class="container store-detail-page">
+        <!-- Back button -->
+        <div class="back-link">
+            <a href="/stores">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Stores
+            </a>
+        </div>
+
+        <!-- Store header -->
+        <div class="store-hero">
+            <div class="store-hero-image">
+                <img src="<%= vendor.logoURL || '/Images/default-store.jpg' %>" alt="<%= vendor.name %>">
+            </div>
+            <div class="store-hero-overlay">
+                <div class="store-hero-content">
+                    <h1><%= vendor.name %></h1>
+                    <p><%= vendor.description %></p>
+                    <div class="store-tags">
+                        <% vendor.tags.forEach(tag => { %>
+                            <span class="tag"><%= tag %></span>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Store info -->
+        <div class="store-info-bar">
+            <div class="info-item">
+                <div class="info-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <span class="rating-score"><%= vendor.rating.score.toFixed(1) %></span>
+                    <span class="rating-count">(<%= vendor.rating.count %> reviews)</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <span>Pickup in <%= vendor.averagePickupTime %> min</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <span><%= vendor.contactInfo %></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="store-hours">
+            <h2>Hours</h2>
+            <p><%= vendor.openingHours %></p>
+        </div>
+
+        <!-- Menu -->
+        <div class="store-menu">
+            <h2>Menu</h2>
+
+            <div class="menu-tabs">
+                <% categories.forEach((category, index) => { %>
+                    <button class="menu-tab <%= index === 0 ? 'active' : '' %>" data-category="<%= category.toLowerCase() %>">
+                        <%= category %>
+                    </button>
+                <% }); %>
+            </div>
+
+            <% categories.forEach((category, index) => { %>
+                <div class="menu-category <%= index === 0 ? 'active' : '' %>" id="<%= category.toLowerCase() %>">
+                    <div class="menu-grid">
+                        <% menuItems[category].forEach(item => { %>
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="<%= item.imageURL || '/Images/default-menu-item.jpg' %>" alt="<%= item.name %>">
+                                </div>
+                                <div class="menu-item-content">
+                                    <div class="menu-item-header">
+                                        <h3><%= item.name %></h3>
+                                        <span class="menu-item-price"><%= item.price %> EGP</span>
+                                    </div>
+                                    <p class="menu-item-description"><%= item.description %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

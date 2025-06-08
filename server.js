@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const path = require("path");
 const cors = require('cors');
 const Vendor = require('./Models/Vendor');
+const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 
 const app = express();
@@ -86,6 +87,48 @@ app.get('/Stores', async (req, res) => {
 });
 
 
+app.get('/stores', async (req, res) => {
+    try {
+        const vendors = await Vendor.find({ isActive: true });
+        res.render('Stores', { stores: vendors });
+    } catch (error) {
+        res.render('Stores', { stores: [] });
+    }
+});
+
+app.get('/stores/:id', async (req, res) => {
+    try {
+        const storeId = req.params.id;
+        const vendor = await Vendor.findById(storeId);
+        
+        if (!vendor) {
+            return res.status(404).render('error', { message: 'Store not found' });
+        }
+
+        // Fetch menu items for this vendor
+        const menuItems = await MenuItem.find({ vendorId: storeId, available: true });
+        
+        // Group menu items by category
+        const menuByCategory = menuItems.reduce((acc, item) => {
+            if (!acc[item.category]) {
+                acc[item.category] = [];
+            }
+            acc[item.category].push(item);
+            return acc;
+        }, {});
+
+        res.render('store-detail', {
+            title: vendor.name,
+            vendor: vendor,
+            menuItems: menuByCategory,
+            categories: Object.keys(menuByCategory),
+            active: 'stores'
+        });
+    } catch (error) {
+        console.error('Error fetching store details:', error);
+        res.status(500).render('error', { message: 'Error loading store details' });
+    }
+});
 
 
 const PORT = process.env.PORT || 5000;

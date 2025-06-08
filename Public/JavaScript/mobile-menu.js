@@ -1,14 +1,17 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Mobile menu functionality
+// Mobile menu functionality
+function initMobileMenu() {
     const mobileMenuToggle = document.querySelector(".mobile-menu-toggle")
     const mobileMenuClose = document.querySelector(".mobile-menu-close")
     const mobileMenu = document.getElementById("mobile-menu")
 
     if (mobileMenuToggle && mobileMenuClose && mobileMenu) {
-        // Create overlay element
-        const overlay = document.createElement("div")
-        overlay.className = "overlay"
-        document.body.appendChild(overlay)
+        // Create overlay element if it doesn't exist
+        let overlay = document.querySelector(".overlay")
+        if (!overlay) {
+            overlay = document.createElement("div")
+            overlay.className = "overlay"
+            document.body.appendChild(overlay)
+        }
 
         // Toggle mobile menu
         mobileMenuToggle.addEventListener("click", () => {
@@ -33,24 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             link.addEventListener("click", closeMenu)
         })
     }
+}
 
-    // Header scroll effect
-    const header = document.getElementById("site-header")
-    if (header) {
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 50) {
-                header.classList.add("scrolled")
-            } else {
-                header.classList.remove("scrolled")
-            }
-        })
-
-        // Initialize scroll position check on page load
-        if (window.scrollY > 50) {
-            header.classList.add("scrolled")
-        }
-    }
-});
-
-
-
+// Initialize mobile menu when DOM is loaded
+document.addEventListener("DOMContentLoaded", initMobileMenu) 

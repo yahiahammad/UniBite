@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="Styles/styles.css">
     <link rel="stylesheet" href="Styles/stores.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/JavaScript/mobile-menu.js"></script>
 </head>
 <body>
 <%- include('partials/Header', { active: 'stores' }) %>
@@ -60,7 +61,7 @@
                                 <span>Pickup in <%= store.averagePickupTime %> mins</span>
                             </div>
                         </div>
-                        <a href="/store-<%= store._id %>" class="btn btn-primary btn-full">
+                        <a href="/stores/<%= store._id %>" class="btn btn-primary btn-full">
                             View Menu
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
