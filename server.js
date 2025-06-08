@@ -7,7 +7,7 @@ const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 const cookieParser = require('cookie-parser');
-const { requireLogin } = require('./middleware/auth');
+const { requireLogin } = require('./Middleware/auth');
 
 const app = express();
 
@@ -37,7 +37,7 @@ const adminRoutes = require('./Routes/adminRoutes');
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
 app.use('/api/vendors', vendorRoutes);
-app.use('/api/menuitems', menuItemRoutes);
+app.use('/api/menu-items', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/', adminRoutes);

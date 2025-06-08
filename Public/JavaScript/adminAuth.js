@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.message || 'Login failed');
             }
 
+            // Store token in localStorage
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+            }
+
             // Redirect to dashboard
             window.location.href = data.redirectUrl || '/admin';
         } catch (error) {

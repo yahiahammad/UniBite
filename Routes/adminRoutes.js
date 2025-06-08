@@ -32,4 +32,9 @@ router.use('/admin', auth);
 // Admin dashboard
 router.get('/admin/dashboard', adminController.renderDashboard);
 
+// Menu management
+router.get('/admin/menu', (req, res) => {
+    res.render('admin/menu-management');
+});
+
 module.exports = router; 

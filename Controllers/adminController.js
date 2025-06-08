@@ -129,10 +129,11 @@ exports.login = async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000 // 24 hours
         });
 
-        // Return success response with redirect URL
+        // Return success response with redirect URL and token
         res.json({
             message: 'Login successful',
-            redirectUrl: '/admin/dashboard'
+            redirectUrl: '/admin/dashboard',
+            token: token
         });
     } catch (error) {
         console.error('Login error:', error);

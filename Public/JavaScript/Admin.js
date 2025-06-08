@@ -197,7 +197,7 @@ function showSection(sectionId) {
             fetchAndRenderOrders();
             break;
         case 'menu':
-            // Will be implemented later
+            loadMenuItems();
             break;
     }
 }
@@ -603,8 +603,186 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
+// Menu Management Functions
+let itemToDelete = null;
+let menuItemModal;
+let deleteConfirmModal;
+
+// Load menu items
+async function loadMenuItems() {
+    try {
+        const response = await fetch('/api/menu-items/vendor', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to load menu items');
+        }
+        menuItems = await response.json();
+        renderMenuItems();
+    } catch (error) {
+        console.error('Error loading menu items:', error);
+        showNotification('Failed to load menu items', 'error');
+    }
+}
+
+// Render menu items in table
+function renderMenuItems() {
+    const tbody = document.getElementById('menuItemsTable');
+    if (!tbody) return;
+    
+    tbody.innerHTML = menuItems.map(item => `
+        <tr>
+            <td>
+                <img src="${item.imageURL || '/Images/default-food.jpg'}" 
+                     alt="${item.name}" 
+                     style="width: 50px; height: 50px; object-fit: cover;">
+            </td>
+            <td>${item.name}</td>
+            <td>${item.description || ''}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>${item.category || ''}</td>
+            <td>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" 
+                           ${item.available ? 'checked' : ''}
+                           onchange="toggleAvailability('${item._id}', this.checked)">
+                </div>
+            </td>
+            <td>
+                <button class="btn btn-sm btn-primary me-2" onclick="editMenuItem('${item._id}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="showDeleteConfirm('${item._id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Open add item modal
+function openAddItemModal() {
+    document.getElementById('modalTitle').textContent = 'Add New Menu Item';
+    document.getElementById('menuItemForm').reset();
+    document.getElementById('itemId').value = '';
+    menuItemModal.show();
+}
+
+// Edit menu item
+function editMenuItem(id) {
+    const item = menuItems.find(i => i._id === id);
+    if (!item) return;
+
+    document.getElementById('modalTitle').textContent = 'Edit Menu Item';
+    document.getElementById('itemId').value = item._id;
+    document.getElementById('name').value = item.name;
+    document.getElementById('description').value = item.description || '';
+    document.getElementById('price').value = item.price;
+    document.getElementById('category').value = item.category || '';
+    document.getElementById('available').checked = item.available;
+
+    menuItemModal.show();
+}
+
+// Save menu item
+async function saveMenuItem() {
+    const formData = new FormData();
+    const id = document.getElementById('itemId').value;
+    
+    formData.append('name', document.getElementById('name').value);
+    formData.append('description', document.getElementById('description').value);
+    formData.append('price', document.getElementById('price').value);
+    formData.append('category', document.getElementById('category').value);
+    formData.append('available', document.getElementById('available').checked);
+
+    const imageFile = document.getElementById('image').files[0];
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
+
+    try {
+        const url = id ? `/api/menu-items/${id}` : '/api/menu-items';
+        const method = id ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+            method,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) throw new Error('Failed to save menu item');
+
+        menuItemModal.hide();
+        await loadMenuItems();
+        showNotification('Menu item saved successfully');
+    } catch (error) {
+        console.error('Error saving menu item:', error);
+        showNotification('Failed to save menu item', 'error');
+    }
+}
+
+// Toggle item availability
+async function toggleAvailability(id, available) {
+    try {
+        const response = await fetch(`/api/menu-items/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ available })
+        });
+
+        if (!response.ok) throw new Error('Failed to update availability');
+        await loadMenuItems();
+        showNotification('Availability updated successfully');
+    } catch (error) {
+        console.error('Error updating availability:', error);
+        showNotification('Failed to update availability', 'error');
+    }
+}
+
+// Show delete confirmation
+function showDeleteConfirm(id) {
+    itemToDelete = id;
+    deleteConfirmModal.show();
+}
+
+// Confirm delete
+async function confirmDelete() {
+    if (!itemToDelete) return;
+
+    try {
+        const response = await fetch(`/api/menu-items/${itemToDelete}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to delete menu item');
+
+        deleteConfirmModal.hide();
+        await loadMenuItems();
+        showNotification('Menu item deleted successfully');
+    } catch (error) {
+        console.error('Error deleting menu item:', error);
+        showNotification('Failed to delete menu item', 'error');
+    } finally {
+        itemToDelete = null;
+    }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize modal instances
+    menuItemModal = new bootstrap.Modal(document.getElementById('menuItemModal'));
+    deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
     // Check authentication first
     if (!checkAuth()) return;
 
