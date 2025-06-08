@@ -24,6 +24,14 @@
             </nav>
 
             <!-- User Actions -->
+            <% if (isAuthenticated) { %>
+            <div class="user-actions">
+                <div class="auth-buttons">
+                    <a href="/logout" class="btn btn-primary">Log out</a>
+                </div>
+            </div>
+            <% } else { %>
+            
             <div class="user-actions">
                 <div class="auth-buttons">
                     <a href="/login" class="btn btn-ghost">Log in</a>
@@ -37,6 +45,7 @@
                     </svg>
                 </button>
             </div>
+            <% } %>
         </div>
     </div>
 </header>
