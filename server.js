@@ -6,6 +6,8 @@ const cors = require('cors');
 const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
+const cookieParser = require('cookie-parser');
+const { requireLogin } = require('./middleware/auth');
 
 const app = express();
 
@@ -13,10 +15,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
 app.set('auth', 'Views/Auth');
 
-
 // Middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse incoming JSON requests
+app.use(cookieParser());
 
 // Connect to MongoDB (removed deprecated options)
 mongoose.connect(process.env.MONGO_URI)
@@ -38,13 +40,11 @@ app.use('/api/vendors', vendorRoutes);
 app.use('/api/menuitems', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
-app.use('/', require('./Routes/adminRoutes'));
+app.use('/', adminRoutes);
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
 });
-
-
 
 app.use(express.static(path.join(__dirname, 'Public')));
 
@@ -77,7 +77,7 @@ app.get('/Help', (req, res) => {
     res.render('Help');
 });
 
-app.get('/Stores', async (req, res) => {
+app.get('/Stores', requireLogin, async (req, res) => {
     try {
         const vendors = await Vendor.find({ isActive: true });
         res.render('Stores', { stores: vendors });
@@ -86,8 +86,7 @@ app.get('/Stores', async (req, res) => {
     }
 });
 
-
-app.get('/stores', async (req, res) => {
+app.get('/stores', requireLogin, async (req, res) => {
     try {
         const vendors = await Vendor.find({ isActive: true });
         res.render('Stores', { stores: vendors });
@@ -96,18 +95,18 @@ app.get('/stores', async (req, res) => {
     }
 });
 
-app.get('/stores/:id', async (req, res) => {
+app.get('/stores/:id', requireLogin, async (req, res) => {
     try {
         const storeId = req.params.id;
         const vendor = await Vendor.findById(storeId);
-        
+
         if (!vendor) {
             return res.status(404).render('error', { message: 'Store not found' });
         }
 
         // Fetch menu items for this vendor
         const menuItems = await MenuItem.find({ vendorId: storeId, available: true });
-        
+
         // Group menu items by category
         const menuByCategory = menuItems.reduce((acc, item) => {
             if (!acc[item.category]) {
@@ -130,6 +129,10 @@ app.get('/stores/:id', async (req, res) => {
     }
 });
 
+app.get('/logout', (req, res) => {
+    res.clearCookie('jwt');
+    res.redirect('/login');
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

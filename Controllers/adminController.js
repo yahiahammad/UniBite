@@ -53,40 +53,32 @@ exports.renderDashboard = async (req, res) => {
         startOfCurrentHour.setUTCMinutes(0);
 
         const endOfCurrentHour = new Date(startOfCurrentHour);
-        endOfCurrentHour.setUTCHours(endOfCurrentHour.getUTCHours() + 1); // Set to start of next hour
-        endOfCurrentHour.setUTCMilliseconds(-1); // Subtract 1ms to get to end of current hour
+        endOfCurrentHour.setUTCHours(endOfCurrentHour.getUTCHours() + 1);
+        endOfCurrentHour.setUTCMilliseconds(-1);
 
         const recentCompletedOrders = await Order.find({
             vendorId: vendor._id,
             status: 'picked up',
-            pickupTime: { $gte: startOfCurrentHour, $lte: endOfCurrentHour } // Filter by pickupTime within the current hour
+            pickupTime: { $gte: startOfCurrentHour, $lte: endOfCurrentHour }
         });
 
-        let calculatedAveragePickupTime = 10; // Default to 10 minutes
+        let calculatedAveragePickupTime = 10;
 
         if (recentCompletedOrders.length > 0) {
             const totalPickupDuration = recentCompletedOrders.reduce((sum, order) => {
-                // Ensure acceptedTime and pickupTime are valid Dates before calculating
                 if (order.acceptedTime instanceof Date && order.pickupTime instanceof Date) {
                     const durationMs = order.pickupTime.getTime() - order.acceptedTime.getTime();
-                    // Use Math.max to ensure only non-negative durations are summed
                     return sum + Math.max(0, durationMs);
                 }
                 return sum;
             }, 0);
 
-            if (totalPickupDuration < 0) {
-                // This warning should be less frequent now that acceptedTime is being used
-                console.warn('Total pickup duration is negative. This indicates an issue with order data where pickupTime is before acceptedTime.');
-            }
-
-            calculatedAveragePickupTime = Math.ceil(totalPickupDuration / recentCompletedOrders.length / (60 * 1000)); // Average in minutes, rounded up
+            calculatedAveragePickupTime = Math.ceil(totalPickupDuration / recentCompletedOrders.length / (60 * 1000));
         }
 
-        // Assign the calculated average pickup time to the vendor object
         vendor.averagePickupTime = calculatedAveragePickupTime;
 
-        res.render('admin/admin', {
+        res.render('admin/dashboard', {
             vendor,
             recentOrders,
             stats: {
@@ -126,7 +118,7 @@ exports.login = async (req, res) => {
         // Return success response with redirect URL
         res.json({
             message: 'Login successful',
-            redirectUrl: '/admin/admin'
+            redirectUrl: '/admin/dashboard'
         });
     } catch (error) {
         console.error('Login error:', error);

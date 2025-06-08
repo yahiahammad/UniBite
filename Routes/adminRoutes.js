@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../Controllers/adminController');
-const auth = require('../Middleware/auth');
+const { auth } = require('../Middleware/auth');
 
 // Public routes
 router.get('/admin-login', (req, res) => {
@@ -30,6 +30,6 @@ router.put('/api/admin/vendor/status', adminController.updateVendorStatus);
 router.use('/admin', auth);
 
 // Admin dashboard
-router.get('/admin/admin', adminController.renderDashboard);
+router.get('/admin/dashboard', adminController.renderDashboard);
 
 module.exports = router; 
