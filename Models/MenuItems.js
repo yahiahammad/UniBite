@@ -8,7 +8,10 @@ const MenuItemSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   category: String, // "Sandwiches", "Beverages"
   imageURL: String,
+  dietaryLabels: [String], //  ['Skimmed milk', 'sugar-free']
   available: { type: Boolean, default: true },
+  prepTime: Number, // estimated minutes
+  createdAt: { type: Date, default: Date.now }, 
 });
 
 module.exports = mongoose.model('MenuItem', MenuItemSchema);

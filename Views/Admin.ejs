@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/Styles/AdminStyle.css">
+</head>
+<body>
+<div class="header">
+    <h1>Admin Dashboard</h1>
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="orders">Orders</button>
+        <button class="tab-btn" data-tab="items">Items</button>
+        <button class="tab-btn" data-tab="status">Status</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Orders Section -->
+    <div class="section active" id="orders">
+        <div class="orders-grid">
+            <div class="order-card" data-order="1">
+                <div class="order-header">Order #1</div>
+                <div class="order-item">Fries with Ketchup & Mayo - Qty: 1 - 25 EGP</div>
+                <div class="order-item">Notes: mngher ay haga 3ayez 3eesh fady shokrn</div>
+                <div class="order-total">Total: 199 EGP</div>
+                <div class="order-actions">
+                    <button class="action-btn accept">Accept</button>
+                    <button class="action-btn decline">Decline</button>
+                </div>
+            </div>
+
+            <div class="order-card" data-order="2">
+                <div class="order-header">Order #2</div>
+                <div class="order-item">Taameya Kiri - Qty: 2 - 30 EGP</div>
+                <div class="order-item">Notes: Zood Tamtam</div>
+                <div class="order-total">Total: 260 EGP</div>
+                <div class="order-actions">
+                    <button class="action-btn accept">Accept</button>
+                    <button class="action-btn decline">Decline</button>
+                </div>
+            </div>
+
+            <div class="order-card" data-order="3">
+                <div class="order-header">Order #3</div>
+                <div class="order-item">Fries Foul Helw - Qty: 1 - 15 EGP</div>
+                <div class="order-total">Total: 275 EGP</div>
+                <div class="order-actions">
+                    <button class="action-btn accept">Accept</button>
+                    <button class="action-btn decline">Decline</button>
+                </div>
+            </div>
+
+            <div class="order-card" data-order="4">
+                <div class="order-header">Order #4</div>
+                <div class="order-item">Regular Fries - Qty: 1 - 15 EGP</div>
+                <div class="order-item">Notes: mngher ay haga 3ayez 3eesh fady shokrn</div>
+                <div class="order-total">Total: 290 EGP</div>
+                <div class="order-actions">
+                    <button class="action-btn accept">Accept</button>
+                    <button class="action-btn decline">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Items Section -->
+    <div class="section" id="items">
+        <div class="items-grid">
+            <div class="category-card">
+                <div class="category-title">Protein</div>
+                <div class="ingredient-item">
+                    <span>Taameya Mix</span>
+                    <div class="toggle on" data-ingredient="taameya"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Foul Beans</span>
+                    <div class="toggle on" data-ingredient="foul"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Cheese</span>
+                    <div class="toggle on" data-ingredient="cheese"></div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-title">Vegetables</div>
+                <div class="ingredient-item">
+                    <span>Tomatoes</span>
+                    <div class="toggle on" data-ingredient="tomatoes"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Lettuce</span>
+                    <div class="toggle on" data-ingredient="lettuce"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Onions</span>
+                    <div class="toggle on" data-ingredient="onions"></div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-title">Sauces</div>
+                <div class="ingredient-item">
+                    <span>Tahini</span>
+                    <div class="toggle on" data-ingredient="tahini"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Ketchup</span>
+                    <div class="toggle on" data-ingredient="ketchup"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Mayo</span>
+                    <div class="toggle on" data-ingredient="mayo"></div>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <div class="category-title">Base</div>
+                <div class="ingredient-item">
+                    <span>French Fries</span>
+                    <div class="toggle on" data-ingredient="fries"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Bread</span>
+                    <div class="toggle on" data-ingredient="bread"></div>
+                </div>
+                <div class="ingredient-item">
+                    <span>Rice</span>
+                    <div class="toggle on" data-ingredient="rice"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Section -->
+    <div class="section" id="status">
+        <div class="status-card">
+            <h2>Restaurant Status</h2>
+            <div class="status-buttons">
+                <button class="status-btn open active">Open</button>
+                <button class="status-btn busy">Busy</button>
+                <button class="status-btn closed">Closed</button>
+            </div>
+            <div class="current-status">Currently: <span id="status-text">Open</span></div>
+        </div>
+    </div>
+</div>
+
+<script src="/JavaScript/Admin.js"></script>
+</body>
+</html>

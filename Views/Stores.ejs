@@ -10,7 +10,82 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<%- include('partials/Header', { active: 'stores' }) %>
+<!-- Header -->
+<header class="site-header scrolled" id="site-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+                    </svg>
+                    <span>UniBite</span>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/stores" class="active">Stores</a></li>
+                    <li><a href="/about-us">About Us</a></li>
+                    <li><a href="/help">Help</a></li>
+                </ul>
+            </nav>
+
+            <!-- User Actions -->
+            <div class="user-actions">
+                <div class="auth-buttons">
+                    <a href="/login" class="btn btn-ghost">Log in</a>
+                    <a href="/signup" class="btn btn-primary">Sign up</a>
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+        <div class="logo">
+            <a href="/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                    <path d="M7 2v20"></path>
+                    <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+                </svg>
+                <span>UniBite</span>
+            </a>
+        </div>
+        <button class="mobile-menu-close" aria-label="Close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="mobile-nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/stores" class="active">Stores</a></li>
+            <li><a href="/about-us">About Us</a></li>
+            <li><a href="/help">Help</a></li>
+        </ul>
+    </nav>
+    <div class="mobile-auth">
+        <a href="/login" class="btn btn-outline btn-full">Log in</a>
+        <a href="/signup" class="btn btn-primary btn-full">Sign up</a>
+    </div>
+</div>
 
 <main>
     <div class="container stores-page">
@@ -20,13 +95,11 @@
         </div>
 
         <div class="stores-grid">
-            <% console.log('Template stores:', stores); %>
-            <% console.log('Stores length:', stores ? stores.length : 0); %>
-            <% if (locals.stores && stores && stores.length > 0) { %>
-                <% stores.forEach(store => { %>
+            <% if (locals.stores && locals.stores.length > 0) { %>
+                <% stores.filter(store => store.isActive).forEach(store => { %>
                     <div class="store-card">
                         <div class="store-image">
-                            <img src="<%= store.logoURL || '/Images/default-store.png' %>" alt="<%= store.name %>">
+                            <img src="<%= store.image %>" alt="<%= store.name %> <%= store.type %>">
                         </div>
                         <div class="store-header">
                             <h2><%= store.name %></h2>
@@ -34,7 +107,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#FF8A00" stroke="#FF8A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                                 </svg>
-                                <span class="rating-score"><%= store.rating.score.toFixed(1) %></span>
+                                <span class="rating-score"><%= store.rating.score %></span>
                                 <span class="rating-count">(<%= store.rating.count %>)</span>
                             </div>
                         </div>
@@ -50,17 +123,17 @@
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
-                                <span><%= store.contactInfo %></span>
+                                <span><%= store.location %></span>
                             </div>
                             <div class="info-item">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <polyline points="12 6 12 12 16 14"></polyline>
                                 </svg>
-                                <span>Pickup in <%= store.averagePickupTime %> mins</span>
+                                <span>Pickup in <%= store.pickupTime %></span>
                             </div>
                         </div>
-                        <a href="/store-<%= store._id %>" class="btn btn-primary btn-full">
+                        <a href="/store-<%= store.slug %>" class="btn btn-primary btn-full">
                             View Menu
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>

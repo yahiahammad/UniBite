@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JWT Auth Test</title>
+</head>
+<body>
+<h1>Login & Update Order Test</h1>
+
+<div>
+    <h2>Login</h2>
+    <input id="email" placeholder="Email" />
+    <input id="password" placeholder="Password" type="password" />
+    <button id="loginBtn">Login</button>
+</div>
+
+<hr />
+
+<div>
+    <h2>Update Order Status</h2>
+    <input id="orderId" placeholder="Order ID" />
+    <input id="orderStatus" placeholder="New Status" />
+    <button id="updateOrderBtn">Update Order</button>
+</div>
+
+<script>
+    const apiBase = 'http://localhost:5000/api'; // adjust if needed
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const res = await fetch(`${apiBase}/users/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`Login failed: ${data.message || 'Unknown error'}`);
+                return;
+            }
+
+            // Save JWT token & user info
+            localStorage.setItem('unibite-token', data.token);
+            localStorage.setItem('unibite-user', JSON.stringify(data.user));
+            alert(`Login successful! User role: ${data.user.userType}`);
+        } catch (err) {
+            alert('Login request failed');
+            console.error(err);
+        }
+    });
+
+    document.getElementById('updateOrderBtn').addEventListener('click', async () => {
+        const orderId = document.getElementById('orderId').value;
+        const status = document.getElementById('orderStatus').value;
+        const token = localStorage.getItem('unibite-token');
+
+        if (!token) {
+            alert('You must login first!');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${apiBase}/orders/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(`Update failed: ${data.message || 'Unknown error'}`);
+                return;
+            }
+
+            alert(`Order updated! New status: ${data.status}`);
+        } catch (err) {
+            alert('Update request failed');
+            console.error(err);
+        }
+    });
+</script>
+</body>
+</html>

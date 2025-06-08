@@ -55,11 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.classList.add("btn-loading")
     }
 
-
     try {
       const response = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Important: This allows cookies to be sent/received
         body: JSON.stringify({ email, password })
       })
 
@@ -78,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Redirect to stores page after successful login
         setTimeout(() => {
-          window.location.href = "/stores"
+          window.location.href = "/Stores"
         }, 1000)
 
       } else {
@@ -86,8 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error('Login error:', error)
-      const errorMessage = '❌ Server error. Please try again.'
-
       showError("email", "Connection failed. Please check your internet connection.")
     } finally {
       // Remove loading state
@@ -144,27 +144,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Utility function to check if user is logged in
-  function isLoggedIn() {
-    const user = localStorage.getItem("unibite-user")
-    return user !== null
-  }
-
-  // Utility function to get current user
-  function getCurrentUser() {
-    const userStr = localStorage.getItem("unibite-user")
-    return userStr ? JSON.parse(userStr) : null
-  }
-
-  // Utility function to logout
-  function logout() {
-    localStorage.removeItem("unibite-user")
-    window.location.href = "/login.html"
-  }
-
+ 
   // Make functions available globally if needed
   window.authUtils = {
     isLoggedIn,
     getCurrentUser,
     logout
   }
+
+  function requireLogin(req, res, next) {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.redirect('/login');
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded;
+      next();
+    } catch (err) {
+      return res.redirect('/login');
+    }
+  }
+  
+
+
 })

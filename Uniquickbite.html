@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniBite User Authentication</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general layout */
+        body {
+            font-family: "Inter", sans-serif;
+            @apply bg-gray-100 flex items-center justify-center min-h-screen p-4;
+        }
+        .container {
+            @apply bg-white p-8 rounded-lg shadow-xl max-w-md w-full;
+        }
+        .form-group label {
+            @apply block text-sm font-medium text-gray-700 mb-1;
+        }
+        .form-group input, .form-group select {
+            @apply mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+        }
+        .btn {
+            @apply w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+        }
+        .message-box {
+            @apply p-3 mt-4 rounded-md text-sm;
+        }
+        .message-success {
+            @apply bg-green-100 text-green-800;
+        }
+        .message-error {
+            @apply bg-red-100 text-red-800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">UniBite Authentication</h1>
+
+        <!-- Message Box for Success/Error -->
+        <div id="messageBox" class="message-box hidden"></div>
+
+        <!-- Registration Form -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Register</h2>
+            <form id="registerForm" class="space-y-4">
+                <div class="form-group">
+                    <label for="registerName">Name:</label>
+                    <input type="text" id="registerName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhoneNumber">Phone Number (Optional):</label>
+                    <input type="text" id="registerPhoneNumber" name="phoneNumber">
+                </div>
+                <div class="form-group">
+                    <label for="registerUserType">User Type:</label>
+                    <select id="registerUserType" name="userType" class="rounded-md" required>
+                        <option value="student">Student</option>
+                        <option value="staff">Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group" id="registerVendorIdGroup" style="display: none;">
+                    <label for="registerVendorId">Vendor ID (for Admin):</label>
+                    <input type="text" id="registerVendorId" name="vendorId">
+                </div>
+                <button type="submit" class="btn bg-green-600 hover:bg-green-700">Register</button>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api/users'; // Make sure your backend server is running on this port!
+
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const messageBox = document.getElementById('messageBox');
+        const registerUserType = document.getElementById('registerUserType');
+        const registerVendorIdGroup = document.getElementById('registerVendorIdGroup');
+        const registerVendorId = document.getElementById('registerVendorId');
+
+        // Function to display messages
+        function displayMessage(message, type) {
+            messageBox.textContent = message;
+            messageBox.className = 'message-box ' + (type === 'success' ? 'message-success' : 'message-error');
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 5000); // Hide after 5 seconds
+        }
+
+        // Toggle Vendor ID field visibility for Admin
+        registerUserType.addEventListener('change', () => {
+            if (registerUserType.value === 'admin') {
+                registerVendorIdGroup.style.display = 'block';
+                registerVendorId.setAttribute('required', 'required'); // Make it required for admin
+            } else {
+                registerVendorIdGroup.style.display = 'none';
+                registerVendorId.removeAttribute('required');
+                registerVendorId.value = ''; // Clear value if not admin
+            }
+        });
+
+        // Register User
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(registerForm);
+            const data = Object.fromEntries(formData.entries());
+
+            // Convert vendorId to undefined if not provided and not admin
+            if (data.userType !== 'admin') {
+                delete data.vendorId;
+            } else if (data.userType === 'admin' && !data.vendorId) {
+                displayMessage('Admin user type requires a Vendor ID.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayMessage(result.message, 'success');
+                    registerForm.reset(); // Clear form on success
+                    // Reset vendorId group display
+                    registerVendorIdGroup.style.display = 'none';
+                    registerVendorId.removeAttribute('required');
+                    registerVendorId.value = '';
+                } else {
+                    displayMessage(result.message || 'Registration failed.', 'error');
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                displayMessage('Network error or server unreachable during registration.', 'error');
+            }
+        });
+
+        // Login User
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(loginForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayMessage(result.message, 'success');
+                    loginForm.reset(); // Clear form on success
+                    // In a real app, you'd store the token here (e.g., localStorage)
+                    // console.log('Login successful! User data:', result.user, 'Token:', result.token);
+                } else {
+                    displayMessage(result.message || 'Login failed.', 'error');
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                displayMessage('Network error or server unreachable during login.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

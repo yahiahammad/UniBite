@@ -184,18 +184,11 @@ p {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 100; /* Default z-index for non-index pages */
   transition: background-color 0.3s ease, box-shadow 0.3s ease, z-index 0.3s ease;
 }
 
-/* Header styles for the landing page */
-body.landing-page .site-header {
-  background-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Default styles for other pages */
-body:not(.landing-page) .site-header {
+body:not([data-page="index"]) .site-header {
   background-color: var(--background);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

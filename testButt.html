@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .test-button {
+            background-color: #007bff;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🍕 Order Management Test</h1>
+
+    <h3>Test Order Update:</h3>
+    <p><strong>Order ID:</strong> <span id="orderId">67890abcdef</span></p>
+    <p><strong>Current Status:</strong> <span id="currentStatus">preparing</span></p>
+
+    <button onclick="markOrderReady()">
+        📦 Mark Order Ready for Pickup
+    </button>
+
+    <button class="test-button" onclick="testConnection()">
+        🔍 Test API Connection
+    </button>
+
+    <div id="statusMessage" class="status"></div>
+
+    <hr style="margin: 30px 0;">
+
+    <h3>📝 What happens when you click:</h3>
+    <ol>
+        <li>JavaScript function runs</li>
+        <li>Makes PUT request to <code>/api/orders/67890abcdef</code></li>
+        <li>Sends: <code>{"status": "ready for pickup"}</code></li>
+        <li>Your controller updates the database</li>
+        <li>Success/error message appears</li>
+    </ol>
+</div>
+
+<script>
+    // Function to show status messages
+    const showStatus = (message, isSuccess = true) => {
+        const statusDiv = document.getElementById('statusMessage');
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${isSuccess ? 'success' : 'error'}`;
+        statusDiv.style.display = 'block';
+
+        // Hide after 5 seconds
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    // Main function to update order status
+    const markOrderReady = () => {
+        const orderId = '684020a13436a77208eeb0d8'; // Hard-coded for testing
+
+        console.log('🔄 Attempting to update order:', orderId);
+        showStatus('Updating order status...', true);
+
+        // Make the API call
+        fetch(`http://localhost:5000/api/orders/${orderId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                status: 'ready for pickup'
+            })
+        })
+            .then(response => {
+                console.log('📡 Response received:', response.status);
+
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            })
+            .then(data => {
+                console.log('✅ Success! Order updated:', data);
+                showStatus('✅ Order marked as ready for pickup!', true);
+
+                // Update the display
+                document.getElementById('currentStatus').textContent = 'ready for pickup';
+            })
+            .catch(error => {
+                console.error('❌ Error updating order:', error);
+                showStatus(`❌ Failed to update order: ${error.message}`, false);
+            });
+    }
+
+    // Test function to check if API is working
+    const testConnection = () => {
+        console.log('🔍 Testing API connection...');
+        showStatus('Testing connection to API...', true);
+
+        fetch('http://localhost:5000/api/test')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ API connection successful:', data);
+                showStatus('✅ API connection successful!', true);
+            })
+            .catch(error => {
+                console.error('❌ API connection failed:', error);
+                showStatus('❌ API connection failed. Is your server running?', false);
+            });
+    }
+
+    // Optional: Test on page load
+    window.addEventListener('load', () => {
+        console.log('🚀 Page loaded. Ready to test order updates!');
+    });
+</script>
+</body>
+</html>
