@@ -264,28 +264,5 @@
 <%- include('partials/Footer.ejs') %>
 
 
-
-
-
-
-
-<script>
-    function checkAuthAndRedirect(targetUrl) {
-        // Simple check - if they have a jwt cookie, go to page, otherwise go to login
-        const cookies = document.cookie.split(';');
-        const hasJWT = cookies.some(cookie => cookie.trim().startsWith('jwt='));
-
-        if (hasJWT) {
-            window.location.href = targetUrl;
-        } else {
-            window.location.href = '/Login';
-        }
-    }
-</script>
-
-
-
-
-
 </body>
 </html>
