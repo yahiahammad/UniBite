@@ -146,6 +146,10 @@ app.get('/logout', (req, res) => {
     res.redirect('/login');
 });
 
+app.get('/order/confirmation', (req, res) => {
+    res.render('order-confirmation');
+});
+
 // 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('error', {

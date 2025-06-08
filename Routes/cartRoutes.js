@@ -28,6 +28,47 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
+// Add item to cart
+router.post('/add', protect, async (req, res) => {
+    try {
+        const { id, name, price, image, category, quantity } = req.body;
+        const user = await User.findById(req.user.id);
+        
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'User not found' });
+        }
+
+        // Initialize cart if it doesn't exist
+        if (!user.cart) {
+            user.cart = [];
+        }
+
+        // Check if item already exists in cart
+        const existingItemIndex = user.cart.findIndex(item => item.id === id);
+
+        if (existingItemIndex !== -1) {
+            // Update quantity if item exists
+            user.cart[existingItemIndex].quantity += quantity;
+        } else {
+            // Add new item if it doesn't exist
+            user.cart.push({
+                id,
+                name,
+                price,
+                image,
+                category,
+                quantity
+            });
+        }
+
+        await user.save();
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ success: false, message: 'Error adding item to cart' });
+    }
+});
+
 // Update item quantity
 router.post('/update', protect, async (req, res) => {
     try {

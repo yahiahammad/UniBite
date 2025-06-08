@@ -13,37 +13,17 @@
         <h2>Your Cart</h2>
         <p>Review and checkout your order</p>
 
-        <div class="items-header">
-            <h3>Items (<%= cartItems ? cartItems.length : 0 %>)</h3>
-            <button class="clear-cart">Clear Cart</button>
+        <div class="cart-header-area">
+            <div class="cart-vendor-info">
+                <span id="cart-vendor-name"></span>
+                <span id="cart-count-label"></span>
+            </div>
+            <button class="clear-cart" id="clear-cart-btn">Clear Cart</button>
         </div>
 
-        <% if (cartItems && cartItems.length > 0) { %>
-            <% cartItems.forEach(function(item) { %>
-                <div class="cart-item">
-                    <div class="item-details">
-                        <div class="item-image" style="background-image: url('<%= item.image %>')"></div>
-                        <div class="item-info">
-                            <h4><%= item.name %></h4>
-                            <p><%= item.category %></p>
-                            <div class="item-quantity">
-                                <button onclick="updateQuantity('<%= item.id %>', -1)">-</button>
-                                <span><%= item.quantity %></span>
-                                <button onclick="updateQuantity('<%= item.id %>', 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item-price">
-                        <p><%= item.price %> EGP</p>
-                        <button class="remove-item" onclick="removeItem('<%= item.id %>')">🗑</button>
-                    </div>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <p class="empty-cart">Your cart is empty</p>
-        <% } %>
-
-        <a href="/menu" class="continue-shopping">← Continue Shopping</a>
+        <div id="cart-items-list"></div>
+        <p class="empty-cart" id="empty-cart-msg" style="display:none;">Your cart is empty</p>
+        <a href="/stores" class="continue-shopping" aria-label="Continue shopping">← Continue Shopping</a>
     </div>
 
     <!-- Summary Section -->
@@ -52,7 +32,7 @@
             <h3>Order Summary</h3>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span><%= subtotal %> EGP</span>
+                <span id="cart-subtotal">0 EGP</span>
             </div>
             <div class="summary-item">
                 <span>Pickup Fee</span>
@@ -60,9 +40,9 @@
             </div>
             <div class="summary-total">
                 <span>Total</span>
-                <span><%= total %> EGP</span>
+                <span id="cart-total">0 EGP</span>
             </div>
-            <button class="checkout-button" onclick="proceedToCheckout()">Checkout</button>
+            <button class="checkout-button" id="checkout-btn">Checkout</button>
         </div>
 
         <div class="info-section">
@@ -77,33 +57,6 @@
         </div>
     </div>
 </div>
-
-<script>
-function updateQuantity(itemId, change) {
-    // Implement quantity update logic
-    fetch('/cart/update', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId, change })
-    }).then(() => window.location.reload());
-}
-
-function removeItem(itemId) {
-    // Implement remove item logic
-    fetch('/cart/remove', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId })
-    }).then(() => window.location.reload());
-}
-
-function proceedToCheckout() {
-    window.location.href = '/checkout';
-}
-</script>
+<script src="/JavaScript/cart.js"></script>
 </body>
 </html> 
