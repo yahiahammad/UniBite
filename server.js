@@ -7,7 +7,7 @@ const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 const cookieParser = require('cookie-parser');
-const { requireLogin, checkAuth } = require('./middleware/auth');
+const { requireLogin, checkAuth } = require('./Middleware/auth');
 
 const app = express();
 
@@ -43,6 +43,7 @@ const menuItemRoutes = require('./Routes/menuItemRoutes');
 const orderRoutes = require('./Routes/orderRoutes');
 const reviewRoutes = require('./Routes/reviewRoutes');
 const adminRoutes = require('./Routes/adminRoutes');
+const cartRoutes = require('./Routes/cartRoutes');
 
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
@@ -51,6 +52,7 @@ app.use('/api/menuitems', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/', adminRoutes);
+app.use('/cart', cartRoutes);
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
