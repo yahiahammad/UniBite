@@ -115,6 +115,24 @@
                                         <span class="menu-item-price"><%= item.price %> EGP</span>
                                     </div>
                                     <p class="menu-item-description"><%= item.description %></p>
+                                    <!-- Plus button -->
+                                    <button class="add-to-cart-btn plus-btn"
+                                            data-id="<%= item._id %>"
+                                            data-name="<%= item.name %>"
+                                            data-price="<%= item.price %>"
+                                            data-image="<%= item.imageURL || '/Images/default-menu-item.jpg' %>"
+                                            data-category="<%= category %>"
+                                            data-description="<%= item.description %>"
+                                            data-options='<%= JSON.stringify(item.options || []) %>'
+                                            data-vendor-id="<%= vendor._id %>"
+                                            data-vendor-name="<%= vendor.name %>"
+                                            title="Add to Cart">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="12" fill="#ff8a00"/>
+                                            <path d="M12 7V17" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                            <path d="M7 12H17" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         <% }); %>
@@ -124,6 +142,29 @@
         </div>
     </div>
 </main>
+
+<!-- Item Modal Popup -->
+<div id="item-modal" class="item-modal-overlay" style="display:none;">
+    <div class="item-modal">
+        <button class="modal-close" id="modal-close">&times;</button>
+        <div class="modal-content">
+            <h2 id="modal-item-name"></h2>
+            <p id="modal-item-description"></p>
+            <div class="modal-quantity-section">
+                <button id="modal-qty-minus">-</button>
+                <span id="modal-qty">1</span>
+                <button id="modal-qty-plus">+</button>
+                <span class="modal-price">Price: <span id="modal-item-price"></span> EGP</span>
+            </div>
+            <div id="modal-options-section"></div>
+            <div class="modal-notes-section">
+                <label for="modal-notes">Notes:</label>
+                <textarea id="modal-notes" placeholder="Add any notes (e.g. no onions, extra sauce)"></textarea>
+            </div>
+            <button id="modal-add-to-cart" class="modal-add-to-cart-btn">Add To Cart</button>
+        </div>
+    </div>
+</div>
 
 <%- include('partials/footer') %>
 </body>

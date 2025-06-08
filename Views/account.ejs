@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - UniBite</title>
+  <meta name="description" content="Manage your UniBite account settings and view your order history.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/account.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header scrolled" id="site-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <a href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+              <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+              <path d="M7 2v20"></path>
+              <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+            </svg>
+            <span>UniBite</span>
+          </a>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="stores.html">Stores</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="help.html">Help</a></li>
+          </ul>
+        </nav>
+
+        <!-- User Actions -->
+        <div class="user-actions">
+          <a href="cart.html" class="cart-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="cart-count">3</span>
+          </a>
+          <div class="auth-buttons">
+            <a href="account.html" class="btn btn-ghost">Account</a>
+            <button id="logout-btn" class="btn btn-primary">Log out</button>
+          </div>
+          <button class="mobile-menu-toggle" aria-label="Toggle menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <div class="logo">
+        <a href="index.html">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+            <path d="M7 2v20"></path>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
+          </svg>
+          <span>UniBite</span>
+        </a>
+      </div>
+      <button class="mobile-menu-close" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="stores.html">Stores</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="help.html">Help</a></li>
+      </ul>
+    </nav>
+    <div class="mobile-auth">
+      <a href="account.html" class="btn btn-outline btn-full">Account</a>
+      <button id="mobile-logout-btn" class="btn btn-primary btn-full">Log out</button>
+    </div>
+  </div>
+
+  <main class="account-page">
+    <div class="container">
+      <div class="account-header">
+        <a href="index.html" class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back
+        </a>
+        <h1>Account</h1>
+      </div>
+
+      <div class="account-tabs">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="personal-info">Personal Info</button>
+          <button class="tab-btn" data-tab="security">Security</button>
+          <button class="tab-btn" data-tab="orders">Order History</button>
+        </div>
+
+        <div class="tabs-content">
+          <!-- Personal Info Tab -->
+          <div class="tab-pane active" id="personal-info">
+            <div class="account-grid">
+              <div class="account-card">
+                <div class="card-header">
+                  <h2>Personal Information</h2>
+                  <p>Update your personal details</p>
+                </div>
+                <div class="card-content">
+                  <form id="personal-info-form">
+                    <div class="form-group">
+                      <label for="name">Full Name</label>
+                      <input type="text" id="name" name="name" value="MIU Student">
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" id="email" name="email" value="student@miuegypt.edu.eg" disabled class="input-disabled">
+                      <p class="input-hint">Your email address cannot be changed as it's linked to your MIU account.</p>
+                    </div>
+                    <div class="form-group">
+                      <label for="phone">Phone Number</label>
+                      <input type="tel" id="phone" name="phone" value="+20 123 456 789">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </form>
+                </div>
+              </div>
+
+              <div class="account-card">
+                <div class="card-header">
+                  <h2>Account Information</h2>
+                  <p>Your account details and preferences</p>
+                </div>
+                <div class="card-content">
+                  <div class="info-group">
+                    <h3>Account Type</h3>
+                    <p>Student</p>
+                  </div>
+                  <div class="info-group">
+                    <h3>Member Since</h3>
+                    <p>May 1, 2025</p>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="info-group">
+                    <h3>Notification Preferences</h3>
+                    <div class="toggle-group">
+                      <div class="toggle-item">
+                        <label for="order-updates">Order Updates</label>
+                        <input type="checkbox" id="order-updates" class="toggle" checked>
+                      </div>
+                      <div class="toggle-item">
+                        <label for="promotions">Promotions and Offers</label>
+                        <input type="checkbox" id="promotions" class="toggle" checked>
+                      </div>
+                      <div class="toggle-item">
+                        <label for="newsletter">Newsletter</label>
+                        <input type="checkbox" id="newsletter" class="toggle">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Tab -->
+          <div class="tab-pane" id="security">
+            <div class="account-card">
+              <div class="card-header">
+                <h2>Change Password</h2>
+                <p>Update your password to keep your account secure</p>
+              </div>
+              <div class="card-content">
+                <form id="password-form">
+                  <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="password-input">
+                      <input type="password" id="currentPassword" name="currentPassword">
+                      <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="password-input">
+                      <input type="password" id="newPassword" name="newPassword">
+                      <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="input-hint">Password must be at least 8 characters long.</p>
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <div class="password-input">
+                      <input type="password" id="confirmNewPassword" name="confirmNewPassword">
+                      <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Change Password</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="account-card">
+              <div class="card-header">
+                <h2>Account Security</h2>
+                <p>Additional security options for your account</p>
+              </div>
+              <div class="card-content">
+                <div class="info-group">
+                  <h3>Two-Factor Authentication</h3>
+                  <p>Add an extra layer of security to your account by enabling two-factor authentication.</p>
+                  <button class="btn btn-outline">Enable 2FA</button>
+                </div>
+                <div class="divider"></div>
+                <div class="info-group">
+                  <h3>Recent Logins</h3>
+                  <div class="login-item">
+                    <p class="login-date">Today, 8:52 PM</p>
+                    <p class="login-device">Cairo, Egypt • Chrome on Windows</p>
+                  </div>
+                  <div class="login-item">
+                    <p class="login-date">May 10, 2025, 12:30 PM</p>
+                    <p class="login-device">Cairo, Egypt • Safari on iPhone</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order History Tab -->
+          <div class="tab-pane" id="orders">
+            <div class="orders-header">
+              <h2>Your Orders</h2>
+              <a href="stores.html" class="btn btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                Order Again
+              </a>
+            </div>
+
+            <div class="orders-list">
+              <div class="order-card">
+                <div class="order-header">
+                  <div>
+                    <h3>ORD-12345</h3>
+                    <p>May 10, 2025 at 12:30 PM</p>
+                  </div>
+                  <div class="order-status">
+                    <span class="badge">Completed</span>
+                    <span class="order-total">160 EGP</span>
+                  </div>
+                </div>
+                <div class="order-items">
+                  <div class="order-item">
+                    <span>1x Chicken Gyro Wrap</span>
+                    <span class="item-price">65 EGP</span>
+                  </div>
+                  <div class="order-item">
+                    <span>1x Loaded Fries</span>
+                    <span class="item-price">50 EGP</span>
+                  </div>
+                  <div class="order-item">
+                    <span>1x Iced Caramel Latte</span>
+                    <span class="item-price">45 EGP</span>
+                  </div>
+                </div>
+                <div class="order-footer">
+                  <button class="btn btn-ghost btn-sm">View Details</button>
+                  <button class="btn btn-outline btn-sm">Order Again</button>
+                </div>
+              </div>
+
+              <div class="order-card">
+                <div class="order-header">
+                  <div>
+                    <h3>ORD-12344</h3>
+                    <p>May 8, 2025 at 1:15 PM</p>
+                  </div>
+                  <div class="order-status">
+                    <span class="badge">Completed</span>
+                    <span class="order-total">115 EGP</span>
+                  </div>
+                </div>
+                <div class="order-items">
+                  <div class="order-item">
+                    <span>1x Beef Shawarma Plate</span>
+                    <span class="item-price">85 EGP</span>
+                  </div>
+                  <div class="order-item">
+                    <span>3x Water</span>
+                    <span class="item-price">30 EGP</span>
+                  </div>
+                </div>
+                <div class="order-footer">
+                  <button class="btn btn-ghost btn-sm">View Details</button>
+                  <button class="btn btn-outline btn-sm">Order Again</button>
+                </div>
+              </div>
+
+              <div class="order-card">
+                <div class="order-header">
+                  <div>
+                    <h3>ORD-12343</h3>
+                    <p>May 5, 2025 at 11:45 AM</p>
+                  </div>
+                  <div class="order-status">
+                    <span class="badge">Completed</span>
+                    <span class="order-total">90 EGP</span>
+                  </div>
+                </div>
+                <div class="order-items">
+                  <div class="order-item">
+                    <span>1x Zaatar Man'oucheh</span>
+                    <span class="item-price">35 EGP</span>
+                  </div>
+                  <div class="order-item">
+                    <span>1x Classic Cinnabon Roll</span>
+                    <span class="item-price">55 EGP</span>
+                  </div>
+                </div>
+                <div class="order-footer">
+                  <button class="btn btn-ghost btn-sm">View Details</button>
+                  <button class="btn btn-outline btn-sm">Order Again</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-copyright">
+          <p>&copy; <span id="current-year">2025</span> UniBite. All rights reserved.</p>
+        </div>
+        <div class="footer-links">
+          <a href="about.html">About</a>
+          <a href="help.html">Help</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <div class="toast-content">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <div class="toast-message">
+        <h4>Success</h4>
+        <p>Your changes have been saved successfully.</p>
+      </div>
+    </div>
+    <button class="toast-close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/account.js"></script>
+</body>
+</html>

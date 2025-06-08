@@ -13,33 +13,17 @@
         <h2>Your Cart</h2>
         <p>Review and checkout your order</p>
 
-        <div class="items-header">
-            <h3>Items (3)</h3>
-            <button class="clear-cart">Clear Cart</button>
+        <div class="cart-header-area">
+            <div class="cart-vendor-info">
+                <span id="cart-vendor-name"></span>
+                <span id="cart-count-label"></span>
+            </div>
+            <button class="clear-cart" id="clear-cart-btn">Clear Cart</button>
         </div>
 
-        <div class="cart-item">
-            <div class="item-details">
-                <div class="item-image"></div>
-                <div class="item-info">
-                    <h4>Chicken Gyro Wrap</h4>
-                    <p>Gyro</p>
-                    <div class="item-quantity">
-                        <button>-</button>
-                        <span>1</span>
-                        <button>+</button>
-                    </div>
-                </div>
-            </div>
-            <div class="item-price">
-                <p>65 EGP</p>
-                <button class="remove-item">🗑</button>
-            </div>
-        </div>
-
-        <!-- Add more cart-item blocks as needed -->
-
-        <a href="#" class="continue-shopping">← Continue Shopping</a>
+        <div id="cart-items-list"></div>
+        <p class="empty-cart" id="empty-cart-msg" style="display:none;">Your cart is empty</p>
+        <a href="/stores" class="continue-shopping" aria-label="Continue shopping">← Continue Shopping</a>
     </div>
 
     <!-- Summary Section -->
@@ -48,7 +32,7 @@
             <h3>Order Summary</h3>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span>210 EGP</span>
+                <span id="cart-subtotal">0 EGP</span>
             </div>
             <div class="summary-item">
                 <span>Pickup Fee</span>
@@ -56,9 +40,9 @@
             </div>
             <div class="summary-total">
                 <span>Total</span>
-                <span>210 EGP</span>
+                <span id="cart-total">0 EGP</span>
             </div>
-            <button class="checkout-button">Checkout</button>
+            <button class="checkout-button" id="checkout-btn">Checkout</button>
         </div>
 
         <div class="info-section">
@@ -73,5 +57,6 @@
         </div>
     </div>
 </div>
+<script src="/JavaScript/cart.js"></script>
 </body>
-</html>
+</html> 
