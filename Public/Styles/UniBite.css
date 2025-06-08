@@ -402,7 +402,7 @@ html, body {
     border-top: solid black;
     border-bottom: solid black;
     margin-bottom: 40px;
-
+    min-height: 400px; /* Add minimum height to ensure proper spacing */
 }
 
 .Section-Title {
@@ -422,10 +422,10 @@ html, body {
     max-width: 1536px;
     margin-inline: auto;
     position: relative;
-    height: 150px;
+    height: 200px; /* Increased height for better visibility */
     margin-top: 2rem;
     overflow: hidden;
-
+    padding: 20px 0; /* Add padding for better spacing */
 }
 
 /* AUTO SCROLL ANIMATION */
@@ -447,9 +447,10 @@ html, body {
     animation-iteration-count: infinite;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     perspective: 1000px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+    border-radius: 12px; /* Add border radius for better aesthetics */
+    overflow: hidden; /* Ensure content doesn't overflow */
 }
-
 
 .card-inner {
     width: 100%;
@@ -457,6 +458,7 @@ html, body {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.8s;
+    border-radius: 12px; /* Match parent's border radius */
 }
 
 /* Flip with bounce effect */
@@ -464,10 +466,7 @@ html, body {
     transform: rotateY(180deg);
     transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
-.card-front, .card-back {
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
+
 .card-front, .card-back {
     position: absolute;
     width: 100%;
@@ -475,91 +474,55 @@ html, body {
     backface-visibility: hidden;
     border-radius: 12px;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0px 0px;
-}
-
-
-
-.background {
-    width: 100%; /* Stretch from left to right */
-    height: 100vh; /* Full height of the viewport */
-    background: url("/Public/Images/back.jpeg") no-repeat center / cover; /* Proper background shorthand */
-    color: white; /* White text for contrast */
-    text-align: center; /* Center text alignment */
-    display: flex; /* Enable flex layout for centering content */
-    justify-content: center; /* Horizontally center the content */
-    align-items: center; /* Vertically center the content */
-}
-
-.card-front {
-    background-color: white;
 }
 
 .card-front img {
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    padding: 10px;
+    background-color: white;
 }
 
 .card-back {
-    position: relative;
-    color: white;
     transform: rotateY(180deg);
-    text-align: center;
-    padding: 1rem;
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    box-sizing: border-box;
+    position: relative;
 }
 
 .card-back img {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
-.card-back::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+.card-back-content {
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.25);
-    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .card-back p {
-    position: relative;
-    z-index: 2;
-    font-size: 15px;
-    margin-bottom: 5px;
-    text-align: center;
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .card-back h2 {
-    position: relative;
-    z-index: 2;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #fff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-    padding: 0.5rem 1rem;
-    text-align: center;
-    white-space: nowrap;
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .view-menu {
@@ -575,17 +538,17 @@ html, body {
     background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     transition: transform 0.2s, background 0.2s;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
-
 
 .view-menu:hover {
     transform: translateY(-2px);
-    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .item:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05); /* Slightly reduced scale for smoother effect */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
 }
 
 /* Animation pause on hover */
