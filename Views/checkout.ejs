@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - UniBite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/Styles/checkout.css">
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Main Checkout Section -->
+        <div class="checkout-section">
+            <a href="/cart" class="back-to-cart">
+                <i class="fas fa-arrow-left"></i>
+                Back to Cart
+            </a>
+            
+            <h2 class="section-title">Checkout</h2>
+
+            <!-- Order Items -->
+            <div class="order-items">
+                <h3 class="section-title">Order Items</h3>
+                <div class="order-item">
+                    <div class="item-details">
+                        <div class="item-image"></div>
+                        <div class="item-info">
+                            <h4>Chicken Gyro Wrap</h4>
+                            <p>Gyro</p>
+                            <div class="item-quantity">
+                                <span>Quantity: 1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-price">65 EGP</div>
+                </div>
+                <!-- Add more items as needed -->
+            </div>
+
+            <!-- Payment Method -->
+            <div class="payment-methods">
+                <h3 class="section-title">Payment Method</h3>
+                <div class="payment-option selected">
+                    <input type="radio" name="payment" id="meal-plan" checked>
+                    <i class="fas fa-utensils payment-icon"></i>
+                    <div>
+                        <h4>Student Meal Plan</h4>
+                        <p>Pay using your student meal plan balance</p>
+                    </div>
+                </div>
+                <div class="payment-option">
+                    <input type="radio" name="payment" id="campus-cash">
+                    <i class="fas fa-wallet payment-icon"></i>
+                    <div>
+                        <h4>Campus Cash</h4>
+                        <p>Pay using your campus cash balance</p>
+                    </div>
+                </div>
+                <div class="payment-option">
+                    <input type="radio" name="payment" id="cash">
+                    <i class="fas fa-money-bill payment-icon"></i>
+                    <div>
+                        <h4>Cash on Pickup</h4>
+                        <p>Pay with cash when you pick up your order</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Notes -->
+            <div class="order-notes">
+                <h3 class="section-title">Order Notes</h3>
+                <textarea class="notes-input" placeholder="Add any special instructions or notes for your order..."></textarea>
+            </div>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="order-summary">
+            <h3 class="section-title">Order Summary</h3>
+            <div class="summary-item">
+                <span>Subtotal</span>
+                <span>210 EGP</span>
+            </div>
+            <div class="summary-item">
+                <span>Pickup Fee</span>
+                <span>Free</span>
+            </div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span>210 EGP</span>
+            </div>
+            <button class="confirm-button" onclick="confirmOrder()">Confirm Order</button>
+        </div>
+    </div>
+
+    <script>
+        // Handle payment method selection
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                // Check the radio button
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // Handle order confirmation
+        function confirmOrder() {
+            // Get selected payment method
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
+            // Get order notes
+            const notes = document.querySelector('.notes-input').value;
+            
+            // Here you would typically send this data to your backend
+            console.log('Order confirmed with:', {
+                paymentMethod,
+                notes,
+                // Add other order details as needed
+            });
+
+            // For now, just redirect to orders page
+            window.location.href = '/orders';
+        }
+    </script>
+</body>
+</html> 
