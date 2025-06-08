@@ -5,6 +5,8 @@ const path = require("path");
 const cors = require('cors');
 const Vendor = require('./Models/Vendor');
 require('dotenv').config(); // Load environment variables from .env
+const cookieParser = require('cookie-parser');
+const { requireLogin } = require('./Middleware/auth'); // <--- NEW
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.set('auth', 'Views/Auth');
 // Middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse incoming JSON requests
+app.use(cookieParser());
 
 // Connect to MongoDB (removed deprecated options)
 mongoose.connect(process.env.MONGO_URI)
@@ -76,17 +79,21 @@ app.get('/Help', (req, res) => {
     res.render('Help');
 });
 
-app.get('/Stores', async (req, res) => {
+app.get('/Help', requireLogin, async (req, res) => {
     try {
         const vendors = await Vendor.find({ isActive: true });
-        res.render('Stores', { stores: vendors });
+        res.render('Help', { stores: vendors });
     } catch (error) {
-        res.render('Stores', { stores: [] });
+        res.redirect('/login');
     }
+});
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('jwt');
+  res.redirect('/login');
 });
 
 
 
-
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

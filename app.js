@@ -36,10 +36,14 @@ app.get('/Admin', (req, res) => {
     res.render('Admin');
 });
 
-app.get('/Help', (req, res) => {
-    res.render('Help');
+app.get('/Help', requireLogin, async (req, res) => {
+    try {
+        const vendors = await Vendor.find({ isActive: true });
+        res.render('Help', { stores: vendors });
+    } catch (error) {
+        res.redirect('/login');
+    }
 });
-
 
 app.get('/Stores', (req, res) => {
     res.render('Stores');
