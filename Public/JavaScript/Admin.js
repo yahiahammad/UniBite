@@ -611,7 +611,7 @@ let deleteConfirmModal;
 // Load menu items
 async function loadMenuItems() {
     try {
-        const response = await fetch('/api/menu-items/vendor', {
+        const response = await fetch('/api/menuitems/vendor', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -703,7 +703,7 @@ async function saveMenuItem() {
     }
 
     try {
-        const url = id ? `/api/menu-items/${id}` : '/api/menu-items';
+        const url = id ? `/api/menuitems/${id}` : '/api/menuitems';
         const method = id ? 'PUT' : 'POST';
         
         const response = await fetch(url, {
@@ -728,7 +728,7 @@ async function saveMenuItem() {
 // Toggle item availability
 async function toggleAvailability(id, available) {
     try {
-        const response = await fetch(`/api/menu-items/${id}`, {
+        const response = await fetch(`/api/menuitems/${id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -757,7 +757,7 @@ async function confirmDelete() {
     if (!itemToDelete) return;
 
     try {
-        const response = await fetch(`/api/menu-items/${itemToDelete}`, {
+        const response = await fetch(`/api/menuitems/${itemToDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
