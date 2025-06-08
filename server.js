@@ -95,17 +95,17 @@ app.get('/stores', requireLogin, async (req, res) => {
     }
 });
 
-app.get('/stores/:id', requireLogin, async (req, res) => {
+app.get('/stores/:name', requireLogin, async (req, res) => {
     try {
-        const storeId = req.params.id;
-        const vendor = await Vendor.findById(storeId);
+        const vendorName = req.params.name;
+        const vendor = await Vendor.findOne({ name: vendorName, isActive: true });
 
         if (!vendor) {
             return res.status(404).render('error', { message: 'Store not found' });
         }
 
         // Fetch menu items for this vendor
-        const menuItems = await MenuItem.find({ vendorId: storeId, available: true });
+        const menuItems = await MenuItem.find({ vendorId: vendor._id, available: true });
 
         // Group menu items by category
         const menuByCategory = menuItems.reduce((acc, item) => {
