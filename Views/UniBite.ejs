@@ -8,6 +8,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/Styles/UniBite.css" />
     <link rel="stylesheet" href="/Styles/Universalcss.css" />
+    <link rel="stylesheet" href="/Styles/styles.css" />
 
     <!-- GSAP + ScrollTrigger -->
     <script src="/JavaScript/gsap.min.js"></script>
@@ -17,41 +18,16 @@
     <script src="/JavaScript/UniBite.js"></script>
 </head>
 
-<body>
+<body class="landing-page">
 
-<div class="nav">
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
-
-    <div class="left-items">
-        <a href="/About-us">About us</a>
-        <a href="/Help">Help</a>
-        <a href="/Stores">Restaurants</a>
-    </div>
-
-    <div class="right-items">
-        <button class="signUp" onclick="window.location.href='/SignUp'">Sign Up</button>
-        <button class="logIn" onclick="window.location.href='/login'">Log In</button>
-
-    </div>
-</div>
-
-<script>
-    function toggleMenu() {
-        document.querySelector('.nav').classList.toggle('open');
-    }
-</script>
-
+<%- include('partials/Header', { active: 'home' }) %>
 
 <!-- Section 1 -->
 <div class="Section1">
-    <div class="logo-container">
-        <img class="Main-logo" src="/Images/LogoVF.png" alt="UniBite Logo">  <!-- UniBite Main Logo -->
-    </div>
     <div class="Background-Container"> </div> <!-- Container of the hero section background -->
 
     <div class="hero-content">
         <div class="hero-text">
-
             <h1 class="hero-title">
                 <span>Revolutionizing</span>
                 <span>Campus</span>
@@ -80,7 +56,6 @@
                 <h3>Special Offers</h3>
                 <p>Exclusive student deals</p>
             </div>
-
         </div>
     </div>
 
@@ -88,7 +63,6 @@
         <div class="mouse"></div>
         <p>Scroll to explore</p>
     </div>
-
 </div>
 
 

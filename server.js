@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require("path");
 const cors = require('cors');
+const Vendor = require('./Models/Vendor');
 require('dotenv').config(); // Load environment variables from .env
 
 const app = express();
@@ -75,8 +76,13 @@ app.get('/Help', (req, res) => {
     res.render('Help');
 });
 
-app.get('/Stores', (req, res) => {
-    res.render('Stores');
+app.get('/Stores', async (req, res) => {
+    try {
+        const vendors = await Vendor.find({ isActive: true });
+        res.render('Stores', { stores: vendors });
+    } catch (error) {
+        res.render('Stores', { stores: [] });
+    }
 });
 
 

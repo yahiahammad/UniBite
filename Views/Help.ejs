@@ -10,48 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<!-- Header -->
-<header class="site-header" id="site-header">
-  <div class="container">
-    <div class="header-content">
-      <div class="logo">
-        <a href="/">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
-            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-            <path d="M7 2v20"></path>
-            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"></path>
-          </svg>
-          <span>UniBite</span>
-        </a>
-      </div>
-
-      <!-- Desktop Navigation -->
-      <nav class="desktop-nav">
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/stores">Stores</a></li>
-          <li><a href="/about-us">About Us</a></li>
-          <li><a href="/help" class="active">Help</a></li>
-        </ul>
-      </nav>
-
-      <!-- User Actions -->
-      <div class="user-actions">
-        <div class="auth-buttons">
-          <a href="/login" class="btn btn-ghost">Log in</a>
-          <a href="/signup" class="btn btn-primary">Sign up</a>
-        </div>
-        <button class="mobile-menu-toggle" aria-label="Toggle menu">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</header>
+<%- include('partials/Header', { active: 'help' }) %>
 
 <main>
   <div class="container help-page">
