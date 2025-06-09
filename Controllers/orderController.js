@@ -1,4 +1,5 @@
 const Order = require('../Models/orders'); // Adjust the path if needed
+const MenuItem = require('../Models/MenuItems');
 
 // Controller to update order status
 exports.updateOrderStatus = async (req, res) => {
@@ -31,8 +32,17 @@ exports.submitOrder = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Cart is empty' });
         }
 
+        // Get the first item to determine the vendor
+        const firstMenuItem = await MenuItem.findById(items[0].id);
+        if (!firstMenuItem) {
+            return res.status(400).json({ success: false, message: 'Invalid menu item' });
+        }
+
         // For demo, assume user is authenticated and req.user is available
         const userId = req.user ? req.user.id : null;
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'User must be logged in to place an order' });
+        }
         
         // Calculate total
         let totalPrice = 0;
@@ -48,6 +58,7 @@ exports.submitOrder = async (req, res) => {
 
         const order = new Order({
             userId: userId,
+            vendorId: firstMenuItem.vendorId, // Use the vendor ID from the first menu item
             items: orderItems,
             totalPrice,
             notes: notes || '',
