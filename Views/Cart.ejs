@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart Page</title>
+    <title>Cart - UniBite</title>
     <link rel="stylesheet" href="/Styles/Cart.css" />
 </head>
 <body>
@@ -14,36 +14,17 @@
         <p>Review and checkout your order</p>
 
         <div class="items-header">
-            <h3>Items (<%= cartItems ? cartItems.length : 0 %>)</h3>
-            <button class="clear-cart">Clear Cart</button>
+            <h3 id="cart-count-label">Items (0)</h3>
+            <button class="clear-cart" onclick="clearCart()">Clear Cart</button>
         </div>
 
-        <% if (cartItems && cartItems.length > 0) { %>
-            <% cartItems.forEach(function(item) { %>
-                <div class="cart-item">
-                    <div class="item-details">
-                        <div class="item-image" style="background-image: url('<%= item.image %>')"></div>
-                        <div class="item-info">
-                            <h4><%= item.name %></h4>
-                            <p><%= item.category %></p>
-                            <div class="item-quantity">
-                                <button onclick="updateQuantity('<%= item.id %>', -1)">-</button>
-                                <span><%= item.quantity %></span>
-                                <button onclick="updateQuantity('<%= item.id %>', 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item-price">
-                        <p><%= item.price %> EGP</p>
-                        <button class="remove-item" onclick="removeItem('<%= item.id %>')">🗑</button>
-                    </div>
-                </div>
-            <% }); %>
-        <% } else { %>
-            <p class="empty-cart">Your cart is empty</p>
-        <% } %>
+        <div id="cart-items-list">
+            <!-- Items will be populated by JavaScript -->
+        </div>
 
-        <a href="/menu" class="continue-shopping">← Continue Shopping</a>
+        <p id="empty-cart-msg" class="empty-cart" style="display: none;">Your cart is empty</p>
+
+        <a href="/stores" class="continue-shopping">← Continue Shopping</a>
     </div>
 
     <!-- Summary Section -->
@@ -52,7 +33,7 @@
             <h3>Order Summary</h3>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span><%= subtotal %> EGP</span>
+                <span id="cart-subtotal">0 EGP</span>
             </div>
             <div class="summary-item">
                 <span>Pickup Fee</span>
@@ -60,7 +41,7 @@
             </div>
             <div class="summary-total">
                 <span>Total</span>
-                <span><%= total %> EGP</span>
+                <span id="cart-total">0 EGP</span>
             </div>
             <button class="checkout-button" onclick="proceedToCheckout()">Checkout</button>
         </div>
@@ -72,38 +53,120 @@
             </div>
             <div class="payment-methods">
                 <h4>Payment Methods</h4>
-                <p>Pay with your student meal plan, campus cash, or cash on pickup.</p>
+                <p>Pay with cash on pickup.</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-function updateQuantity(itemId, change) {
-    // Implement quantity update logic
-    fetch('/cart/update', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId, change })
-    }).then(() => window.location.reload());
+function getCartObj() {
+    try {
+        return JSON.parse(localStorage.getItem('cartObj')) || {};
+    } catch (e) { return {}; }
 }
 
-function removeItem(itemId) {
-    // Implement remove item logic
-    fetch('/cart/remove', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ itemId })
-    }).then(() => window.location.reload());
+function setCartObj(cartObj) {
+    localStorage.setItem('cartObj', JSON.stringify(cartObj));
+}
+
+function getCart() {
+    const cartObj = getCartObj();
+    return cartObj.items || [];
+}
+
+function renderCart() {
+    const cart = getCart();
+    const cartList = document.getElementById('cart-items-list');
+    const emptyCartMsg = document.getElementById('empty-cart-msg');
+    const cartCountLabel = document.getElementById('cart-count-label');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartTotal = document.getElementById('cart-total');
+    
+    cartList.innerHTML = '';
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+        emptyCartMsg.style.display = 'block';
+    } else {
+        emptyCartMsg.style.display = 'none';
+    }
+
+    cartCountLabel.textContent = `Items (${cart.length})`;
+
+    cart.forEach((item, idx) => {
+        subtotal += item.price * item.quantity;
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `
+            <div class="item-details">
+                <div class="item-image" style="background-image: url('${item.image}')"></div>
+                <div class="item-info">
+                    <h4>${item.name}</h4>
+                    <p>${item.category}</p>
+                    <div class="item-quantity">
+                        <button class="qty-btn" data-idx="${idx}" data-change="-1">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" data-idx="${idx}" data-change="1">+</button>
+                    </div>
+                    ${item.notes ? `<div class='item-notes'><em>Notes: ${item.notes}</em></div>` : ''}
+                    ${item.options && Object.keys(item.options).length > 0 ? `<div class='item-options'><em>Options: ${Object.entries(item.options).map(([k,v]) => `${k}: ${Array.isArray(v)?v.join(', '):v}`).join(' | ')}</em></div>` : ''}
+                </div>
+            </div>
+            <div class="item-price">
+                <p>${item.price * item.quantity} EGP</p>
+                <button class="remove-item" data-idx="${idx}">🗑</button>
+            </div>
+        `;
+        cartList.appendChild(div);
+    });
+
+    cartSubtotal.textContent = subtotal + ' EGP';
+    cartTotal.textContent = subtotal + ' EGP';
+}
+
+// Quantity change
+document.getElementById('cart-items-list').addEventListener('click', function(e) {
+    if (e.target.classList.contains('qty-btn')) {
+        const idx = parseInt(e.target.getAttribute('data-idx'));
+        const change = parseInt(e.target.getAttribute('data-change'));
+        let cartObj = getCartObj();
+        let cart = cartObj.items || [];
+        if (cart[idx]) {
+            cart[idx].quantity += change;
+            if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+            cartObj.items = cart;
+            setCartObj(cartObj);
+            renderCart();
+        }
+    }
+    if (e.target.classList.contains('remove-item')) {
+        const idx = parseInt(e.target.getAttribute('data-idx'));
+        let cartObj = getCartObj();
+        let cart = cartObj.items || [];
+        cart.splice(idx, 1);
+        cartObj.items = cart;
+        setCartObj(cartObj);
+        renderCart();
+    }
+});
+
+function clearCart() {
+    setCartObj({});
+    renderCart();
 }
 
 function proceedToCheckout() {
+    const cart = getCart();
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
     window.location.href = '/checkout';
 }
+
+// Initial render
+renderCart();
 </script>
 </body>
 </html> 

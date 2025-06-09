@@ -92,13 +92,28 @@
             return cartObj.items || [];
         }
 
+        function getVendorName() {
+            const cartObj = getCartObj();
+            return cartObj.vendorName || '';
+        }
+
         // Render cart items
         function renderCart() {
             const cart = getCart();
+            const vendorName = getVendorName();
             const container = document.getElementById('order-items-container');
             let subtotal = 0;
 
             container.innerHTML = '';
+            
+            // Add vendor name if available
+            if (vendorName) {
+                const vendorDiv = document.createElement('div');
+                vendorDiv.className = 'vendor-name';
+                vendorDiv.textContent = `Order from: ${vendorName}`;
+                container.appendChild(vendorDiv);
+            }
+
             cart.forEach(item => {
                 subtotal += item.price * item.quantity;
                 const div = document.createElement('div');
@@ -112,6 +127,8 @@
                             <div class="item-quantity">
                                 <span>Quantity: ${item.quantity}</span>
                             </div>
+                            ${item.notes ? `<div class='item-notes'><em>Notes: ${item.notes}</em></div>` : ''}
+                            ${item.options && Object.keys(item.options).length > 0 ? `<div class='item-options'><em>Options: ${Object.entries(item.options).map(([k,v]) => `${k}: ${Array.isArray(v)?v.join(', '):v}`).join(' | ')}</em></div>` : ''}
                         </div>
                     </div>
                     <div class="item-price">${item.price * item.quantity} EGP</div>
@@ -132,6 +149,7 @@
                     return;
                 }
 
+                const cartObj = getCartObj();
                 // Get order notes
                 const notes = document.querySelector('.notes-input').value;
                 
@@ -143,7 +161,8 @@
                     },
                     body: JSON.stringify({
                         items: cart,
-                        notes: notes
+                        notes: notes,
+                        vendorId: cartObj.vendorId
                     })
                 });
 

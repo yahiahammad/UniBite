@@ -221,15 +221,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cartObj = JSON.parse(localStorage.getItem('cartObj')) || {};
     } catch (e) { cartObj = {}; }
     const cart = cartObj.items || [];
-    // Debug logs
-    console.log('Current item vendorId:', itemData.vendorId);
-    console.log('Cart vendorId:', cartObj.vendorId);
+    
     // If cart is empty or vendorId is not set, set vendorId/vendorName
     if (!cartObj.vendorId) {
       cartObj.vendorId = String(itemData.vendorId);
       cartObj.vendorName = itemData.vendorName;
       cartObj.items = cart;
-      console.log('Set cartObj.vendorId to', cartObj.vendorId);
     }
     // If vendor matches, add as usual
     if (String(cartObj.vendorId) === String(itemData.vendorId)) {
@@ -247,67 +244,86 @@ document.addEventListener("DOMContentLoaded", () => {
         cartObj.items = [];
         addItemToCart(cartObj, itemData);
         pendingVendorItem = null;
-      } else {
-        itemModal.style.display = 'none';
-        pendingVendorItem = null;
       }
     });
   });
 
   function addItemToCart(cartObj, itemData) {
-    let cart = cartObj.items || [];
-    // Check for existing item (same id, options, notes)
-    const matchIndex = cart.findIndex(item =>
-      item.id === itemData.id &&
+    const cart = cartObj.items || [];
+    // Check if item already exists in cart
+    const existingItemIndex = cart.findIndex(item => 
+      item.id === itemData.id && 
       JSON.stringify(item.options) === JSON.stringify(itemData.options) &&
-      (item.notes || '') === (itemData.notes || '')
+      item.notes === itemData.notes
     );
-    if (matchIndex !== -1) {
-      cart[matchIndex].quantity += itemData.quantity;
+
+    if (existingItemIndex !== -1) {
+      // Update quantity of existing item
+      cart[existingItemIndex].quantity += itemData.quantity;
     } else {
+      // Add new item
       cart.push(itemData);
     }
+
+    // Update cart in localStorage
     cartObj.items = cart;
     localStorage.setItem('cartObj', JSON.stringify(cartObj));
+
+    // Show success message
+    showCartToast('Item added to cart');
+    
+    // Close modal
     itemModal.style.display = 'none';
-    showCartToast('Added to cart!');
   }
 
   function showVendorModal(existingVendor, cb) {
     const modal = document.getElementById('vendor-modal');
     const msg = document.getElementById('vendor-modal-msg');
-    msg.textContent = `You already have an ongoing cart from ${existingVendor}. Do you want to clear it and start a new cart?`;
-    modal.style.display = 'block';
-    document.getElementById('vendor-modal-yes').onclick = function() {
+    const yesBtn = document.getElementById('vendor-modal-yes');
+    const noBtn = document.getElementById('vendor-modal-no');
+
+    msg.textContent = `Your cart contains items from ${existingVendor}. Would you like to clear your cart and add items from this vendor instead?`;
+    modal.style.display = 'flex';
+
+    yesBtn.onclick = () => {
       modal.style.display = 'none';
       cb(true);
     };
-    document.getElementById('vendor-modal-no').onclick = function() {
+    noBtn.onclick = () => {
       modal.style.display = 'none';
       cb(false);
     };
   }
 
-  // Toast feedback
   function showCartToast(msg) {
+    // Create toast element if it doesn't exist
     let toast = document.getElementById('cart-toast');
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'cart-toast';
-      toast.style.position = 'fixed';
-      toast.style.bottom = '2rem';
-      toast.style.right = '2rem';
-      toast.style.background = '#ff8a00';
-      toast.style.color = 'white';
-      toast.style.padding = '1rem 2rem';
-      toast.style.borderRadius = '2rem';
-      toast.style.fontWeight = '600';
-      toast.style.zIndex = 9999;
-      toast.style.boxShadow = '0 2px 12px rgba(0,0,0,0.12)';
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #ff8a00;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      `;
       document.body.appendChild(toast);
     }
+
+    // Show toast
     toast.textContent = msg;
-    toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 1500);
+    toast.style.opacity = '1';
+
+    // Hide toast after 2 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+    }, 2000);
   }
 })
