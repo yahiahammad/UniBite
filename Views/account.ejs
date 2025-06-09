@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account - UniBite</title>
   <meta name="description" content="Manage your UniBite account settings and view your order history.">
-  <link rel="stylesheet" href="Styles/styles.css">
-  <link rel="stylesheet" href="Styles/account.css">
+  <link rel="stylesheet" href="/Styles/styles.css">
+  <link rel="stylesheet" href="/Styles/account.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Header -->
   <%- include('partials/Header', { active: 'account' }) %>
-
 
   <main class="account-page">
     <div class="container">
@@ -205,22 +204,7 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-copyright">
-          <p>&copy; <span id="current-year">2025</span> UniBite. All rights reserved.</p>
-        </div>
-        <div class="footer-links">
-          <a href="about.html">About</a>
-          <a href="help.html">Help</a>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <%- include('partials/Footer') %>
 
   <!-- Toast Notification -->
   <div class="toast" id="toast">
@@ -242,8 +226,9 @@
     </button>
   </div>
 
-  <script src="js/main.js"></script>
-  <script src="js/account.js"></script>
+  <!-- Scripts -->
+  <script src="/JavaScript/main.js"></script>
+  <script src="/JavaScript/account.js"></script>
   <script>
     // Function to switch between tabs
     function switchTab(tabName) {

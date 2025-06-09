@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle")
   const mobileMenuClose = document.querySelector(".mobile-menu-close")
   const mobileMenu = document.getElementById("mobile-menu")
+  const body = document.body
 
   if (mobileMenuToggle && mobileMenuClose && mobileMenu) {
     // Create overlay element
@@ -16,27 +17,47 @@ document.addEventListener("DOMContentLoaded", () => {
     overlay.className = "overlay"
     document.body.appendChild(overlay)
 
-    // Toggle mobile menu
-    mobileMenuToggle.addEventListener("click", () => {
+    function openMobileMenu() {
       mobileMenu.classList.add("active")
       overlay.classList.add("active")
-      document.body.style.overflow = "hidden"
-    })
+      body.classList.add("mobile-menu-open")
+    }
 
-    // Close mobile menu
-    mobileMenuClose.addEventListener("click", closeMenu)
-    overlay.addEventListener("click", closeMenu)
-
-    function closeMenu() {
+    function closeMobileMenu() {
       mobileMenu.classList.remove("active")
       overlay.classList.remove("active")
-      document.body.style.overflow = ""
+      body.classList.remove("mobile-menu-open")
     }
+
+    if (mobileMenuToggle) {
+      mobileMenuToggle.addEventListener("click", openMobileMenu)
+    }
+
+    if (mobileMenuClose) {
+      mobileMenuClose.addEventListener("click", closeMobileMenu)
+    }
+
+    // Close mobile menu when clicking overlay
+    overlay.addEventListener("click", closeMobileMenu)
+
+    // Close mobile menu when pressing escape key
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && mobileMenu.classList.contains("active")) {
+        closeMobileMenu()
+      }
+    })
+
+    // Handle window resize
+    window.addEventListener("resize", function () {
+      if (window.innerWidth >= 992 && mobileMenu.classList.contains("active")) {
+        closeMobileMenu()
+      }
+    })
 
     // Close menu when clicking on a link
     const mobileNavLinks = document.querySelectorAll(".mobile-nav a")
     mobileNavLinks.forEach((link) => {
-      link.addEventListener("click", closeMenu)
+      link.addEventListener("click", closeMobileMenu)
     })
   }
 

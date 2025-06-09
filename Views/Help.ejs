@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Help Center - UniBite</title>
   <meta name="description" content="Find answers to common questions about using UniBite for campus food ordering.">
-  <link rel="stylesheet" href="Styles/styles.css">
-  <link rel="stylesheet" href="Styles/help.css">
+  <link rel="stylesheet" href="/Styles/styles.css">
+  <link rel="stylesheet" href="/Styles/help.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -427,22 +427,9 @@
   </div>
 </main>
 
-<!-- Footer -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-copyright">
-        <p>&copy; 2024 UniBite. All rights reserved.</p>
-      </div>
-      <div class="footer-links">
-        <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms of Service</a>
-        <a href="/about-us">About Us</a>
-        <a href="/contact">Contact</a>
-      </div>
-    </div>
-  </div>
-</footer>
-<script src="JavaScript/help.js"></script>
+<%- include('partials/Footer') %>
+
+<!-- Scripts -->
+<script src="/JavaScript/main.js"></script>
 </body>
 </html>
