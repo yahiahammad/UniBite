@@ -9,7 +9,6 @@ const OrderSchema = new mongoose.Schema({
       menuItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem', required: true },
       quantity: { type: Number, required: true, min: 1 },
       nameAtOrder: String,      //  Store name/price at order time for historical accuracy, as menu items can change
-
       priceAtOrder: Number,
     }
   ],

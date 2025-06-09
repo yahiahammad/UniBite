@@ -30,5 +30,9 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Method to compare passwords
+UserSchema.methods.comparePassword = function(candidatePassword) {
+  return this.password === candidatePassword;
+};
 
 module.exports = mongoose.model('User', UserSchema);

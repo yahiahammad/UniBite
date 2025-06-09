@@ -163,6 +163,27 @@ app.get('/order/confirmation', (req, res) => {
 app.get('/checkout', requireLogin, (req, res) => {
     res.render('checkout');
 });
+
+app.get('/account', requireLogin, (req, res) => {
+    // Pass user data to the account page
+    res.render('account', { 
+        active: 'account',
+        user: req.user,
+        memberSince: new Date(req.user.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+    });
+});
+
+app.get('/orders', requireLogin, (req, res) => {
+    res.render('orders', { 
+        active: 'orders',
+        user: req.user
+    });
+});
+
 app.get('/executive', authenticateExecutive, (req, res) => {
     res.render('executive', { active: 'executive', authenticateExecutive: true });
 })

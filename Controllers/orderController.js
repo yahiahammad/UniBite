@@ -1,6 +1,22 @@
 const Order = require('../Models/orders'); // Adjust the path if needed
 const MenuItem = require('../Models/MenuItems');
 
+// Controller to get all orders for the current user
+exports.getUserOrders = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const orders = await Order.find({ userId })
+            .sort({ orderTime: -1 })
+            .populate('vendorId', 'name')
+            .populate('items.menuItemId');
+
+        res.json(orders);
+    } catch (error) {
+        console.error('Error fetching user orders:', error);
+        res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
+
 // Controller to update order status
 exports.updateOrderStatus = async (req, res) => {
     const orderId = req.params.id;

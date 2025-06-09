@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Personal info form submission
   const personalInfoForm = document.getElementById("personal-info-form")
   if (personalInfoForm) {
-    personalInfoForm.addEventListener("submit", function (e) {
+    personalInfoForm.addEventListener("submit", async function (e) {
       e.preventDefault()
 
       // Show loading state
@@ -71,27 +71,44 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.textContent = "Saving..."
       submitButton.disabled = true
 
-      // Simulate API call
-      setTimeout(() => {
-        // Update user data
-        user.name = document.getElementById("name").value
-        user.phone = document.getElementById("phone").value
-        localStorage.setItem("unibite-user", JSON.stringify(user))
+      try {
+        const response = await fetch('/api/users/update-profile', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: document.getElementById("name").value,
+            phone: document.getElementById("phone").value
+          })
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+          // Update user data in localStorage
+          user.name = document.getElementById("name").value;
+          user.phone = document.getElementById("phone").value;
+          localStorage.setItem("unibite-user", JSON.stringify(user));
+
+          showToast("Success", "Your personal information has been updated successfully.");
+        } else {
+          showToast("Error", data.message || "Failed to update profile", "error");
+        }
+      } catch (error) {
+        showToast("Error", "An error occurred while updating profile", "error");
+      } finally {
         // Reset button state
         submitButton.textContent = "Save Changes"
         submitButton.disabled = false
-
-        // Show success toast
-        showToast("Success", "Your personal information has been updated successfully.")
-      }, 1000)
+      }
     })
   }
 
   // Password form submission
   const passwordForm = document.getElementById("password-form")
   if (passwordForm) {
-    passwordForm.addEventListener("submit", function (e) {
+    passwordForm.addEventListener("submit", async function (e) {
       e.preventDefault()
 
       const currentPassword = document.getElementById("currentPassword").value
@@ -119,18 +136,34 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.textContent = "Changing..."
       submitButton.disabled = true
 
-      // Simulate API call
-      setTimeout(() => {
-        // Reset form
-        this.reset()
+      try {
+        const response = await fetch('/api/users/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword
+          })
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+          // Reset form
+          this.reset();
+          showToast("Success", "Your password has been changed successfully.");
+        } else {
+          showToast("Error", data.message || "Failed to change password", "error");
+        }
+      } catch (error) {
+        showToast("Error", "An error occurred while changing password", "error");
+      } finally {
         // Reset button state
         submitButton.textContent = "Change Password"
         submitButton.disabled = false
-
-        // Show success toast
-        showToast("Success", "Your password has been changed successfully.")
-      }, 1000)
+      }
     })
   }
 
