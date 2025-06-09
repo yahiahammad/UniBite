@@ -7,7 +7,7 @@ const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 const cookieParser = require('cookie-parser');
-const { requireLogin, checkAuth } = require('./Middleware/auth');
+const { requireLogin, checkAuth, authenticateExecutive} = require('./Middleware/auth');
 
 const app = express();
 
@@ -30,6 +30,13 @@ app.use((req, res, next) => {
     next();
 });
 
+// Middleware to check if the user is an executive (admin)
+// This makes `isExecutive` available to all templates
+app.use((req, res, next) => {
+    res.locals.isExecutive = !!(req.user && req.user.userType === 'admin');
+    next();
+});
+
 // Connect to MongoDB (removed deprecated options)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected'))
@@ -44,6 +51,7 @@ const orderRoutes = require('./Routes/orderRoutes');
 const reviewRoutes = require('./Routes/reviewRoutes');
 const adminRoutes = require('./Routes/adminRoutes');
 const cartRoutes = require('./Routes/cartRoutes');
+const executiveRoutes = require('./Routes/executiveRoutes');
 
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
@@ -53,6 +61,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/', adminRoutes);
 app.use('/cart', cartRoutes);
+app.use('/api/executive', executiveRoutes);
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
@@ -154,7 +163,9 @@ app.get('/order/confirmation', (req, res) => {
 app.get('/checkout', requireLogin, (req, res) => {
     res.render('checkout');
 });
-
+app.get('/executive', authenticateExecutive, (req, res) => {
+    res.render('executive', { active: 'executive', authenticateExecutive: true });
+})
 // 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('error', {
@@ -162,6 +173,7 @@ app.use((req, res) => {
         active: ''
     });
 });
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

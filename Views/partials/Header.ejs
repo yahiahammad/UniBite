@@ -20,39 +20,42 @@
                     <li><a href="/stores" class="<%= active === 'stores' ? 'active' : '' %>">Stores</a></li>
                     <li><a href="/about-us" class="<%= active === 'about' ? 'active' : '' %>">About Us</a></li>
                     <li><a href="/help" class="<%= active === 'help' ? 'active' : '' %>">Help</a></li>
+                    <% if (isExecutive) { %>
+                        <li><a href="/executive" class="<%= active === 'executive' ? 'active' : '' %>">Executive</a></li>
+                    <% } %>
                 </ul>
             </nav>
 
             <!-- User Actions -->
             <% if (isAuthenticated) { %>
-            <div class="user-actions">
-                <a href="/cart" class="cart-link" title="Cart" style="margin-right:1.5rem;display:inline-flex;align-items:center;gap:0.3rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="9" cy="21" r="1"/>
-                        <circle cx="20" cy="21" r="1"/>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    <span>Cart</span>
-                </a>
-                <div class="auth-buttons">
-                    <a href="/logout" class="btn btn-primary">Log out</a>
+                <div class="user-actions">
+                    <a href="/cart" class="cart-link" title="Cart" style="margin-right:1.5rem;display:inline-flex;align-items:center;gap:0.3rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span>Cart</span>
+                    </a>
+                    <div class="auth-buttons">
+                        <a href="/logout" class="btn btn-primary">Log out</a>
+                    </div>
                 </div>
-            </div>
             <% } else { %>
-            
-            <div class="user-actions">
-                <div class="auth-buttons">
-                    <a href="/login" class="btn btn-ghost">Log in</a>
-                    <a href="/signup" class="btn btn-primary">Sign up</a>
+
+                <div class="user-actions">
+                    <div class="auth-buttons">
+                        <a href="/login" class="btn btn-ghost">Log in</a>
+                        <a href="/signup" class="btn btn-primary">Sign up</a>
+                    </div>
+                    <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
-                <button class="mobile-menu-toggle" aria-label="Toggle menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
             <% } %>
         </div>
     </div>
@@ -84,6 +87,7 @@
             <li><a href="/stores" class="<%= active === 'stores' ? 'active' : '' %>">Stores</a></li>
             <li><a href="/about-us" class="<%= active === 'about' ? 'active' : '' %>">About Us</a></li>
             <li><a href="/help" class="<%= active === 'help' ? 'active' : '' %>">Help</a></li>
+
         </ul>
     </nav>
     <div class="mobile-auth">

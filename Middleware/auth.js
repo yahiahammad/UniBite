@@ -6,13 +6,7 @@ const Vendor = require('../Models/Vendor');
 // Vendor-specific auth middleware
 const auth = async (req, res, next) => {
     try {
-        let token;
-        if (req.cookies && req.cookies.jwt) {
-            token = req.cookies.jwt;
-        } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            token = req.headers.authorization.split(' ')[1];
-        }
-
+        const token = req.cookies.jwt;
         if (!token) {
             return res.status(401).json({ message: 'Not authenticated' });
         }
@@ -91,4 +85,41 @@ function requireLogin(req, res, next) {
     }
 }
 
-module.exports = { auth, protect, checkAuth, requireLogin };
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};
+
+const authenticateExecutive = async (req, res, next) => {
+    try {
+        let token;
+        if (req.cookies && req.cookies.jwt) {
+            token = req.cookies.jwt;
+        } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+
+        if (!token) {
+            return res.status(401).json({ message: 'Executive authentication failed: No token provided.' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user || user.userType !== 'admin') {
+            console.log('Executive authentication failed: User not found or not an admin.');
+            return res.status(403).json({ message: 'Executive authentication failed: Not authorized.' });
+        }
+
+        req.user = user; // Attach the user object to the request
+        next();
+    } catch (error) {
+        console.error('Executive authentication middleware error:', error);
+        res.status(401).json({ message: 'Executive authentication failed: Invalid token.' });
+    }
+};
+
+module.exports = { auth, protect, checkAuth, requireLogin, isAuthenticated, authenticateExecutive };

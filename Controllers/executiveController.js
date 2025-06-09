@@ -34,7 +34,7 @@ exports.deleteUser = async (req, res) => {
     try {
         const { userId } = req.params;
         const user = await User.findByIdAndDelete(userId);
-        
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -118,7 +118,7 @@ exports.deleteVendor = async (req, res) => {
     try {
         const { vendorId } = req.params;
         const vendor = await Vendor.findByIdAndDelete(vendorId);
-        
+
         if (!vendor) {
             return res.status(404).json({ message: 'Vendor not found' });
         }
