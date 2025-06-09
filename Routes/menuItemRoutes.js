@@ -7,26 +7,20 @@ const multer = require('multer');
 const path = require('path');
 
 // Configure multer for image uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'Public/Images/menu');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-
-const upload = multer({ 
-    storage: storage,
+const upload = multer({
+    storage: multer.memoryStorage(), // Use memory storage to access file buffer
     fileFilter: function (req, file, cb) {
-        const filetypes = /jpeg|jpg|png|gif/;
+        const filetypes = /jpeg|jpg|png|gif|webp/;
         const mimetype = filetypes.test(file.mimetype);
         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        
+
         if (mimetype && extname) {
             return cb(null, true);
         }
-        cb(new Error('Only image files are allowed!'));
+        cb(new Error('Only image files (jpeg, jpg, png, gif, webp) are allowed!'));
+    },
+    limits: {
+        fileSize: 10 * 1024 * 1024 // 10MB limit
     }
 });
 
