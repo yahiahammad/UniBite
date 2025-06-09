@@ -21,43 +21,16 @@
             <!-- Order Items -->
             <div class="order-items">
                 <h3 class="section-title">Order Items</h3>
-                <div class="order-item">
-                    <div class="item-details">
-                        <div class="item-image"></div>
-                        <div class="item-info">
-                            <h4>Chicken Gyro Wrap</h4>
-                            <p>Gyro</p>
-                            <div class="item-quantity">
-                                <span>Quantity: 1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item-price">65 EGP</div>
+                <div id="order-items-container">
+                    <!-- Items will be populated by JavaScript -->
                 </div>
-                <!-- Add more items as needed -->
             </div>
 
             <!-- Payment Method -->
             <div class="payment-methods">
                 <h3 class="section-title">Payment Method</h3>
                 <div class="payment-option selected">
-                    <input type="radio" name="payment" id="meal-plan" checked>
-                    <i class="fas fa-utensils payment-icon"></i>
-                    <div>
-                        <h4>Student Meal Plan</h4>
-                        <p>Pay using your student meal plan balance</p>
-                    </div>
-                </div>
-                <div class="payment-option">
-                    <input type="radio" name="payment" id="campus-cash">
-                    <i class="fas fa-wallet payment-icon"></i>
-                    <div>
-                        <h4>Campus Cash</h4>
-                        <p>Pay using your campus cash balance</p>
-                    </div>
-                </div>
-                <div class="payment-option">
-                    <input type="radio" name="payment" id="cash">
+                    <input type="radio" name="payment" id="cash" checked>
                     <i class="fas fa-money-bill payment-icon"></i>
                     <div>
                         <h4>Cash on Pickup</h4>
@@ -78,7 +51,7 @@
             <h3 class="section-title">Order Summary</h3>
             <div class="summary-item">
                 <span>Subtotal</span>
-                <span>210 EGP</span>
+                <span id="subtotal">0 EGP</span>
             </div>
             <div class="summary-item">
                 <span>Pickup Fee</span>
@@ -86,7 +59,7 @@
             </div>
             <div class="summary-total">
                 <span>Total</span>
-                <span>210 EGP</span>
+                <span id="total">0 EGP</span>
             </div>
             <button class="confirm-button" onclick="confirmOrder()">Confirm Order</button>
         </div>
@@ -107,23 +80,91 @@
             });
         });
 
-        // Handle order confirmation
-        function confirmOrder() {
-            // Get selected payment method
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
-            // Get order notes
-            const notes = document.querySelector('.notes-input').value;
-            
-            // Here you would typically send this data to your backend
-            console.log('Order confirmed with:', {
-                paymentMethod,
-                notes,
-                // Add other order details as needed
+        // Load cart from localStorage
+        function getCartObj() {
+            try {
+                return JSON.parse(localStorage.getItem('cartObj')) || {};
+            } catch (e) { return {}; }
+        }
+
+        function getCart() {
+            const cartObj = getCartObj();
+            return cartObj.items || [];
+        }
+
+        // Render cart items
+        function renderCart() {
+            const cart = getCart();
+            const container = document.getElementById('order-items-container');
+            let subtotal = 0;
+
+            container.innerHTML = '';
+            cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+                const div = document.createElement('div');
+                div.className = 'order-item';
+                div.innerHTML = `
+                    <div class="item-details">
+                        <div class="item-image" style="background-image: url('${item.image}')"></div>
+                        <div class="item-info">
+                            <h4>${item.name}</h4>
+                            <p>${item.category}</p>
+                            <div class="item-quantity">
+                                <span>Quantity: ${item.quantity}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-price">${item.price * item.quantity} EGP</div>
+                `;
+                container.appendChild(div);
             });
 
-            // For now, just redirect to orders page
-            window.location.href = '/orders';
+            document.getElementById('subtotal').textContent = subtotal + ' EGP';
+            document.getElementById('total').textContent = subtotal + ' EGP';
         }
+
+        // Handle order confirmation
+        async function confirmOrder() {
+            try {
+                const cart = getCart();
+                if (cart.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+
+                // Get order notes
+                const notes = document.querySelector('.notes-input').value;
+                
+                // Submit order to server
+                const response = await fetch('/api/orders/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        items: cart,
+                        notes: notes
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Clear cart from localStorage
+                    localStorage.removeItem('cartObj');
+                    // Redirect to order confirmation page with order ID
+                    window.location.href = `/order/confirmation?id=${data.orderId}`;
+                } else {
+                    alert('Order failed: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                alert('Failed to submit order. Please try again.');
+            }
+        }
+
+        // Initial render
+        renderCart();
     </script>
 </body>
 </html> 

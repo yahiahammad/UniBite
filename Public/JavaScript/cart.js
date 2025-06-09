@@ -113,28 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Checkout
-  checkoutBtn.addEventListener('click', async function() {
+  checkoutBtn.addEventListener('click', function() {
     const cart = getCart();
     if (cart.length === 0) {
       alert('Your cart is empty!');
       return;
     }
-    try {
-      const res = await fetch('/api/orders/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cart })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setCartObj({});
-        window.location.href = '/order/confirmation';
-      } else {
-        alert('Order failed: ' + (data.message || 'Unknown error'));
-      }
-    } catch (e) {
-      alert('Order failed. Please try again.');
-    }
+    window.location.href = '/cart/checkout';
   });
 
   renderCart();
