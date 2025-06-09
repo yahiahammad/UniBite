@@ -23,7 +23,8 @@
 <div class="main-content">
     <div class="SignUp-container">
         <h2>Sign Up</h2>
-        <form action="SignUp.php" method="POST" onsubmit="return validateEmail()">
+        <form id="signup-form">
+            <input type="text" id="name" name="name" class="input-field" placeholder="Full Name" required>
             <input type="email" id="email" name="email" class="input-field" placeholder="example@miuegypt.edu.eg" required>
             <input type="tel" id="phone" name="phone" class="input-field" placeholder="Phone Number" required>
             <input type="password" id="password" name="password" class="input-field" placeholder="Password" required>
@@ -52,6 +53,7 @@
     <div class="credentials">© 2025 UniBite. All rights reserved.</div>
 </div>
 
+<script src="/JavaScript/signup.js"></script>
 <script src="/JavaScript/EmailValidation.js"></script>
 
 </body>

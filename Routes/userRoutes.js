@@ -6,6 +6,8 @@ const { requireLogin } = require('../Middleware/auth');
 const User = require('../Models/User');
 
 router.post('/login', userController.loginUser);
+router.post('/register', userController.registerUser);
+
 
 // Update user profile
 router.post('/update-profile', requireLogin, async (req, res) => {
