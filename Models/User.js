@@ -25,7 +25,9 @@ const UserSchema = new mongoose.Schema({
     image: String,
     category: String,
     quantity: Number
-  }]
+  }],
+  newsletterSubscribed: { type: Boolean, default: false },
+  lastNewsletterToggle: { type: Date, default: null }
 }, {
   timestamps: true
 });

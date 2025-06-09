@@ -75,7 +75,7 @@
                   </div>
                   <div class="info-group">
                     <h3>Member Since</h3>
-                    <p><%= memberSince %></p>
+                    <p id="member-since"></p>
                   </div>
                   <div class="divider"></div>
                   <div class="info-group">
@@ -85,13 +85,12 @@
                         <label for="order-updates">Order Updates</label>
                         <input type="checkbox" id="order-updates" class="toggle" checked>
                       </div>
-                      <div class="toggle-item">
-                        <label for="promotions">Promotions and Offers</label>
-                        <input type="checkbox" id="promotions" class="toggle" checked>
-                      </div>
-                      <div class="toggle-item">
-                        <label for="newsletter">Newsletter</label>
-                        <input type="checkbox" id="newsletter" class="toggle">
+                      <div class="toggle-item newsletter-toggle">
+                        <div class="toggle-label">
+                          <label for="newsletter">Newsletter</label>
+                          <p class="input-hint">Receive updates about new features and special offers. You can change this preference once every 24 hours.</p>
+                        </div>
+                        <input type="checkbox" id="newsletter" class="toggle" <%= user.newsletterSubscribed ? 'checked' : '' %>>
                       </div>
                     </div>
                   </div>

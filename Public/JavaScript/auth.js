@@ -72,6 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
           name: result.user.name || email.split("@")[0].replace(".", " "),
           email: result.user.email,
           role: result.user.role || "student",
+          newsletterSubscribed: result.user.newsletterSubscribed || false,
+          lastNewsletterToggle: result.user.lastNewsletterToggle || null,
+          createdAt: result.user.createdAt || new Date().toISOString()
         }
 
         localStorage.setItem("unibite-user", JSON.stringify(userData))

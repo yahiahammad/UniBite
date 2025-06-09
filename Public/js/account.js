@@ -120,6 +120,106 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Newsletter toggle functionality
+    const newsletterToggle = document.getElementById('newsletter');
+    console.log('Newsletter toggle element:', newsletterToggle);
+
+    if (newsletterToggle) {
+        newsletterToggle.addEventListener('change', async function() {
+            console.log('Newsletter toggle changed:', this.checked);
+            const isSubscribed = this.checked;
+            const user = JSON.parse(localStorage.getItem("unibite-user"));
+            console.log('Current user:', user);
+            
+            // Check if enough time has passed since last toggle (24 hours)
+            const lastToggle = user.lastNewsletterToggle;
+            if (lastToggle) {
+                const timeSinceLastToggle = Date.now() - new Date(lastToggle).getTime();
+                const hoursSinceLastToggle = timeSinceLastToggle / (1000 * 60 * 60);
+                console.log('Hours since last toggle:', hoursSinceLastToggle);
+                
+                if (hoursSinceLastToggle < 24) {
+                    this.checked = !isSubscribed; // Revert the toggle
+                    const hoursRemaining = Math.ceil(24 - hoursSinceLastToggle);
+                    showToast(
+                        "Error", 
+                        `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
+                        "error"
+                    );
+                    return;
+                }
+            }
+
+            try {
+                const endpoint = isSubscribed ? '/api/newsletter/subscribe' : '/api/newsletter/unsubscribe';
+                console.log('Making request to:', endpoint);
+                const token = localStorage.getItem('token');
+                console.log('Auth token:', token ? 'Present' : 'Missing');
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    credentials: 'include'
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok) {
+                    // Update user data in localStorage
+                    user.newsletterSubscribed = isSubscribed;
+                    user.lastNewsletterToggle = Date.now();
+                    localStorage.setItem("unibite-user", JSON.stringify(user));
+
+                    showToast(
+                        "Success", 
+                        isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
+                    );
+                } else {
+                    this.checked = !isSubscribed; // Revert the toggle
+                    showToast("Error", data.message || "Failed to update newsletter preference", "error");
+                }
+            } catch (error) {
+                console.error('Newsletter toggle error:', error);
+                this.checked = !isSubscribed; // Revert the toggle
+                showToast("Error", "An error occurred while updating newsletter preference", "error");
+            }
+        });
+    }
+
+    // Debug logs for user data
+    const user = JSON.parse(localStorage.getItem("unibite-user"));
+    console.log('User data from localStorage:', user);
+    console.log('Newsletter subscription status:', user?.newsletterSubscribed);
+
+    // Sync newsletter toggle state with user's database state
+    const newsletterToggleSync = document.getElementById('newsletter');
+    if (newsletterToggleSync) {
+        if (user && user.newsletterSubscribed !== undefined) {
+            console.log('Setting newsletter toggle to:', user.newsletterSubscribed);
+            newsletterToggleSync.checked = user.newsletterSubscribed;
+        } else {
+            console.log('No newsletter subscription status found in user data');
+        }
+    }
+
+    // Format and display member since date
+    const memberSinceElement = document.getElementById('member-since');
+    if (memberSinceElement) {
+        if (user && user.createdAt) {
+            const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            memberSinceElement.textContent = memberSince;
+        }
+    }
 });
 
 // Toast notification function

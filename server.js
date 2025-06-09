@@ -52,6 +52,7 @@ const reviewRoutes = require('./Routes/reviewRoutes');
 const adminRoutes = require('./Routes/adminRoutes');
 const cartRoutes = require('./Routes/cartRoutes');
 const executiveRoutes = require('./Routes/executiveRoutes');
+const newsletterRoutes = require('./Routes/newsletterRoutes');
 
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
@@ -62,6 +63,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/', adminRoutes);
 app.use('/cart', cartRoutes);
 app.use('/api/executive', executiveRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });

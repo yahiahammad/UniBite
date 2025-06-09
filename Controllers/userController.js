@@ -43,7 +43,9 @@ exports.loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.userType
+        role: user.userType,
+        newsletterSubscribed: user.newsletterSubscribed,
+        lastNewsletterToggle: user.lastNewsletterToggle
       }
     });
   } catch (error) {
