@@ -1,0 +1,119 @@
+/* Public/Styles/executive.css */
+
+/* Styles specific to the Executive Dashboard */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; /* Lighter background */
+    color: #34495e; /* Darker text for contrast */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* More pronounced shadow */
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+h1 {
+    color: #FF8A00; /* Primary orange for main title specific to executive dashboard */
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+h2 {
+    color: #2c3e50; /* Darker heading for sections specific to executive dashboard */
+    margin-bottom: 25px;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef; /* Subtle underline specific to executive dashboard */
+    padding-bottom: 10px;
+}
+
+.section {
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px dashed #e0e0e0; /* Dashed separator for visual interest */
+}
+
+.section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 12px 18px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #FF8A00; /* Orange highlight on focus */
+    box-shadow: 0 0 0 0.25rem rgba(255, 138, 0, 0.25); /* Orange shadow */
+}
+
+/* Button styles (btn-primary, btn-danger) are now handled by styles.css */
+
+.search-results {
+    background-color: #fff9f0; /* Very light orange tint for results area */
+    border: 1px solid #ffcc80;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+.card {
+    border: 1px solid #ffe0b3; /* Lighter orange border for cards */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Slightly more prominent card shadow */
+    margin-bottom: 15px;
+    background-color: #ffffff;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    color: #e67c00; /* Darker orange for titles */
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.card-text:last-of-type {
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.6rem;
+    }
+} 
