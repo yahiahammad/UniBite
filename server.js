@@ -1,5 +1,6 @@
 // server.js
 const express = require('express');
+const http = require('http'); // Import http module
 const mongoose = require('mongoose');
 const path = require("path");
 const cors = require('cors');
@@ -8,8 +9,11 @@ const MenuItem = require('./Models/MenuItems');
 require('dotenv').config(); // Load environment variables from .env
 const cookieParser = require('cookie-parser');
 const { requireLogin, checkAuth, authenticateExecutive} = require('./Middleware/auth');
+const { init } = require('./socket'); // Import the init function
 
 const app = express();
+const server = http.createServer(app); // Create HTTP server
+const io = init(server); // Initialize Socket.IO and pass the server
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
@@ -199,4 +203,4 @@ app.use((req, res) => {
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`)); // Use server.listen

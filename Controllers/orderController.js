@@ -1,6 +1,6 @@
 const Order = require('../Models/orders'); // Adjust the path if needed
 const MenuItem = require('../Models/MenuItems');
-
+const { getIO } = require('../socket'); // Import the getIO function
 // Controller to get all orders for the current user
 exports.getUserOrders = async (req, res) => {
     try {
@@ -32,6 +32,10 @@ exports.updateOrderStatus = async (req, res) => {
         if (!updatedOrder) {
             return res.status(404).json({ message: 'Order not found' });
         }
+
+        // Emit an event to notify clients about the status update
+        const io = getIO();
+        io.emit('order_status_updated', updatedOrder);
 
         res.status(200).json(updatedOrder);
     } catch (error) {
@@ -83,6 +87,17 @@ exports.submitOrder = async (req, res) => {
         });
 
         await order.save();
+
+        // Populate vendor and item details before sending back
+        const populatedOrder = await Order.findById(order._id)
+            .populate('vendorId', 'name')
+            .populate('items.menuItemId', 'name');
+
+        // Emit the new order to the vendor's room
+        const io = getIO();
+        io.emit('new_order', populatedOrder);
+
+        // Send confirmation back to the user
         res.json({ success: true, orderId: order._id });
     } catch (error) {
         console.error('Error submitting order:', error);
