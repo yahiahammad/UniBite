@@ -40,6 +40,28 @@ function init(httpServer) {
             }
         });
 
+        // Listen for 'cancel_order' event from a client
+        socket.on('cancel_order', async (data) => {
+            try {
+                const { orderId } = data;
+                const updatedOrder = await Order.findByIdAndUpdate(
+                    orderId,
+                    { status: 'cancelled' }, // Set the status to 'cancelled'
+                    { new: true }
+                ).populate('vendorId', 'name').populate('items.menuItemId', 'name');
+
+                if (updatedOrder) {
+                    // Emit an event to all clients that the order status has been updated
+                    io.emit('order_status_updated', updatedOrder);
+                    console.log(`Order ${orderId} status updated to cancelled.`);
+                } else {
+                    console.log(`Order ${orderId} not found.`);
+                }
+            } catch (error) {
+                console.error('Error updating order status to cancelled:', error);
+            }
+        });
+
         socket.on('disconnect', () => {
             console.log('❌ User disconnected with socket ID:', socket.id);
         });

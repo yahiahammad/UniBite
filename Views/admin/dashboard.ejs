@@ -141,7 +141,7 @@
                 <div class="recent-orders">
                     <h2>Recent Orders</h2>
                     <div class="orders-grid" id="recentOrdersGrid">
-                        <!-- Recent orders will be loaded here via AJAX -->
+                        <!-- Orders are loaded here via JavaScript -->
                     </div>
                 </div>
             </section>
@@ -335,8 +335,20 @@
 
             // Listen for status updates
             socket.on('order_status_updated', (order) => {
-                console.log('Order status updated, reloading...');
-                refreshPage();
+                const orderCard = document.getElementById(`order-${order._id}`);
+                
+                if (orderCard) {
+                    if (order.status === 'cancelled') {
+                        // If the order is cancelled, remove it from the recent orders grid.
+                        orderCard.style.transition = 'opacity 0.5s';
+                        orderCard.style.opacity = '0';
+                        setTimeout(() => orderCard.remove(), 500);
+                    } else {
+                        // Otherwise, just update the card's content in place.
+                        const updatedCard = createOrderCard(order);
+                        orderCard.innerHTML = updatedCard.innerHTML;
+                    }
+                }
             });
 
             function showToastNotification(order) {
@@ -357,6 +369,7 @@
                         <p>Order #${order._id.substring(0, 8)}...</p>
                         <ul>${itemsHtml}</ul>
                         <button class="btn btn-sm btn-success accept-toast-btn" data-order-id="${order._id}">Accept</button>
+                        <button class="btn btn-sm btn-danger cancel-toast-btn" data-order-id="${order._id}">Cancel</button>
                     </div>
                 `;
 
@@ -405,6 +418,9 @@
                         ${order.status === 'pending' ? 
                             `<button class="btn btn-sm btn-success accept-order-btn" data-order-id="${order._id}">Accept</button>` : 
                             ''}
+                        ${(order.status === 'pending' || order.status === 'preparing') ?
+                            `<button class="btn btn-sm btn-danger cancel-order-btn" data-order-id="${order._id}">Cancel</button>` :
+                            ''}
                     </div>
                 `;
                 return card;
@@ -417,39 +433,71 @@
                 socket.emit('accept_order', { orderId: hiddenOrderId });
             }
 
+            function handleCancel(orderId) {
+                console.log(`Cancelling order with ID: ${orderId}`);
+                socket.emit('cancel_order', { orderId: orderId });
+            }
+
             // Event listener for accept buttons on TOASTS (using event delegation on container)
             notificationContainer.addEventListener('click', (e) => {
-                if (e.target && e.target.classList.contains('accept-toast-btn')) {
+                if (e.target) {
                     const orderId = e.target.dataset.orderId;
-                    handleAccept(orderId);
-
-                    // Remove the toast immediately
                     const toast = document.getElementById(`toast-${orderId}`);
-                    if (toast) {
-                        toast.classList.remove('show');
-                        setTimeout(() => toast.remove(), 300);
+
+                    if (e.target.classList.contains('accept-toast-btn')) {
+                        handleAccept(orderId);
+                        if (toast) {
+                            toast.classList.remove('show');
+                            setTimeout(() => toast.remove(), 300);
+                        }
+                    } else if (e.target.classList.contains('cancel-toast-btn')) {
+                        handleCancel(orderId);
+                        if (toast) {
+                            toast.classList.remove('show');
+                            setTimeout(() => toast.remove(), 300);
+                        }
                     }
                 }
             });
 
             // Event listener for accept buttons on main grid (using event delegation)
             recentOrdersGrid.addEventListener('click', (e) => {
-                if (e.target && e.target.classList.contains('accept-order-btn')) {
+                if (e.target) {
                     const orderId = e.target.dataset.orderId;
-                    handleAccept(orderId);
-                    // The button will disappear on refresh, which is triggered by the 'order_status_updated' event
+                    if (e.target.classList.contains('accept-order-btn')) {
+                        handleAccept(orderId);
+                        // The button will disappear on refresh, which is triggered by the 'order_status_updated' event
+                    } else if (e.target.classList.contains('cancel-order-btn')) {
+                        handleCancel(orderId);
+                    }
                 }
             });
 
-             // Example of how existing orders might be loaded
+            // Load initial orders from the API endpoint
             async function loadInitialOrders() {
-                // This is just a placeholder to show how you might load existing orders.
-                // In a real app, you would fetch this from your backend API.
-                const mockOrders = []; // e.g. fetch('/api/orders/vendor').then(res => res.json())
-                mockOrders.forEach(order => {
-                    const orderCard = createOrderCard(order);
-                    recentOrdersGrid.appendChild(orderCard);
-                });
+                try {
+                    const response = await fetch('/api/admin/recent-orders');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch recent orders');
+                    }
+                    const orders = await response.json();
+                    
+                    recentOrdersGrid.innerHTML = ''; // Clear any existing content
+
+                    if (orders && orders.length > 0) {
+                        orders.forEach(order => {
+                            if (order.status !== 'cancelled') {
+                                const orderCard = createOrderCard(order);
+                                recentOrdersGrid.appendChild(orderCard);
+                            }
+                        });
+                    } else {
+                        recentOrdersGrid.innerHTML = '<p>No recent orders found.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error loading initial orders:', error);
+                    recentOrdersGrid.innerHTML = '<p>Could not load recent orders.</p>';
+                }
             }
             
             loadInitialOrders();

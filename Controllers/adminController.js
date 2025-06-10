@@ -17,7 +17,7 @@ exports.renderDashboard = async (req, res) => {
         // Get recent orders
         const recentOrders = await Order.find({ vendorId })
             .sort({ orderTime: -1 })
-            .limit(5)
+            .limit(20)
             .populate('userId', 'name email')
             .populate('items.menuItemId');
 
@@ -187,7 +187,7 @@ exports.getRecentOrders = async (req, res) => {
         const vendorId = req.user.id;
         const recentOrders = await Order.find({ vendorId })
             .sort({ orderTime: -1 })
-            .limit(5)
+            .limit(20)
             .populate('userId', 'name email')
             .populate('items.menuItemId');
         
