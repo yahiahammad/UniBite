@@ -292,24 +292,21 @@
             // Function to unlock audio on the first user interaction.
             function unlockAudio() {
                 if (!isAudioUnlocked) {
-                    // A common trick is to play and pause the sound immediately on the first interaction.
-                    // This satisfies the browser's requirement for a user-initiated audio event.
                     notificationSound.play().then(() => {
                         notificationSound.pause();
                         notificationSound.currentTime = 0;
                         isAudioUnlocked = true;
-                        console.log("Audio context unlocked by user interaction.");
-                        // We only need to do this once, so remove the listeners.
+                        console.log("Audio unlocked by user interaction.");
+                        // Once unlocked, we don't need these listeners anymore.
                         document.removeEventListener('click', unlockAudio);
                         document.removeEventListener('keydown', unlockAudio);
                     }).catch(error => {
-                        // This might still fail if the browser has stricter policies, but it's a good attempt.
-                         console.warn("Could not unlock audio on interaction.", error);
+                         console.warn("Could not unlock audio on interaction. Browser may require a more direct click.", error);
                     });
                 }
             }
 
-            // Add event listeners to detect the first user interaction.
+            // Listen for the first click or keypress anywhere on the page to unlock audio.
             document.addEventListener('click', unlockAudio);
             document.addEventListener('keydown', unlockAudio);
 
@@ -326,7 +323,7 @@
                         console.error("Error playing notification sound:", error);
                     });
                 } else {
-                    console.warn("Audio is locked by the browser. Please click on the page to enable sound.");
+                    console.warn("Audio is locked by the browser. Please click anywhere on the page to enable sound.");
                 }
 
                 showToastNotification(order);
