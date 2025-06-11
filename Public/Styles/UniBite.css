@@ -7,7 +7,8 @@
 html, body {
     overflow-x: hidden;
     font-size: 16px;
-
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
 }
 
 @media (max-width: 768px) {
@@ -21,22 +22,26 @@ html, body {
 /* SECTION 1 (Hero section) STYLING */
 
 .Section1 {
-    height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 2rem 1rem;
 }
 
 .Background-Container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background-image: url('../Images/HeroBackV2.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 
 .logo-container {
@@ -60,43 +65,50 @@ html, body {
     position: relative;
     z-index: 2;
     text-align: center;
+    max-width: 1200px;
+    width: 100%;
+    padding: 2rem;
     margin-top: 4rem;
 }
 
 .hero-title {
-    font-size: 2.5rem;
+    font-size: 4rem;
     font-weight: 800;
     background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 0.3rem;
+    margin-bottom: 1rem;
     transform: translateY(20px);
     animation: fadeInUp 2s ease forwards;
+    line-height: 1.2;
 }
 
 .hero-subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 2rem;
     animation: fadeInUp 0.8s ease forwards 0.2s;
+    font-weight: 500;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 0.8rem;
+    gap: 1.5rem;
     justify-content: center;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards 0.4s;
-
+    flex-wrap: wrap;
 }
 
 .hero-buttons button {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: 600;
+    min-width: 200px;
 }
 
 .primary-btn {
@@ -113,89 +125,53 @@ html, body {
 
 .hero-buttons button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(153, 45, 31, 0.3);
+    box-shadow: 0 8px 20px rgba(255, 138, 0, 0.3);
 }
 
 .hero-features {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
 }
 
 .feature {
     flex: 1;
-    max-width: 180px;
-    padding: 1rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+    max-width: 300px;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards 0.6s;
+    backdrop-filter: blur(10px);
 }
 
 .feature:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 17px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
-    font-size: 1.8rem;
-    margin-bottom: 0.4rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 .feature h3 {
     color: #333;
-    font-size: 1rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .feature p {
     color: #666;
-    font-size: 0.75rem;
-}
-
-
-.scroll-indicator {
-    position: absolute;
-    bottom: 0.8rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-    opacity: 0;
-    animation: fadeIn 1s ease forwards 1s;
-}
-
-.mouse {
-    width: 25px;
-    height: 40px;
-    border: 2px solid #ff8a00;
-    border-radius: 15px;
-    position: relative;
-}
-
-.mouse::before {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background: #ff8a00;
-    border-radius: 50%;
-    animation: scroll 1.5s infinite;
-}
-
-.scroll-indicator p {
-    color: #666;
-    font-size: 0.8rem;
-    margin:0;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 @keyframes fadeInUp {
@@ -211,78 +187,64 @@ html, body {
     }
 }
 
-/*Scroll animation for the mouse (Scroll to explore) */
-@keyframes scroll {
-    0% {
-        opacity: 1;
-        transform: translate(-50%, 0);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, 12px);
-    }
-}
-
 @media (max-width: 768px) {
     .Main-logo {
         width: 20%;
-
     }
 
     .hero-title {
-        font-size: 2rem;
-        margin-top: 7rem;
-        margin-bottom: 12rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        line-height: 1.2;
+        font-size: 2.5rem;
+        margin-top: 2rem;
     }
 
     .hero-subtitle {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
     }
 
     .hero-buttons {
-        flex-direction: row;
+        flex-direction: column;
         gap: 1rem;
         padding: 0 1rem;
     }
 
     .hero-buttons button {
-        padding: 0.75rem 1.5rem;
+        width: 100%;
+        padding: 1rem;
         font-size: 1rem;
-        min-width: 8rem;
     }
 
     .hero-features {
-        display: none; /* Hide features on mobile */
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
     }
 
+    .feature {
+        min-width: 100%;
+        padding: 1.5rem;
+    }
 
-    /* Mobile background */
-        .Background-Container {
-            background-image: url('../Images/MobileBack.jpg'); /* Different image for mobile (For orientation) */
-            background-size:cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+    .Background-Container {
+        background-image: url('../Images/MobileBack.jpg');
+    }
 }
+
 /* ========================================================================================= */
 
 /* SECTION 2 STYLING (GRID LAYOUT) */
 .Section2 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    height: 100vh;
-
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2.5rem;
+    padding: 3rem;
+    min-height: 100vh;
+    background: #f8f9fa;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Applies to all inner boxes EXCEPT .LogIn-SignUp-buttons */
 .Section2 div:not(.LogIn-SignUp-buttons) {
     color: white;
     text-align: center;
@@ -292,53 +254,65 @@ html, body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    padding: 3rem 2rem;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 350px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.Section2 div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.6)
+    );
+    z-index: 0;
+    transition: all 0.4s ease;
+}
+
+.Section2 div:hover::before {
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0.7)
+    );
+}
+
+.Section2 div > * {
+    position: relative;
+    z-index: 1;
+}
+
+.Section2 div:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .Section2 h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 2.8rem;
+    font-weight: 800;
     margin: 0;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Layout for the first item (JOIN US section) */
 .LogIn-SignUp {
     display: flex;
     flex-direction: column;
-}
-
-.LogIn-SignUp h1 {
-    margin-bottom: 5px;
-}
-
-/* Flexbox for the buttons in JOIN US section (horizontal layout) */
-.LogIn-SignUp-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* Shared styling for all buttons in Section2 */
-.Section2 button {
-    margin: 10px 5px 0;
-    padding: 10px 20px;
-    border: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(to right, #ff8a00 0%, #ffa94d 100%);
-    transition: transform 0.2s, background 0.2s;
-}
-
-.LogIn-SignUp {
+    gap: 2rem;
     background-image: url('../Images/Eat.jpg');
 }
 
@@ -354,55 +328,100 @@ html, body {
     background-image: url('../Images/aboutUs.jpg');
 }
 
-/* Overlay layer */
-.Section2 > div {
+.LogIn-SignUp-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.Section2 button {
+    padding: 1.2rem 2.5rem;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #ff8a00 0%, #ffa94d 100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 200px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     position: relative;
     overflow: hidden;
 }
 
-.Section2 > div::before {
+.Section2 button::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 0;
+    background: linear-gradient(135deg, #ffa94d 0%, #ff8a00 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* Ensure content stays above overlay */
-.Section2 > div > * {
+.Section2 button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(255, 138, 0, 0.3);
+}
+
+.Section2 button:hover::before {
+    opacity: 1;
+}
+
+.Section2 button span {
     position: relative;
     z-index: 1;
 }
 
 @media (max-width: 768px) {
     .Section2 {
-        gap: 15px;
-        padding: 15px;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .Section2 div:not(.LogIn-SignUp-buttons) {
+        min-height: 280px;
+        padding: 2rem 1.5rem;
     }
 
     .Section2 h1 {
-        font-size: 2rem;
-        word-wrap: break-word; /* Breaks text to make it fit in box */
-        padding: 0 10px;
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
     }
 
+    .Section2 button {
+        width: 100%;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        min-width: unset;
+    }
 
+    .LogIn-SignUp-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
 }
 
 /* ========================================================================================= */
+
 /* SECTION 3 STYLING (Our partners) */
 .Section3 {
-    padding: 60px;
+    padding: 60px 20px;
     background: linear-gradient(to bottom, #fff, #f8f9fa);
     overflow: hidden;
     position: relative;
-    border-top: solid black;
-    border-bottom: solid black;
     margin-bottom: 40px;
-    min-height: 400px; /* Add minimum height to ensure proper spacing */
+    min-height: 400px;
 }
 
 .Section-Title {
@@ -418,21 +437,14 @@ html, body {
 }
 
 .partners {
-    width: 90%;
+    width: 100%;
     max-width: 1536px;
-    margin-inline: auto;
+    margin: 0 auto;
     position: relative;
-    height: 200px; /* Increased height for better visibility */
+    height: 200px;
     margin-top: 2rem;
     overflow: hidden;
-    padding: 20px 0; /* Add padding for better spacing */
-}
-
-/* AUTO SCROLL ANIMATION */
-@keyframes scrollLeft {
-    to {
-        left: -200px;
-    }
+    padding: 20px 0;
 }
 
 .item {
@@ -447,9 +459,9 @@ html, body {
     animation-iteration-count: infinite;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     perspective: 1000px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
-    border-radius: 12px; /* Add border radius for better aesthetics */
-    overflow: hidden; /* Ensure content doesn't overflow */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 .card-inner {
@@ -458,10 +470,9 @@ html, body {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.8s;
-    border-radius: 12px; /* Match parent's border radius */
+    border-radius: 12px;
 }
 
-/* Flip with bounce effect */
 .item:hover .card-inner {
     transform: rotateY(180deg);
     transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
@@ -547,11 +558,10 @@ html, body {
 }
 
 .item:hover {
-    transform: scale(1.05); /* Slightly reduced scale for smoother effect */
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* Animation pause on hover */
 .partners:hover .item {
     animation-play-state: paused;
 }
@@ -566,57 +576,107 @@ html, body {
 .item8 { animation-delay: calc(30s / 9 * (9 - 8) * -1); }
 .item9 { animation-delay: calc(30s / 9 * (9 - 9) * -1); }
 
+@keyframes scrollLeft {
+    to {
+        left: -200px;
+    }
+}
+
 @media (max-width: 768px) {
     .Section3 {
-        padding: 30px 15px;
+        padding: 30px 10px;
+        min-height: 300px;
     }
 
     .Section-Title {
         font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .partners {
+        height: 150px;
+        margin-top: 1rem;
+        padding: 10px 0;
+    }
+
+    .item {
+        width: 180px;
+        height: 120px;
+        margin-right: 15px;
+    }
+
+    .card-front, .card-back {
+        width: 180px;
+        height: 120px;
+    }
+
+    .card-front img {
+        padding: 5px;
+    }
+
+    .card-back-content {
+        padding: 10px;
+    }
+
+    .card-back p {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+
+    .card-back h2 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .view-menu {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        border-radius: 10px;
+    }
+
+    @keyframes scrollLeft {
+        to {
+            left: -150px;
+        }
+    }
+}
+
+/* For very small screens */
+@media (max-width: 360px) {
+    .Section3 {
+        padding: 20px 5px;
+    }
+
+    .Section-Title {
+        font-size: 1.8rem;
         margin-bottom: 1rem;
     }
 
     .partners {
         height: 120px;
-        width: 95%;
-        margin-top: 1rem;
     }
 
     .item {
-        width: 160px;
-        height: 120px;
+        width: 150px;
+        height: 100px;
         margin-right: 10px;
     }
 
     .card-front, .card-back {
-        width: 160px;
-        height: 120px;
-    }
-
-    .card-back {
-        padding: 10px;
-    }
-
-    .card-front img {
-        width: 70%;
-        height: 70%;
+        width: 150px;
+        height: 100px;
     }
 
     .card-back p {
-        font-size: 11px;
-        margin-bottom: 4px;
-        line-height: 1.2;
+        font-size: 0.7rem;
     }
 
     .card-back h2 {
-        font-size: 10px;
-        padding: 4px 8px;
-        margin-bottom: 4px;
+        font-size: 0.9rem;
     }
 
     .view-menu {
         padding: 4px 10px;
         font-size: 0.7rem;
-        border-radius: 12px;
     }
 }
