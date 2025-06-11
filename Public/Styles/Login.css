@@ -60,7 +60,7 @@
 
 
 .signup-btn {
-    margin-left: 40px;
+    margin-left: 20px;
     padding: 8px 16px;
     font-size: 14px;
     color: white;
@@ -69,10 +69,13 @@
     cursor: pointer;
     background: linear-gradient(to right, #ff8a00 0%, #ff6b00 100%);
     transition: transform 0.2s, background 0.2s;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .signup-btn:hover {
     transform: scale(1.05);
+    text-decoration: none;
 }
 
 * {
@@ -106,33 +109,33 @@ body {
 
 .login-container {
     background: rgba(255, 255, 255, 0.95);
-    padding: 40px;
-    border-radius: 16px;
+    padding: 25px;
+    border-radius: 12px;
     box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
     text-align: center;
-    width: 450px;
+    width: 400px;
     position: relative;
     backdrop-filter: blur(10px);
 }
 
 .login-container h2 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: #333;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 600;
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .input-field {
     width: 100%;
-    padding: 15px;
-    margin-bottom: 5px;
+    padding: 10px;
+    margin-bottom: 0;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    font-size: 15px;
+    border-radius: 6px;
+    font-size: 14px;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -142,20 +145,28 @@ body {
     outline: none;
 }
 
+.termsAndConditions {
+    font-size: 12px;
+    color: #666;
+    margin: 15px 0;
+    display: block;
+    text-align: left;
+    line-height: 1.4;
+}
+
 .button-container {
     display: flex;
     justify-content: space-between;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 10px;
+    margin-top: 15px;
 }
-
 
 .button, .google-button {
     width: 48%;
-    padding: 14px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     transition: all 0.3s ease;
 }
@@ -182,7 +193,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .google-button:hover {
@@ -336,7 +347,7 @@ body {
 
     .login-container {
         width: 90%;
-        max-width: 450px;
+        max-width: 400px;
         padding: 30px 20px;
     }
 
@@ -411,4 +422,20 @@ body {
 
 #verification-status a:hover {
     transform: scale(1.05);
+}
+
+.already-customer {
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.already-customer a {
+    color: #ff8a00;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.already-customer a:hover {
+    color: #ff6b00;
+    text-decoration: underline;
 }
