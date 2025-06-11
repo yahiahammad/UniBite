@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Simple string field for password as requested
+  password: { type: String, required: true, select: false }, // Password is not selected by default
   phoneNumber: String,
   userType: {
     type: String,
@@ -35,9 +36,21 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Pre-save hook to hash password
+UserSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Method to compare passwords
-UserSchema.methods.comparePassword = function(candidatePassword) {
-  return this.password === candidatePassword;
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model('User', UserSchema);

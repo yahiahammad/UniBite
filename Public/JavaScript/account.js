@@ -166,6 +166,86 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   }
+  
+    // Newsletter toggle functionality
+    const newsletterToggle = document.getElementById('newsletter');
+    if (newsletterToggle) {
+        newsletterToggle.addEventListener('change', async function() {
+            const isSubscribed = this.checked;
+            const user = JSON.parse(localStorage.getItem("unibite-user"));
+            
+            const lastToggle = user.lastNewsletterToggle;
+            if (lastToggle) {
+                const timeSinceLastToggle = Date.now() - new Date(lastToggle).getTime();
+                const hoursSinceLastToggle = timeSinceLastToggle / (1000 * 60 * 60);
+                
+                if (hoursSinceLastToggle < 24) {
+                    this.checked = !isSubscribed;
+                    const hoursRemaining = Math.ceil(24 - hoursSinceLastToggle);
+                    showToast(
+                        "Error", 
+                        `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
+                        "error"
+                    );
+                    return;
+                }
+            }
+
+            try {
+                const endpoint = isSubscribed ? '/api/newsletter/subscribe' : '/api/newsletter/unsubscribe';
+                const token = localStorage.getItem('token');
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    user.newsletterSubscribed = isSubscribed;
+                    user.lastNewsletterToggle = Date.now();
+                    localStorage.setItem("unibite-user", JSON.stringify(user));
+
+                    showToast(
+                        "Success", 
+                        isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
+                    );
+                } else {
+                    this.checked = !isSubscribed;
+                    showToast("Error", data.message || "Failed to update newsletter preference", "error");
+                }
+            } catch (error) {
+                this.checked = !isSubscribed;
+                showToast("Error", "An error occurred while updating newsletter preference", "error");
+            }
+        });
+    }
+
+    // Sync newsletter toggle state with user's database state
+    const newsletterToggleSync = document.getElementById('newsletter');
+    if (newsletterToggleSync) {
+        if (user && user.newsletterSubscribed !== undefined) {
+            newsletterToggleSync.checked = user.newsletterSubscribed;
+        }
+    }
+
+    // Format and display member since date
+    const memberSinceElement = document.getElementById('member-since');
+    if (memberSinceElement) {
+        if (user && user.createdAt) {
+            const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            memberSinceElement.textContent = memberSince;
+        }
+    }
 
   // Logout functionality
   const logoutButtons = document.querySelectorAll("#logout-btn, #mobile-logout-btn")
@@ -192,14 +272,14 @@ document.addEventListener("DOMContentLoaded", () => {
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       `
-      toastIcon.style.color = "#4CAF50"
+      toast.classList.remove('error');
     } else if (type === "error") {
       toastIcon.innerHTML = `
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       `
-      toastIcon.style.color = "#F44336"
+      toast.classList.add('error');
     }
 
     // Show toast

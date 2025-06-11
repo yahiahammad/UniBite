@@ -21,7 +21,8 @@ exports.loginUser = async (req, res) => {
     }
 
     // Now user.password should be available
-    if (user.password !== password) {
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
       return res.status(401).json({ message: 'Incorrect password' });
     }
 

@@ -35,7 +35,7 @@ router.post('/update-profile', requireLogin, async (req, res) => {
 router.post('/change-password', requireLogin, async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user.id).select('+password');
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });

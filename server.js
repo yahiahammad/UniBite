@@ -205,7 +205,9 @@ app.get('/executive', authenticateExecutive, (req, res) => {
 app.get('/verify-email', (req, res) => {
     res.render('Auth/VerifyEmail');
 });
-
+app.get('/cart', requireLogin, (req, res) => {
+    res.render('Cart', { active: 'cart' });
+});
 // 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('error', {
