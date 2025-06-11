@@ -19,8 +19,15 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
 app.set('auth', 'Views/Auth');
 
+// CORS configuration
+app.use(cors({
+    origin: 'http://localhost:5000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -61,13 +68,13 @@ const newsletterRoutes = require('./Routes/newsletterRoutes');
 // --- MOUNT YOUR ROUTES (This was missing!) ---
 app.use('/api/users', userRoutes);
 app.use('/api/vendors', vendorRoutes);
-app.use('/api/menuitems', menuItemRoutes);
+app.use('/api/menu-items', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
-app.use('/', adminRoutes);
-app.use('/cart', cartRoutes);
-app.use('/api/executive', executiveRoutes);
+app.use('/api/cart', cartRoutes);
 app.use('/api/newsletter', newsletterRoutes);
+app.use('/', adminRoutes);
+app.use('/api/executive', executiveRoutes);
 
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
@@ -193,6 +200,12 @@ app.get('/orders', requireLogin, (req, res) => {
 app.get('/executive', authenticateExecutive, (req, res) => {
     res.render('executive', { active: 'executive', authenticateExecutive: true });
 })
+
+// Add route for email verification page
+app.get('/verify-email', (req, res) => {
+    res.render('Auth/VerifyEmail');
+});
+
 // 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('error', {

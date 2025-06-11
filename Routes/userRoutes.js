@@ -7,6 +7,7 @@ const User = require('../Models/User');
 
 router.post('/login', userController.loginUser);
 router.post('/register', userController.registerUser);
+router.get('/verify-email', userController.verifyEmail);
 
 
 // Update user profile

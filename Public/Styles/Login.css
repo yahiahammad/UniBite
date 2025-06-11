@@ -366,3 +366,49 @@ body {
         margin: 0;
     }
 }
+
+/* Verification page styles */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff8a00;
+    border-radius: 50%;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.success-icon, .error-icon {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#verification-status {
+    text-align: center;
+    padding: 20px;
+}
+
+#verification-status p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+#verification-status a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: linear-gradient(to right, #ff8a00 0%, #ff6b00 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: transform 0.2s;
+}
+
+#verification-status a:hover {
+    transform: scale(1.05);
+}

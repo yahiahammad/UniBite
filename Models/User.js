@@ -17,6 +17,9 @@ const UserSchema = new mongoose.Schema({
     required: function() { return this.userType === 'admin'; },
     default: null
   },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: String,
+  verificationTokenExpires: Date,
   createdAt: { type: Date, default: Date.now },
   cart: [{
     id: String,
