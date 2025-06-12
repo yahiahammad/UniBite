@@ -2,6 +2,7 @@ const Order = require('../Models/orders');
 const MenuItem = require('../Models/MenuItems');
 const Vendor = require('../Models/Vendor');
 const jwt = require('jsonwebtoken');
+const { sendOrderStatusEmail } = require('../utils/emailService');
 
 // Render admin dashboard
 exports.renderDashboard = async (req, res) => {
@@ -295,6 +296,17 @@ exports.updateOrderStatus = async (req, res) => {
             order.acceptedTime = new Date();
         }
         await order.save();
+
+        // Send email to user if accepted, declined, or ready for pickup
+        if (status === 'preparing' || status === 'cancelled' || status === 'ready for pickup') {
+            await order.populate('userId', 'email');
+            await order.populate('vendorId', 'name');
+            const userEmail = order.userId.email;
+            const restaurantName = order.vendorId && order.vendorId.name ? order.vendorId.name : '';
+            const items = order.items;
+            console.log('Sending order status email to:', userEmail, 'for order:', order._id, 'status:', status);
+            await sendOrderStatusEmail(userEmail, order._id, status, restaurantName, items);
+        }
 
         res.json({ message: 'Order status updated successfully' });
     } catch (error) {

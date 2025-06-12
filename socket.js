@@ -1,6 +1,8 @@
 // socket.js
 const { Server } = require('socket.io');
 const Order = require('./Models/orders'); // Import the Order model
+const { sendOrderStatusEmail } = require('./utils/emailService');
+const User = require('./Models/User');
 
 let io;
 
@@ -21,22 +23,23 @@ function init(httpServer) {
                 const { orderId } = data;
                 const updatedOrder = await Order.findByIdAndUpdate(
                     orderId,
-                    { status: 'preparing' }, // Set the status to 'preparing'
+                    { status: 'preparing' },
                     { new: true }
-                ).populate('vendorId', 'name').populate('items.menuItemId', 'name');
+                ).populate('userId', 'email').populate('vendorId', 'name');
 
                 if (updatedOrder) {
-                    // Emit an event to all clients that the order status has been updated
+                    if (updatedOrder.userId && updatedOrder.userId.email) {
+                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
+                        const items = updatedOrder.items;
+                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'preparing', restaurantName, items);
+                    }
                     io.emit('order_status_updated', updatedOrder);
                     console.log(`Order ${orderId} status updated to preparing.`);
                 } else {
-                    // Handle case where order is not found
-                    // You can emit an error back to the sender
                     console.log(`Order ${orderId} not found.`);
                 }
             } catch (error) {
                 console.error('Error updating order status:', error);
-                // Optionally, emit an error event back to the client
             }
         });
 
@@ -46,12 +49,16 @@ function init(httpServer) {
                 const { orderId } = data;
                 const updatedOrder = await Order.findByIdAndUpdate(
                     orderId,
-                    { status: 'cancelled' }, // Set the status to 'cancelled'
+                    { status: 'cancelled' },
                     { new: true }
-                ).populate('vendorId', 'name').populate('items.menuItemId', 'name');
+                ).populate('userId', 'email').populate('vendorId', 'name');
 
                 if (updatedOrder) {
-                    // Emit an event to all clients that the order status has been updated
+                    if (updatedOrder.userId && updatedOrder.userId.email) {
+                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
+                        const items = updatedOrder.items;
+                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'cancelled', restaurantName, items);
+                    }
                     io.emit('order_status_updated', updatedOrder);
                     console.log(`Order ${orderId} status updated to cancelled.`);
                 } else {
@@ -59,6 +66,32 @@ function init(httpServer) {
                 }
             } catch (error) {
                 console.error('Error updating order status to cancelled:', error);
+            }
+        });
+
+        // Listen for 'ready_for_pickup' event from a client
+        socket.on('ready_for_pickup', async (data) => {
+            try {
+                const { orderId } = data;
+                const updatedOrder = await Order.findByIdAndUpdate(
+                    orderId,
+                    { status: 'ready for pickup' },
+                    { new: true }
+                ).populate('userId', 'email').populate('vendorId', 'name');
+
+                if (updatedOrder) {
+                    if (updatedOrder.userId && updatedOrder.userId.email) {
+                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
+                        const items = updatedOrder.items;
+                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'ready for pickup', restaurantName, items);
+                    }
+                    io.emit('order_status_updated', updatedOrder);
+                    console.log(`Order ${orderId} status updated to ready for pickup.`);
+                } else {
+                    console.log(`Order ${orderId} not found.`);
+                }
+            } catch (error) {
+                console.error('Error updating order status to ready for pickup:', error);
             }
         });
 
@@ -80,4 +113,4 @@ function getIO() {
 module.exports = {
     init,
     getIO,
-}; 
+};
