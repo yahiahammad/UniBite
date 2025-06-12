@@ -98,9 +98,9 @@ function setupEventListeners() {
 
     // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(e.target) && 
-            !menuToggle.contains(e.target) && 
+        if (window.innerWidth <= 768 &&
+            !sidebar.contains(e.target) &&
+            !menuToggle.contains(e.target) &&
             sidebar.classList.contains('show')) {
             toggleSidebar();
         }
@@ -135,7 +135,7 @@ function setupEventListeners() {
 
             // Get current status
             const currentStatus = statusIndicator.textContent.toLowerCase();
-            
+
             // Skip if clicking the same status
             if (currentStatus === newStatus) return;
 
@@ -147,7 +147,7 @@ function setupEventListeners() {
     // Status confirmation modal events
     confirmStatusChange?.addEventListener('click', handleStatusChange);
     cancelStatusChange?.addEventListener('click', hideStatusConfirmation);
-    
+
     // Close modal when clicking the X or outside
     const closeButtons = document.querySelectorAll('.modal .close');
     closeButtons.forEach(button => {
@@ -206,7 +206,7 @@ function showSection(sectionId) {
 async function updateDashboard() {
     try {
         const headers = getAuthHeaders();
-        
+
         const response = await fetch('/api/admin/stats', {
             headers: headers
         });
@@ -297,7 +297,7 @@ async function fetchAndRenderOrders() {
 
         const data = await response.json();
         const ordersGrid = document.getElementById('allOrdersGrid');
-        
+
         if (!ordersGrid) {
             console.error('Orders grid element not found');
             return;
@@ -420,16 +420,16 @@ function showOrderModal(order) {
                 <div class="order-items-list">
                     <h4>Order Items</h4>
                     ${order.items.map(item => {
-                        const itemName = item.menuItemId ? item.menuItemId.name : item.nameAtOrder || 'Unknown Item';
-                        const itemPrice = item.menuItemId ? item.menuItemId.price : item.priceAtOrder || 0;
-                        return `
+        const itemName = item.menuItemId ? item.menuItemId.name : item.nameAtOrder || 'Unknown Item';
+        const itemPrice = item.menuItemId ? item.menuItemId.price : item.priceAtOrder || 0;
+        return `
                         <div class="order-item-detail">
                             <span class="order-item-quantity">${item.quantity}x</span>
                             <span class="order-item-name">${itemName}</span>
                             <span class="order-item-price">$${(itemPrice * item.quantity).toFixed(2)}</span>
                         </div>
                         `;
-                    }).join('')}
+    }).join('')}
                 </div>
                 ${order.notes ? `
                     <div class="order-notes">
@@ -478,7 +478,7 @@ function showOrderModal(order) {
 // Get order action buttons based on status
 function getOrderActionButtons(order) {
     const buttons = [];
-    
+
     switch (order.status) {
         case 'pending':
             buttons.push(`
@@ -568,7 +568,7 @@ async function updateOrderStatus(orderId, newStatus) {
 
         // Also update dashboard stats as revenue/today's orders might change
         updateDashboard();
-        
+
         // Show success message
         showNotification('Order status updated successfully', 'success');
     } catch (error) {
@@ -611,7 +611,7 @@ let deleteConfirmModal;
 // Load menu items
 async function loadMenuItems() {
     try {
-        const response = await fetch('/api/menuitems/vendor', {
+        const response = await fetch('/api/menu-items/vendor', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -631,7 +631,7 @@ async function loadMenuItems() {
 function renderMenuItems() {
     const tbody = document.getElementById('menuItemsTable');
     if (!tbody) return;
-    
+
     tbody.innerHTML = menuItems.map(item => `
         <tr>
             <td>
@@ -690,7 +690,7 @@ function editMenuItem(id) {
 async function saveMenuItem() {
     const formData = new FormData();
     const id = document.getElementById('itemId').value;
-    
+
     formData.append('name', document.getElementById('name').value);
     formData.append('description', document.getElementById('description').value);
     formData.append('price', document.getElementById('price').value);
@@ -703,9 +703,9 @@ async function saveMenuItem() {
     }
 
     try {
-        const url = id ? `/api/menuitems/${id}` : '/api/menuitems';
+        const url = id ? `/api/menu-items/${id}` : '/api/menu-items';
         const method = id ? 'PUT' : 'POST';
-        
+
         const response = await fetch(url, {
             method,
             headers: {
@@ -728,9 +728,9 @@ async function saveMenuItem() {
 // Toggle item availability
 async function toggleAvailability(id, available) {
     try {
-        const response = await fetch(`/api/menuitems/${id}`, {
+        const response = await fetch(`/api/menu-items/${id}`, {
             method: 'PUT',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
@@ -757,7 +757,7 @@ async function confirmDelete() {
     if (!itemToDelete) return;
 
     try {
-        const response = await fetch(`/api/menuitems/${itemToDelete}`, {
+        const response = await fetch(`/api/menu-items/${itemToDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
