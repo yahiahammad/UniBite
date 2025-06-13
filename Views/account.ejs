@@ -55,7 +55,7 @@
                     </div>
                     <div class="form-group">
                       <label for="phone">Phone Number</label>
-                      <input type="tel" id="phone" name="phone" placeholder="<%= user.phoneNumber || '+20 123 456 789' %>" value="<%= user.phoneNumber %>">
+                      <input type="tel" id="phone" name="phone" placeholder="<%= user.phone || '+20 123 456 789' %>" value="<%= user.phone || '+20 123 456 789' %>">
                     </div>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                   </form>
@@ -266,7 +266,9 @@
     // Function to load orders
     async function loadOrders() {
       try {
-        const response = await fetch('/api/orders/user');
+        const response = await fetch('/api/orders/user', {
+          credentials: 'include'
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
@@ -324,7 +326,7 @@
       const statusClass = order.status.toLowerCase().replace(/\s+/g, '-');
       const paymentClass = order.paymentStatus.toLowerCase();
       
-      return `
+      let cardHtml = `
         <div class="order-card ${statusClass}">
           <div class="order-header">
             <div>
@@ -352,7 +354,7 @@
           </div>
 
           <div class="vendor-info">
-            <img src="/Images/store-logo.png" alt="${order.vendorId.name} Logo" class="vendor-logo">
+            <img src="${order.vendorId.logoURL ? order.vendorId.logoURL : '/Images/default-food.webp'}" alt="${order.vendorId.name} Logo" class="vendor-logo">
             <span>${order.vendorId.name}</span>
           </div>
 
@@ -396,6 +398,22 @@
           </div>
         </div>
       `;
+
+      // Add review button for completed, unreviewed orders
+      if ((order.status === 'picked up' || order.status === 'cancelled') && order.reviewed === false) {
+        cardHtml += `
+          <div class="order-review-action">
+            <button class="btn btn-review" onclick="openReviewModal('${order._id}', '${order.vendorId._id}', '${order.vendorId.name}')">Leave a Review</button>
+          </div>
+        `;
+      } else if (order.reviewed === true) {
+        cardHtml += `
+          <div class="order-review-action reviewed">
+            <span class="reviewed-message">Thank you for your review!</span>
+          </div>
+        `;
+      }
+      return cardHtml;
     }
 
     // Load orders when the orders tab is clicked

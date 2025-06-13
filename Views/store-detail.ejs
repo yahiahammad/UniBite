@@ -43,6 +43,9 @@
                         <% }); %>
                     </div>
                 </div>
+                <div class="see-reviews-container">
+                  <button id="show-reviews-btn" class="btn btn-primary see-reviews-btn">See Reviews</button>
+                </div>
             </div>
         </div>
 
@@ -156,6 +159,15 @@
                     </div>
                 </div>
             <% }); %>
+        </div>
+
+        <!-- Reviews Modal -->
+        <div id="reviews-modal" class="review-modal">
+            <div class="modal-content">
+                <span class="close" id="close-reviews-modal">&times;</span>
+                <h2>Reviews for <%= vendor.name %></h2>
+                <div id="reviews-list">Loading...</div>
+            </div>
         </div>
     </div>
 </main>

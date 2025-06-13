@@ -363,4 +363,44 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.style.opacity = '0';
     }, 2000);
   }
+
+  // --- Reviews Modal Logic ---
+  const showReviewsBtn = document.getElementById('show-reviews-btn');
+  const reviewsModal = document.getElementById('reviews-modal');
+  const closeReviewsModal = document.getElementById('close-reviews-modal');
+  const reviewsList = document.getElementById('reviews-list');
+  const vendorId = document.body.getAttribute('data-vendor-id');
+
+  if (showReviewsBtn && reviewsModal && closeReviewsModal && reviewsList && vendorId) {
+    showReviewsBtn.onclick = async function() {
+      reviewsModal.style.display = 'flex';
+      reviewsList.innerHTML = 'Loading...';
+      try {
+        const res = await fetch(`/api/reviews/vendor/${vendorId}`);
+        const reviews = await res.json();
+        if (Array.isArray(reviews) && reviews.length > 0) {
+          reviewsList.innerHTML = reviews.map(r => `
+            <div class="review-item" style="text-align:left; margin-bottom:1.5rem; border-bottom:1px solid #eee; padding-bottom:1rem;">
+              <div style="font-weight:600; color:#e29127; margin-bottom:0.3rem;">${r.userId?.name || 'User'}</div>
+              <div style="color:#FFD700; font-size:1.2rem; margin-bottom:0.2rem;">
+                ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}
+              </div>
+              <div style="color:#333;">${r.comment ? r.comment : '<em>No comment</em>'}</div>
+              <div style="font-size:0.85rem; color:#888; margin-top:0.2rem;">${new Date(r.createdAt).toLocaleString()}</div>
+            </div>
+          `).join('');
+        } else {
+          reviewsList.innerHTML = '<div style="color:#888;">No reviews yet for this restaurant.</div>';
+        }
+      } catch (err) {
+        reviewsList.innerHTML = '<div style="color:#c00;">Error loading reviews.</div>';
+      }
+    };
+    closeReviewsModal.onclick = function() {
+      reviewsModal.style.display = 'none';
+    };
+    window.onclick = function(event) {
+      if (event.target === reviewsModal) reviewsModal.style.display = 'none';
+    };
+  }
 })

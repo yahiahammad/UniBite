@@ -27,6 +27,7 @@ const OrderSchema = new mongoose.Schema({
     default: 'unpaid',
   },
   notes: String, // Optional notes from the user
+  reviewed: { type: Boolean, default: false }, // Track if this order has been reviewed
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

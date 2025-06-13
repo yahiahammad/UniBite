@@ -367,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div class="vendor-info">
-          <img src="/Images/store-logo.png" alt="${order.vendorId.name} Logo" class="vendor-logo">
+          <img src="${order.vendorId.logoURL ? order.vendorId.logoURL : '/Images/default-food.webp'}" alt="${order.vendorId.name} Logo" class="vendor-logo">
           <span>${order.vendorId.name}</span>
         </div>
 
@@ -409,6 +409,16 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="order-total">
           Total: ${order.totalPrice} EGP
         </div>
+
+        <!-- Review Button/Modal Placement -->
+        <div class="order-review-placement">
+          <!-- Show review button only for picked up, unreviewed orders -->
+          ${(order.status === 'picked up' && order.reviewed === false) ? `
+            <button class="btn btn-review" onclick="openReviewModal('${order._id}', '${order.vendorId._id}', '${order.vendorId.name}')">Leave a Review</button>
+          ` : (order.status === 'picked up' && order.reviewed === true ? `
+            <span class="reviewed-message">Thank you for your review!</span>
+          ` : '')}
+        </div>
       </div>
     `;
   }
@@ -423,6 +433,103 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById('orders')) {
     loadOrders();
   }
+
+  // --- Review Modal Logic ---
+  // Modal HTML
+  if (!document.getElementById('review-modal')) {
+    const modalDiv = document.createElement('div');
+    modalDiv.id = 'review-modal';
+    modalDiv.className = 'review-modal';
+    modalDiv.style.display = 'none';
+    modalDiv.innerHTML = `
+      <div class="modal-content">
+        <span class="close" id="close-review-modal">&times;</span>
+        <div class="review-title">Leave a Review</div>
+        <div class="review-vendor" id="review-vendor-name"></div>
+        <div class="enhanced-stars" id="review-stars">
+          ${[1,2,3,4,5].map(i => `<span class="star" data-value="${i}">&#9733;</span>`).join('')}
+        </div>
+        <textarea class="review-comment" id="review-comment" placeholder="Share your experience..."></textarea>
+        <div class="review-actions">
+          <button class="btn btn-primary" id="submit-review-btn">Submit Review</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modalDiv);
+  }
+
+  // Modal open/close logic
+  window.openReviewModal = function(orderId, vendorId, vendorName) {
+    const modal = document.getElementById('review-modal');
+    modal.style.display = 'flex';
+    document.getElementById('review-vendor-name').textContent = vendorName;
+    modal.dataset.orderId = orderId;
+    modal.dataset.vendorId = vendorId;
+    // Reset stars and comment
+    document.getElementById('review-comment').value = '';
+    document.querySelectorAll('#review-stars .star').forEach(star => {
+      star.classList.remove('selected', 'hovered');
+    });
+    window.selectedRating = 0;
+  };
+  document.getElementById('close-review-modal').onclick = function() {
+    document.getElementById('review-modal').style.display = 'none';
+  };
+  window.onclick = function(event) {
+    const modal = document.getElementById('review-modal');
+    if (event.target === modal) modal.style.display = 'none';
+  };
+
+  // Star rating logic
+  document.querySelectorAll('#review-stars .star').forEach(star => {
+    star.addEventListener('mouseenter', function() {
+      const val = parseInt(this.dataset.value);
+      document.querySelectorAll('#review-stars .star').forEach(s => {
+        s.classList.toggle('hovered', parseInt(s.dataset.value) <= val);
+      });
+    });
+    star.addEventListener('mouseleave', function() {
+      document.querySelectorAll('#review-stars .star').forEach(s => s.classList.remove('hovered'));
+    });
+    star.addEventListener('click', function() {
+      const val = parseInt(this.dataset.value);
+      window.selectedRating = val;
+      document.querySelectorAll('#review-stars .star').forEach(s => {
+        s.classList.toggle('selected', parseInt(s.dataset.value) <= val);
+      });
+    });
+  });
+
+  // Submit review logic
+  document.getElementById('submit-review-btn').onclick = async function() {
+    const modal = document.getElementById('review-modal');
+    const orderId = modal.dataset.orderId;
+    const vendorId = modal.dataset.vendorId;
+    const rating = window.selectedRating;
+    const comment = document.getElementById('review-comment').value;
+    if (!rating) {
+      showToast('Error', 'Please select a star rating.', 'error');
+      return;
+    }
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ orderId, vendorId, rating, comment })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast('Success', 'Review submitted successfully!');
+        modal.style.display = 'none';
+        loadOrders();
+      } else {
+        showToast('Error', data.message || 'Error submitting review', 'error');
+      }
+    } catch (err) {
+      showToast('Error', 'Error submitting review', 'error');
+    }
+  };
 });
 
 // Toast notification function

@@ -7,10 +7,16 @@ exports.getUserOrders = async (req, res) => {
         const userId = req.user.id;
         const orders = await Order.find({ userId })
             .sort({ orderTime: -1 })
-            .populate('vendorId', 'name')
+            .populate('vendorId', 'name logoURL')
             .populate('items.menuItemId');
 
-        res.json(orders);
+        // Ensure 'reviewed' field is always present in the response
+        const ordersWithReviewed = orders.map(order => {
+            const o = order.toObject();
+            if (typeof o.reviewed === 'undefined') o.reviewed = false;
+            return o;
+        });
+        res.json(ordersWithReviewed);
     } catch (error) {
         console.error('Error fetching user orders:', error);
         res.status(500).json({ message: 'Internal server error', error: error.message });
