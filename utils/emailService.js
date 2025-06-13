@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-// Create a transporter using SMTP
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send verification email
+
 const sendVerificationEmail = async (email, token) => {
   const subject = 'Verify your UniBite account';
   const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
@@ -37,7 +37,7 @@ const sendVerificationEmail = async (email, token) => {
   }
 };
 
-// Send password reset email
+
 const sendResetPasswordEmail = async (email, token) => {
   const subject = 'Password Reset Request';
   const url = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
@@ -125,7 +125,7 @@ const sendResetPasswordEmail = async (email, token) => {
   }
 };
 
-// Send order status email (accepted/declined/ready for pickuo)
+
 const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '', items = []) => {
   let subject, html;
   let orderDetailsHtml = '';

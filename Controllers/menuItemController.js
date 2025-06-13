@@ -3,17 +3,17 @@ const path = require('path');
 const fs = require('fs').promises;
 const sharp = require('sharp');
 
-// Function to convert image to WebP
+
 const convertToWebP = async (inputBuffer, originalFilename) => {
     try {
-        // Generate a unique filename with timestamp
+        
         const timestamp = Date.now();
         const webpFilename = `${timestamp}-${originalFilename.replace(/\.[^/.]+$/, '.webp')}`;
         const outputPath = path.join(__dirname, '..', 'Public', 'Images', 'menu', webpFilename);
 
         await sharp(inputBuffer)
-            .webp({ quality: 80 }) // 80% quality for good balance of size and quality
-            .resize(800, 800, { // Resize to max 800x800 while maintaining aspect ratio
+            .webp({ quality: 80 }) 
+            .resize(800, 800, { 
                 fit: 'inside',
                 withoutEnlargement: true
             })
@@ -27,7 +27,7 @@ const convertToWebP = async (inputBuffer, originalFilename) => {
     }
 };
 
-// Search menu items for a vendor
+
 exports.searchMenuItems = async (req, res) => {
     try {
         const { vendorId } = req.params;
@@ -51,7 +51,7 @@ exports.searchMenuItems = async (req, res) => {
     }
 };
 
-// Get all menu items for a vendor
+
 exports.getMenuItems = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -63,7 +63,7 @@ exports.getMenuItems = async (req, res) => {
     }
 };
 
-// Get menu items for the logged-in vendor
+
 exports.getVendorMenuItems = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -77,7 +77,7 @@ exports.getVendorMenuItems = async (req, res) => {
     }
 };
 
-// Get a specific menu item
+
 exports.getMenuItem = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -95,7 +95,7 @@ exports.getMenuItem = async (req, res) => {
     }
 };
 
-// Create new menu item
+
 exports.createMenuItem = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -105,17 +105,17 @@ exports.createMenuItem = async (req, res) => {
         console.log('Request body:', req.body);
         console.log('File upload:', req.file ? 'Yes' : 'No');
 
-        // Handle image upload
+        
         let imageURL = '';
         if (req.file) {
             console.log('File uploaded:', req.file.originalname);
 
             try {
-                // Convert image to WebP
+                
                 imageURL = await convertToWebP(req.file.buffer, req.file.originalname);
             } catch (error) {
                 console.error('Error processing image:', error);
-                // Fallback: save original file without conversion
+                
                 const timestamp = Date.now();
                 const filename = `${timestamp}-${req.file.originalname}`;
                 const filePath = path.join(__dirname, '..', 'Public', 'Images', 'menu', filename);
@@ -148,7 +148,7 @@ exports.createMenuItem = async (req, res) => {
     }
 };
 
-// Update menu item
+
 exports.updateMenuItem = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -164,11 +164,11 @@ exports.updateMenuItem = async (req, res) => {
             return res.status(404).json({ message: 'Menu item not found' });
         }
 
-        // Handle image upload
+        
         if (req.file) {
             console.log('New file uploaded:', req.file.originalname);
 
-            // Delete old image if exists and it's not the default image
+            
             if (menuItem.imageURL && menuItem.imageURL !== '/Images/default-food.webp') {
                 const oldImagePath = path.join(__dirname, '..', 'Public', menuItem.imageURL);
                 try {
@@ -176,17 +176,17 @@ exports.updateMenuItem = async (req, res) => {
                     console.log('Old image deleted:', oldImagePath);
                 } catch (error) {
                     console.error('Error deleting old image:', error);
-                    // Continue with update even if old image deletion fails
+                    
                 }
             }
 
             try {
-                // Convert new image to WebP
+                
                 const newImageURL = await convertToWebP(req.file.buffer, req.file.originalname);
                 menuItem.imageURL = newImageURL;
             } catch (error) {
                 console.error('Error processing image:', error);
-                // Fallback: save original file without conversion
+                
                 const timestamp = Date.now();
                 const filename = `${timestamp}-${req.file.originalname}`;
                 const filePath = path.join(__dirname, '..', 'Public', 'Images', 'menu', filename);
@@ -197,7 +197,7 @@ exports.updateMenuItem = async (req, res) => {
             }
         }
 
-        // Update fields
+        
         menuItem.name = name || menuItem.name;
         menuItem.description = description !== undefined ? description : menuItem.description;
         menuItem.price = price || menuItem.price;
@@ -213,7 +213,7 @@ exports.updateMenuItem = async (req, res) => {
     }
 };
 
-// Delete menu item
+
 exports.deleteMenuItem = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -226,7 +226,7 @@ exports.deleteMenuItem = async (req, res) => {
             return res.status(404).json({ message: 'Menu item not found' });
         }
 
-        // Delete image if exists and it's not the default image
+        
         if (menuItem.imageURL && menuItem.imageURL !== '/Images/default-food.webp') {
             const imagePath = path.join(__dirname, '..', 'Public', menuItem.imageURL);
             try {
@@ -234,7 +234,7 @@ exports.deleteMenuItem = async (req, res) => {
                 console.log('Image deleted:', imagePath);
             } catch (error) {
                 console.error('Error deleting image:', error);
-                // Continue with deletion even if image deletion fails
+                
             }
         }
 

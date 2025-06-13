@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <!-- Menu Items Table -->
+    
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
@@ -23,13 +23,13 @@
                 </tr>
             </thead>
             <tbody id="menuItemsTable">
-                <!-- Menu items will be loaded here -->
+                
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- Add/Edit Item Modal -->
+
 <div class="modal fade" id="menuItemModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -95,19 +95,19 @@
     </div>
 </div>
 
-<!-- Bootstrap Bundle with Popper -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Custom JavaScript -->
+
 <script src="/JavaScript/admin.js"></script>
 <script>
-    // Initialize menu management when the page loads
+    
     document.addEventListener('DOMContentLoaded', () => {
-        // Initialize Bootstrap modals
+        
         const menuItemModal = new bootstrap.Modal(document.getElementById('menuItemModal'));
         const deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
         
-        // Load menu items
+        
         loadMenuItems();
     });
 </script>

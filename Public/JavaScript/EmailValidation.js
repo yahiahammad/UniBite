@@ -4,9 +4,9 @@ function validateEmail() {
 
     if (!regex.test(email)) {
         alert("Invalid email. Please use an @miuegypt.edu.eg email.");
-        return false; // Prevent form submission
+        return false; 
     }
-    return true; // Proceed with SignUp
+    return true; 
 }
 
 function continueWithGoogle() {

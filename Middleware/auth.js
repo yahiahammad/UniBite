@@ -1,9 +1,9 @@
-// middleware/auth.js
+
 const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
 const Vendor = require('../Models/Vendor');
 
-// Vendor-specific auth middleware
+
 const auth = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
             return res.status(404).json({ message: 'Vendor not found' });
         }
 
-        // Set user info from vendor
+        
         req.user = {
             id: vendor._id,
             email: vendor.email
@@ -32,7 +32,7 @@ const auth = async (req, res, next) => {
     }
 };
 
-// Protect routes - require authentication
+
 const protect = (req, res, next) => {
     let token = req.cookies.jwt;
     if (!token) return res.redirect('/login');
@@ -45,7 +45,7 @@ const protect = (req, res, next) => {
     }
 };
 
-// Check auth status without redirecting
+
 const checkAuth = async (req, res, next) => {
     let token;
     if (req.cookies && req.cookies.jwt) {
@@ -70,7 +70,7 @@ const checkAuth = async (req, res, next) => {
     next();
 };
 
-// Require login with redirect
+
 function requireLogin(req, res, next) {
     const token = req.cookies.jwt;
     if (!token) {
@@ -114,7 +114,7 @@ const authenticateExecutive = async (req, res, next) => {
             return res.status(403).json({ message: 'Executive authentication failed: Not authorized.' });
         }
 
-        req.user = user; // Attach the user object to the request
+        req.user = user; 
         next();
     } catch (error) {
         console.error('Executive authentication middleware error:', error);

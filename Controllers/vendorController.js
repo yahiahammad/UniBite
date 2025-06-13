@@ -1,8 +1,8 @@
-// Controllers/vendorController.js
-const Vendor = require('../Models/Vendor'); // <-- Make sure this path is correct!
 
-// Handles GET /api/vendors
-exports.getAllVendors = async (req, res) => { // <-- This function needs to exist and be exported
+const Vendor = require('../Models/Vendor'); 
+
+
+exports.getAllVendors = async (req, res) => { 
   try {
     const vendors = await Vendor.find();
     res.status(200).json(vendors);
@@ -12,7 +12,7 @@ exports.getAllVendors = async (req, res) => { // <-- This function needs to exis
   }
 };
 
-// Handles GET /api/vendors/:id
+
 exports.getVendorById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -27,7 +27,7 @@ exports.getVendorById = async (req, res) => {
   }
 };
 
-// Placeholder for other vendor-related functions (e.g., createVendor)
+
 exports.createVendor = (req, res) => {
   res.status(501).json({ message: 'POST Create Vendor not yet implemented.' });
 };

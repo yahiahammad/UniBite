@@ -5,7 +5,7 @@ const path = require('path');
 const { auth } = require('../Middleware/auth');
 const menuItemController = require('../Controllers/menuItemController');
 
-// Configure multer for image upload
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, '../Public/Images/menu'));
@@ -19,18 +19,18 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
-        // Accept images only
+        
         if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
             return cb(new Error('Only image files are allowed!'), false);
         }
         cb(null, true);
     },
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 5 * 1024 * 1024 
     }
 });
 
-// Menu management routes
+
 router.get('/menu-items', auth, menuItemController.getMenuItems);
 router.post('/menu-items', auth, upload.single('image'), menuItemController.createMenuItem);
 router.put('/menu-items/:id', auth, upload.single('image'), menuItemController.updateMenuItem);

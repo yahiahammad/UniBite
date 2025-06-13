@@ -1,4 +1,4 @@
-/* Base Styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -18,9 +18,9 @@ html, body {
     }
 }
 
-/* ========================================================================================= */
 
-/* SECTION 1 (Hero section) STYLING */
+
+
 
 .Section1 {
     min-height: 100vh;
@@ -211,9 +211,9 @@ html, body {
     }
 }
 
-/* ========================================================================================= */
 
-/* SECTION 2 STYLING (GRID LAYOUT) */
+
+
 .Section2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -392,9 +392,9 @@ html, body {
     }
 }
 
-/* ========================================================================================= */
 
-/* SECTION 3 STYLING (Our partners) */
+
+
 .Section3 {
     padding: 60px 20px;
     background: linear-gradient(to bottom, #fff, #f8f9fa);
@@ -621,7 +621,7 @@ html, body {
     }
 }
 
-/* For very small screens */
+
 @media (max-width: 360px) {
     .Section3 {
         padding: 20px 5px;

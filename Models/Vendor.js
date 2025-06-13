@@ -8,7 +8,7 @@ const VendorSchema = new mongoose.Schema({
   openingHours: String,
   contactInfo: String,
   logoURL: String, 
-  tags: [String], // e.g., ['Healthy', 'fast food']
+  tags: [String], 
   isActive: { type: Boolean, default: true },
   status: {
     type: String,
@@ -19,10 +19,10 @@ const VendorSchema = new mongoose.Schema({
     score: { type: Number, default: 0 },
     count: { type: Number, default: 0 }
   },
-  averagePickupTime: { type: Number, default: 10 } // Represents average pickup time in minutes
+  averagePickupTime: { type: Number, default: 10 } 
 });
 
-// Pre-save middleware to ensure email is lowercase
+
 VendorSchema.pre('save', function(next) {
   if (this.isModified('email')) {
     this.email = this.email.toLowerCase();

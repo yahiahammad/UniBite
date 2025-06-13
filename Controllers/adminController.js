@@ -4,25 +4,25 @@ const Vendor = require('../Models/Vendor');
 const jwt = require('jsonwebtoken');
 const { sendOrderStatusEmail } = require('../utils/emailService');
 
-// Render admin dashboard
+
 exports.renderDashboard = async (req, res) => {
     try {
         const vendorId = req.user.id;
         
-        // Get vendor info
+        
         const vendor = await Vendor.findById(vendorId);
         if (!vendor) {
             return res.status(404).json({ message: 'Vendor not found' });
         }
 
-        // Get recent orders
+        
         const recentOrders = await Order.find({ vendorId })
             .sort({ orderTime: -1 })
             .limit(20)
             .populate('userId', 'name email')
             .populate('items.menuItemId');
 
-        // Get dashboard stats
+        
         const totalOrders = await Order.countDocuments({ vendorId });
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
@@ -46,7 +46,7 @@ exports.renderDashboard = async (req, res) => {
             { $group: { _id: null, total: { $sum: '$totalPrice' } } }
         ]);
 
-        // Calculate average pickup time for the current hour
+        
         const now = new Date();
         const startOfCurrentHour = new Date(now);
         startOfCurrentHour.setUTCMilliseconds(0);
@@ -95,42 +95,42 @@ exports.renderDashboard = async (req, res) => {
     }
 };
 
-// Admin login
+
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find vendor by email
+        
         const vendor = await Vendor.findOne({ email: email.toLowerCase() });
         if (!vendor) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Check if vendor is active
+        
         if (!vendor.isActive) {
             return res.status(401).json({ message: 'Your account has been deactivated' });
         }
 
-        // Verify password (plain text comparison)
+        
         if (password !== vendor.password) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Create JWT token
+        
         const token = jwt.sign(
             { id: vendor._id, email: vendor.email },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
 
-        // Set JWT token in cookie
+        
         res.cookie('jwt', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            maxAge: 24 * 60 * 60 * 1000 
         });
 
-        // Return success response with redirect URL and token
+        
         res.json({
             message: 'Login successful',
             redirectUrl: '/admin/dashboard',
@@ -142,7 +142,7 @@ exports.login = async (req, res) => {
     }
 };
 
-// Get dashboard statistics
+
 exports.getDashboardStats = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -182,7 +182,7 @@ exports.getDashboardStats = async (req, res) => {
     }
 };
 
-// Get recent orders
+
 exports.getRecentOrders = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -200,7 +200,7 @@ exports.getRecentOrders = async (req, res) => {
     }
 };
 
-// Get all orders with pagination
+
 exports.getAllOrders = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -226,7 +226,7 @@ exports.getAllOrders = async (req, res) => {
     }
 };
 
-// Update vendor status
+
 exports.updateVendorStatus = async (req, res) => {
     try {
         const { status } = req.body;
@@ -251,7 +251,7 @@ exports.updateVendorStatus = async (req, res) => {
     }
 };
 
-// Get vendor status
+
 exports.getVendorStatus = async (req, res) => {
     try {
         const vendorId = req.user.id;
@@ -268,26 +268,26 @@ exports.getVendorStatus = async (req, res) => {
     }
 };
 
-// Update order status
+
 exports.updateOrderStatus = async (req, res) => {
     try {
         const { orderId } = req.params;
         const { status } = req.body;
         const vendorId = req.user.id;
         
-        // Validate status
+        
         const validStatuses = ['pending', 'preparing', 'ready for pickup', 'picked up', 'cancelled'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: 'Invalid status' });
         }
 
-        // Find order and verify it belongs to this vendor
+        
         const order = await Order.findOne({ _id: orderId, vendorId });
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        // Update order status
+        
         order.status = status;
         if (status === 'picked up') {
             order.pickupTime = new Date();
@@ -296,7 +296,7 @@ exports.updateOrderStatus = async (req, res) => {
         }
         await order.save();
 
-        // Send email to user if accepted, declined, or ready for pickup
+        
         if (status === 'preparing' || status === 'cancelled' || status === 'ready for pickup') {
             await order.populate('userId', 'email');
             await order.populate('vendorId', 'name');
@@ -314,7 +314,7 @@ exports.updateOrderStatus = async (req, res) => {
     }
 };
 
-// Get a single order by ID
+
 exports.getSingleOrder = async (req, res) => {
     try {
         const { orderId } = req.params;

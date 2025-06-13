@@ -24,7 +24,7 @@ async function verifyEmail(token) {
 
         if (response.ok) {
             showSuccess(result.message);
-            // Redirect to login page after 3 seconds
+            
             setTimeout(() => {
                 window.location.href = '/login';
             }, 3000);

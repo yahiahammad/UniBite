@@ -38,7 +38,7 @@
     color: #ff6b00;
 }
 
-/* Navbar Links */
+
 .navbar .nav-links {
     display: flex;
     gap: 50px;
@@ -308,7 +308,7 @@ body {
 }
 
 .password-input-wrapper .input-field {
-    padding-right: 45px; /* Make room for the eye icon */
+    padding-right: 45px; 
     width: 100%;
 }
 
@@ -387,7 +387,7 @@ body {
     }
 }
 
-/* Verification page styles */
+
 .loading-spinner {
     width: 40px;
     height: 40px;
@@ -449,7 +449,7 @@ body {
     text-decoration: underline;
 }
 
-/* Forgot Password and Reset Password Styles */
+
 .forgot-password-text, .reset-password-text {
     color: #666;
     margin-bottom: 25px;
@@ -524,11 +524,11 @@ body {
 }
 
 .password-requirements li i.success {
-    color: #28a745; /* Green color for success */
+    color: #28a745; 
 }
 
 .password-requirements li i.error {
-    color: #dc3545; /* Red color for error */
+    color: #dc3545; 
 }
 
 .back-to-login {

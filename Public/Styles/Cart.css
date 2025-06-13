@@ -1,4 +1,4 @@
-/* Base Styles */
+
 :root {
     --primary: #ff8a00;
     --primary-dark: #ff6b00;
@@ -39,7 +39,7 @@ body {
     padding: 0 1.5rem;
 }
 
-/* Typography */
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.2;
@@ -54,7 +54,7 @@ h3 {
     font-size: 1.5rem;
 }
 
-/* Buttons */
+
 .btn {
     display: inline-flex;
     align-items: center;
@@ -84,7 +84,7 @@ h3 {
     width: 100%;
 }
 
-/* Cart Styles */
+
 .cart-container {
     display: flex;
     gap: 2rem;
@@ -413,7 +413,7 @@ h3 {
     text-align: center;
 }
 
-/* Responsive Design */
+
 @media (max-width: 900px) {
     body {
         padding: 1rem;

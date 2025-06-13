@@ -4,12 +4,12 @@ const crypto = require('crypto');
 const { sendVerificationEmail, sendResetPasswordEmail } = require('../utils/emailService');
 
 
-// Login user controller
+
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Add .select('+password') to include the password field
+    
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -20,20 +20,20 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Please verify your email before logging in' });
     }
 
-    // Now user.password should be available
+    
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Incorrect password' });
     }
 
-    // Generate JWT
+    
     const token = jwt.sign(
         { id: user._id, email: user.email, userType: user.userType },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
     );
 
-    // Set JWT as HTTP-only cookie
+    
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: false,
@@ -41,7 +41,7 @@ exports.loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    // Remove password before sending response
+    
     user.password = undefined;
 
     res.status(200).json({
@@ -66,7 +66,7 @@ exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if user exists
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ 
@@ -75,9 +75,9 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // Generate verification token
+    
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; 
 
     const newUser = new User({
       name,
@@ -89,10 +89,10 @@ exports.registerUser = async (req, res) => {
 
     await newUser.save();
 
-    // Send verification email
+    
     const emailSent = await sendVerificationEmail(email, verificationToken);
     if (!emailSent) {
-      // If email sending fails, delete the user and return error
+      
       await User.findByIdAndDelete(newUser._id);
       return res.status(500).json({ 
         success: false,
@@ -107,7 +107,7 @@ exports.registerUser = async (req, res) => {
 
   } catch (error) {
     console.error('Registration Error:', error);
-    // Check if it's a duplicate key error
+    
     if (error.code === 11000) {
       return res.status(400).json({ 
         success: false,
@@ -121,7 +121,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Verify email endpoint
+
 exports.verifyEmail = async (req, res) => {
   const { token } = req.query;
 
@@ -147,7 +147,7 @@ exports.verifyEmail = async (req, res) => {
   }
 };
 
-// Forgot password controller
+
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -157,11 +157,11 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ message: 'No user found with that email address' });
     }
 
-    // Generate password reset token
+    
     const resetToken = user.generatePasswordResetToken();
     await user.save();
 
-    // Send reset email using the new function
+    
     const emailSent = await sendResetPasswordEmail(user.email, resetToken);
     
     if (!emailSent) {
@@ -175,7 +175,7 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// Verify reset token
+
 exports.verifyResetToken = async (req, res) => {
   try {
     const { token } = req.body;
@@ -200,12 +200,12 @@ exports.verifyResetToken = async (req, res) => {
   }
 };
 
-// Reset password
+
 exports.resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
 
-    // Validate password complexity
+    
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
@@ -227,7 +227,7 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ message: 'Invalid or expired password reset token' });
     }
 
-    // Update password and invalidate the reset token
+    
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;

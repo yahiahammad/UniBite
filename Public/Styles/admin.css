@@ -651,7 +651,7 @@ body {
     transform: translateX(1.5rem);
 }
 
-/* Bootstrap modals handle their own display and z-index. Removed custom .modal CSS to prevent conflicts. */
+
 
 .modal-content {
     background: var(--white);
@@ -900,7 +900,7 @@ body {
     }
 }
 
-/* Overlay for mobile */
+
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -919,7 +919,7 @@ body {
     opacity: 1;
 }
 
-/* Order Modal Styles */
+
 .order-modal {
     display: none;
     position: fixed;
@@ -1041,7 +1041,7 @@ body {
     color: var(--gray-900);
 }
 
-/* Status Action Buttons */
+
 .status-action-btn {
     padding: 0.75rem 1.25rem;
     border: none;
@@ -1096,7 +1096,7 @@ body {
     background: var(--gray-700);
 }
 
-/* No Orders Message */
+
 .no-orders {
     text-align: center;
     padding: 3rem;

@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');
     const submitButton = document.getElementById('submitButton');
 
-    // Toggle password visibility
+    
     togglePassword?.addEventListener('click', () => {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
         
-        // Update SVG icon
+        
         const eyeIcon = togglePassword.querySelector('.eye-icon');
         if (type === 'text') {
             eyeIcon.innerHTML = `
@@ -26,29 +26,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle form submission
+    
     loginForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Clear previous errors
+        
         clearErrors();
         
-        // Get form values
+        
         const email = emailInput.value.trim();
         const password = passwordInput.value;
 
-        // Validate inputs
+        
         if (!email || !password) {
             showError('Please fill in all fields');
             return;
         }
 
         try {
-            // Disable submit button
+            
             submitButton.disabled = true;
             submitButton.textContent = 'Logging in...';
 
-            // Make login request
+            
             const response = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: {
@@ -63,23 +63,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.message || 'Login failed');
             }
 
-            // Store token in localStorage
+            
             if (data.token) {
                 localStorage.setItem('token', data.token);
             }
 
-            // Redirect to dashboard
+            
             window.location.href = data.redirectUrl || '/admin';
         } catch (error) {
             showError(error.message || 'Invalid email or password');
         } finally {
-            // Re-enable submit button
+            
             submitButton.disabled = false;
             submitButton.textContent = 'Login to Dashboard';
         }
     });
 
-    // Show error message
+    
     function showError(message) {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm.insertBefore(errorDiv, submitButton);
     }
 
-    // Clear error messages
+    
     function clearErrors() {
         const errorMessages = loginForm.querySelectorAll('.error-message');
         errorMessages.forEach(error => error.remove());

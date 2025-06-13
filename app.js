@@ -7,7 +7,7 @@ app.set('views', path.join(__dirname, 'Views'));
 
 app.use(express.static(path.join(__dirname, 'Public')));
 
-//Routing
+
 app.get('/', (req, res) => {
     res.render('UniBite');
 });
@@ -46,7 +46,7 @@ app.get('/Stores', (req, res) => {
 });
 
 
-// Start server
+
 const PORT = 4000;
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

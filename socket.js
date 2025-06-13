@@ -1,6 +1,6 @@
-// socket.js
+
 const { Server } = require('socket.io');
-const Order = require('./Models/orders'); // Import the Order model
+const Order = require('./Models/orders'); 
 const { sendOrderStatusEmail } = require('./utils/emailService');
 const User = require('./Models/User');
 
@@ -9,7 +9,7 @@ let io;
 function init(httpServer) {
     io = new Server(httpServer, {
         cors: {
-            origin: '*', // Be more specific in production
+            origin: '*', 
             methods: ['GET', 'POST']
         }
     });
@@ -17,7 +17,7 @@ function init(httpServer) {
     io.on('connection', (socket) => {
         console.log('✅ A user connected with socket ID:', socket.id);
 
-        // Listen for 'accept_order' event from a client
+        
         socket.on('accept_order', async (data) => {
             try {
                 const { orderId } = data;
@@ -43,7 +43,7 @@ function init(httpServer) {
             }
         });
 
-        // Listen for 'cancel_order' event from a client
+        
         socket.on('cancel_order', async (data) => {
             try {
                 const { orderId } = data;
@@ -69,7 +69,7 @@ function init(httpServer) {
             }
         });
 
-        // Listen for 'ready_for_pickup' event from a client
+        
         socket.on('ready_for_pickup', async (data) => {
             try {
                 const { orderId } = data;

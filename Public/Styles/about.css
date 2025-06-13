@@ -1,4 +1,4 @@
-/* About Page Styles */
+
 .about-page {
   padding: 6rem 0 3rem;
 }
@@ -20,7 +20,7 @@
   margin: 0 auto;
 }
 
-/* Mission Section */
+
 .mission-section {
   margin-bottom: 4rem;
 }
@@ -75,7 +75,7 @@
   object-fit: cover;
 }
 
-/* Stats Section */
+
 .stats-section {
   background-color: var(--background-alt);
   padding: 3rem;
@@ -102,7 +102,7 @@
   color: var(--text-light);
 }
 
-/* Team Section */
+
 .team-section {
   margin-bottom: 4rem;
   text-align: center;
@@ -151,7 +151,7 @@
   font-size: 0.875rem;
 }
 
-/* Values Section */
+
 .values-section {
   margin-bottom: 4rem;
   text-align: center;
@@ -194,7 +194,7 @@
   color: var(--text-light);
 }
 
-/* Contact Section */
+
 .contact-section {
   background-color: var(--primary);
   color: white;
@@ -221,7 +221,7 @@
   align-items: center;
 }
 
-/* Media Queries */
+
 @media (min-width: 576px) {
   .contact-buttons {
     flex-direction: row;

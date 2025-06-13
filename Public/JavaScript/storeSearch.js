@@ -8,30 +8,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let searchTimeout;
 
-    // Function to reset the menu to its initial categorized view
+    
     function resetMenuToInitialCategoryView() {
-        searchResults.style.display = 'none'; // Ensure search results are hidden
+        searchResults.style.display = 'none'; 
 
-        // Show category tabs
+        
         menuTabs.forEach(tab => {
-            tab.style.display = 'block'; // Or 'flex' depending on your CSS for tabs container
-            tab.classList.remove('active'); // Remove active from all tabs first
+            tab.style.display = 'block'; 
+            tab.classList.remove('active'); 
         });
 
-        // Hide all categories except the first one, and activate the first tab
+        
         menuCategories.forEach((category, index) => {
             if (index === 0) {
-                category.style.display = 'block'; // Show only the first category
+                category.style.display = 'block'; 
                 if (menuTabs.length > 0) {
-                    menuTabs[0].classList.add('active'); // Activate the first tab
+                    menuTabs[0].classList.add('active'); 
                 }
             } else {
-                category.style.display = 'none'; // Hide other categories
+                category.style.display = 'none'; 
             }
         });
     }
 
-    // Function to show/hide clear search icon
+    
     function toggleClearIcon() {
         if (searchInput.value.trim()) {
             clearSearchIcon.classList.add('visible');
@@ -40,17 +40,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to render search results
+    
     function renderSearchResults(items) {
-        // Hide all category related elements
+        
         menuCategories.forEach(category => {
             category.style.display = 'none';
         });
         menuTabs.forEach(tab => {
-            tab.style.display = 'none'; // Hide the category tabs
+            tab.style.display = 'none'; 
         });
 
-        // Show search results container
+        
         searchResults.style.display = 'block';
 
         if (!items || items.length === 0) {
@@ -95,32 +95,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         searchResults.innerHTML = resultsHTML;
         
-        // Reattach add to cart listeners
+        
         if (typeof window.attachAddToCartListeners === 'function') {
             window.attachAddToCartListeners();
         }
     }
 
-    // Search input handler
+    
     searchInput.addEventListener('input', function() {
         const query = this.value.trim();
         toggleClearIcon();
 
-        // Clear previous timeout
+        
         if (searchTimeout) {
             clearTimeout(searchTimeout);
         }
 
         if (!query) {
             searchResults.innerHTML = '';
-            resetMenuToInitialCategoryView(); // Call new function to reset to initial category view
+            resetMenuToInitialCategoryView(); 
             return;
         }
 
-        // Set new timeout for search
+        
         searchTimeout = setTimeout(async () => {
             try {
-                // Ensure categories and tabs are hidden when search is active
+                
                 menuCategories.forEach(category => {
                     category.style.display = 'none';
                 });
@@ -134,24 +134,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 const items = await response.json();
                 
-                renderSearchResults(items); // renderSearchResults now handles visibility itself
+                renderSearchResults(items); 
             } catch (error) {
                 console.error('Search error:', error);
                 searchResults.innerHTML = '<div class="error">Error performing search</div>';
-                searchResults.style.display = 'block'; // Ensure error is visible
+                searchResults.style.display = 'block'; 
             }
-        }, 300); // 300ms debounce
+        }, 300); 
     });
 
-    // Clear search handler
+    
     clearSearchIcon.addEventListener('click', function() {
         searchInput.value = '';
         searchResults.innerHTML = '';
         clearSearchIcon.classList.remove('visible');
-        resetMenuToInitialCategoryView(); // Call new function to reset to initial category view
+        resetMenuToInitialCategoryView(); 
     });
 
-    // Initial setup
+    
     toggleClearIcon();
-    resetMenuToInitialCategoryView(); // Set initial state on page load
+    resetMenuToInitialCategoryView(); 
 }); 

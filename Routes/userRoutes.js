@@ -1,19 +1,19 @@
-// routes/userRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const userController = require('../Controllers/userController'); // Import the controller
+const userController = require('../Controllers/userController'); 
 const { requireLogin } = require('../Middleware/auth');
 const User = require('../Models/User');
 const rateLimit = require('express-rate-limit');
 
-// Rate limiter for forgot password
+
 const forgotPasswordLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 4, // 4 requests per hour
+    windowMs: 60 * 60 * 1000, 
+    max: 4, 
     message: 'Too many password reset requests, please try again after an hour'
 });
 
-// Public routes for page rendering
+
 router.get('/login', (req, res) => {
     res.render('Auth/Login');
 });
@@ -39,13 +39,13 @@ router.get('/reset-password', (req, res) => {
     res.render('Auth/ResetPassword');
 });
 
-// API routes
+
 router.post('/login', userController.loginUser);
 router.post('/forgot-password', forgotPasswordLimiter, userController.forgotPassword);
 router.post('/reset-password', userController.resetPassword);
 router.post('/verify-reset-token', userController.verifyResetToken);
 
-// Update user profile
+
 router.post('/update-profile', requireLogin, async (req, res) => {
     try {
         const { name, phone } = req.body;
@@ -66,7 +66,7 @@ router.post('/update-profile', requireLogin, async (req, res) => {
     }
 });
 
-// Change password
+
 router.post('/change-password', requireLogin, async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
@@ -76,13 +76,13 @@ router.post('/change-password', requireLogin, async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Verify current password
+        
         const isMatch = await user.comparePassword(currentPassword);
         if (!isMatch) {
             return res.status(400).json({ message: 'Current password is incorrect' });
         }
 
-        // Update password
+        
         user.password = newPassword;
         await user.save();
 

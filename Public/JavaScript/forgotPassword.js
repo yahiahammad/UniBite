@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('email');
     const submitButton = form.querySelector('button[type="submit"]');
 
-    // Toggle password visibility
+    
     const toggleButtons = document.querySelectorAll('.password-toggle');
     toggleButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Show loading state
+        
         submitButton.classList.add('btn-loading');
         submitButton.disabled = true;
 
@@ -36,18 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Show success message
+                
                 alert('Password reset link has been sent to your email. Please check your inbox.');
                 window.location.href = '/login';
             } else {
-                // Show error message
+                
                 alert(data.message || 'An error occurred. Please try again.');
             }
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
         } finally {
-            // Remove loading state
+            
             submitButton.classList.remove('btn-loading');
             submitButton.disabled = false;
         }

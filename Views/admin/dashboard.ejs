@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= vendor.name %> - Admin Dashboard</title>
-    <!-- Bootstrap CSS -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="/Styles/admin.css">
     <style>
-        /* Notification Toast Styles */
+        
         .notification-container {
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 1055; /* Higher than most Bootstrap components */
+            z-index: 1055; 
         }
 
         .toast-notification {
@@ -50,17 +50,17 @@
             padding: 1rem;
         }
 
-        /* Flashing Order Style */
+        
         @keyframes flash-red-background {
             0%, 100% {
                 background-color: #fff;
             }
             50% {
-                background-color: #ffe6e6; /* A light red for flashing */
+                background-color: #ffe6e6; 
             }
         }
 
-        /* The :has selector is supported in modern browsers */
+        
         .order-card:has(.status-pending) {
             animation: flash-red-background 1.5s infinite;
             border-color: #ff4d4d;
@@ -73,7 +73,7 @@
     <div id="notificationContainer" class="notification-container"></div>
 
     <div class="admin-container">
-        <!-- Sidebar -->
+        
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2><%= vendor.name %></h2>
@@ -111,9 +111,9 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
+        
         <main class="main-content">
-            <!-- Dashboard Section -->
+            
             <section id="dashboard" class="section active">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -141,27 +141,27 @@
                 <div class="recent-orders">
                     <h2>Recent Orders</h2>
                     <div class="orders-grid" id="recentOrdersGrid">
-                        <!-- Orders are loaded here via JavaScript -->
+                        
                     </div>
                 </div>
             </section>
 
-            <!-- Orders Section -->
+            
             <section id="orders" class="section">
                 <h2>All Orders</h2>
                 <div class="orders-grid" id="allOrdersGrid">
-                    <!-- All orders will be loaded here via AJAX -->
+                    
                 </div>
                 <div class="pagination-controls mt-4">
                     <nav aria-label="Orders pagination">
                         <ul class="pagination justify-content-center" id="ordersPagination">
-                            <!-- Pagination will be dynamically inserted here -->
+                            
                         </ul>
                     </nav>
                 </div>
             </section>
 
-            <!-- Menu Section -->
+            
             <section id="menu" class="section">
                 <div class="menu-management">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -171,7 +171,7 @@
                         </button>
                     </div>
 
-                    <!-- Menu Items Table -->
+                    
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -186,14 +186,14 @@
                                 </tr>
                             </thead>
                             <tbody id="menuItemsTable">
-                                <!-- Menu items will be loaded here -->
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Add/Edit Item Modal -->
+            
             <div class="modal fade" id="menuItemModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -240,7 +240,7 @@
                 </div>
             </div>
 
-            <!-- Delete Confirmation Modal -->
+            
             <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -261,7 +261,7 @@
         </main>
     </div>
 
-    <!-- Status Confirmation Modal -->
+    
     <div id="statusConfirmModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -278,13 +278,13 @@
         </div>
     </div>
 
-    <!-- Bootstrap Bundle with Popper -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Socket.IO Client -->
+    
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- Custom JavaScript -->
+    
     <script src="/JavaScript/admin.js"></script>
 
     <script>
@@ -301,7 +301,7 @@
             const notificationSound = document.getElementById('notificationSound');
             let isAudioUnlocked = false;
 
-            // Function to unlock audio on the first user interaction.
+            
             function unlockAudio() {
                 if (!isAudioUnlocked) {
                     notificationSound.play().then(() => {
@@ -309,7 +309,7 @@
                         notificationSound.currentTime = 0;
                         isAudioUnlocked = true;
                         console.log("Audio unlocked by user interaction.");
-                        // Once unlocked, we don't need these listeners anymore.
+                        
                         document.removeEventListener('click', unlockAudio);
                         document.removeEventListener('keydown', unlockAudio);
                     }).catch(error => {
@@ -318,16 +318,16 @@
                 }
             }
 
-            // Listen for the first click or keypress anywhere on the page to unlock audio.
+            
             document.addEventListener('click', unlockAudio);
             document.addEventListener('keydown', unlockAudio);
 
-            // Function to refresh the page to update EJS
+            
             function refreshPage() {
                 window.location.reload();
             }
 
-            // Function to load orders with pagination
+            
             async function loadOrders(page = 1) {
                 try {
                     const response = await fetch(`/api/admin/orders?page=${page}&limit=${ITEMS_PER_PAGE}`);
@@ -336,11 +336,11 @@
                     }
                     const data = await response.json();
                     
-                    allOrdersGrid.innerHTML = ''; // Clear existing content
+                    allOrdersGrid.innerHTML = ''; 
                     
                     if (data.orders && data.orders.length > 0) {
                         data.orders.forEach(order => {
-                            // Canceled orders are now filtered on the backend, but this is a good safeguard.
+                            
                             if (order.status !== 'cancelled') {
                                 const orderCard = createOrderCard(order);
                                 allOrdersGrid.appendChild(orderCard);
@@ -350,7 +350,7 @@
                         allOrdersGrid.innerHTML = '<p>No orders found.</p>';
                     }
                     
-                    // Update pagination regardless of whether there are orders
+                    
                     totalPages = data.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
                     updatePagination(page);
 
@@ -360,16 +360,16 @@
                 }
             }
 
-            // Function to update pagination controls
+            
             function updatePagination(currentPage) {
                 ordersPagination.innerHTML = '';
                 
-                // Hide pagination if not needed
+                
                 if (totalPages <= 1) {
                     return;
                 }
 
-                // Previous button
+                
                 const prevLi = document.createElement('li');
                 prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
                 prevLi.innerHTML = `
@@ -379,7 +379,7 @@
                 `;
                 ordersPagination.appendChild(prevLi);
 
-                // Page numbers
+                
                 for (let i = 1; i <= totalPages; i++) {
                     const li = document.createElement('li');
                     li.className = `page-item ${i === currentPage ? 'active' : ''}`;
@@ -389,7 +389,7 @@
                     ordersPagination.appendChild(li);
                 }
 
-                // Next button
+                
                 const nextLi = document.createElement('li');
                 nextLi.className = `page-item ${currentPage >= totalPages ? 'disabled' : ''}`;
                 nextLi.innerHTML = `
@@ -400,7 +400,7 @@
                 ordersPagination.appendChild(nextLi);
             }
             
-            // Use event delegation for pagination clicks
+            
             ordersPagination.addEventListener('click', (e) => {
                 e.preventDefault();
                 const link = e.target.closest('.page-link');
@@ -413,29 +413,29 @@
                 }
             });
 
-            // Listen for new orders
+            
             socket.on('new_order', (order) => {
                 if (isAudioUnlocked) {
                     notificationSound.play().catch(e => console.error("Error playing sound.", e));
                 }
                 showToastNotification(order);
 
-                // If on the dashboard, prepend the new order to the *recent* orders list.
-                // If on the main paginated orders view, the toast is sufficient notification,
-                // and we avoid a jarring auto-refresh. The view will update on next navigation.
+                
+                
+                
                 if (document.getElementById('dashboard').classList.contains('active')) {
                     recentOrdersGrid.prepend(createOrderCard(order));
                 }
             });
 
-            // Listen for status updates
+            
             socket.on('order_status_updated', (order) => {
-                // An order card might exist in both grids, so we must update all instances.
+                
                 const orderCards = document.querySelectorAll(`#order-${order._id}`);
                 
                 if (orderCards.length === 0 && order.status !== 'cancelled' && document.getElementById('orders').classList.contains('active')) {
-                    // This can happen if an order from another page is accepted via toast.
-                    // The best way to handle this is to just reload the current page view.
+                    
+                    
                     loadOrders(currentPage);
                     return;
                 }
@@ -477,18 +477,18 @@
 
                 notificationContainer.appendChild(toast);
 
-                // Show the toast
+                
                 setTimeout(() => {
                     toast.classList.add('show');
-                }, 100); // Small delay to allow CSS transition
+                }, 100); 
 
-                // Hide the toast after 10 seconds
+                
                 const hideTimeout = setTimeout(() => {
                     toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300); // Remove from DOM after transition
+                    setTimeout(() => toast.remove(), 300); 
                 }, 10000);
 
-                // Add event listeners to close button and accept button
+                
                 toast.querySelector('.btn-close').addEventListener('click', () => {
                     clearTimeout(hideTimeout);
                     toast.classList.remove('show');
@@ -496,7 +496,7 @@
                 });
             }
 
-            // Function to create an order card element (for the main grid)
+            
             function createOrderCard(order) {
                 const card = document.createElement('div');
                 card.className = 'order-card';
@@ -529,7 +529,7 @@
             }
 
             function handleAccept(orderId) {
-                 // The order ID is saved in a variable (not visible)
+                 
                 const hiddenOrderId = orderId; 
                 console.log(`Accepting order with hidden ID: ${hiddenOrderId}`);
                 socket.emit('accept_order', { orderId: hiddenOrderId });
@@ -540,7 +540,7 @@
                 socket.emit('cancel_order', { orderId: orderId });
             }
 
-            // Consolidated event listener for all order actions using delegation
+            
             document.querySelector('.main-content').addEventListener('click', (e) => {
                 const target = e.target;
                 const orderId = target.dataset.orderId;
@@ -554,7 +554,7 @@
                 }
             });
 
-            // Event listener for toast notifications
+            
             notificationContainer.addEventListener('click', (e) => {
                 const target = e.target;
                 const orderId = target.dataset.orderId;
@@ -574,9 +574,9 @@
                 }
             });
 
-            // Initial Load Logic
+            
             (async () => {
-                // Load recent orders for the dashboard view initially
+                
                 try {
                     const response = await fetch('/api/admin/recent-orders?limit=15');
                     if (!response.ok) throw new Error('Failed to fetch recent orders');
@@ -597,9 +597,9 @@
                     recentOrdersGrid.innerHTML = '<p>Could not load recent orders.</p>';
                 }
 
-                // Setup listener for the 'Orders' tab to load paginated orders
+                
                 document.querySelector('[data-section="orders"]').addEventListener('click', () => {
-                    // Only load if the section is not already active to prevent redundant loads
+                    
                     if (!document.getElementById('orders').classList.contains('active')) {
                         loadOrders(currentPage);
                     }

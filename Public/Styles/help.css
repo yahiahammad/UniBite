@@ -1,4 +1,4 @@
-/* Base Styles */
+
 :root {
     --primary: #ff8a00;
     --primary-dark: #ff6b00;
@@ -43,7 +43,7 @@ body {
     padding: 0 1.5rem;
 }
 
-/* Help Page Specific Styles */
+
 .help-page {
     padding: 2rem 0;
 }
@@ -304,7 +304,7 @@ body {
     margin: 0;
 }
 
-/* Footer */
+
 .site-footer {
     margin-top: 4rem;
     padding: 2rem 0;

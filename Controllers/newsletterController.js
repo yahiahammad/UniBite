@@ -1,7 +1,7 @@
 const Newsletter = require('../Models/newsletter');
 const User = require('../Models/User');
 
-// Subscribe to newsletter
+
 exports.subscribe = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -11,16 +11,16 @@ exports.subscribe = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if user is already subscribed
+        
         const existingSubscription = await Newsletter.findOne({ email: user.email });
         if (existingSubscription) {
             return res.status(400).json({ message: 'You are already subscribed to the newsletter' });
         }
 
-        // Add user's email to newsletter collection
+        
         await Newsletter.create({ email: user.email });
 
-        // Update user's newsletter preference
+        
         user.newsletterSubscribed = true;
         user.lastNewsletterToggle = Date.now();
         await user.save();
@@ -32,7 +32,7 @@ exports.subscribe = async (req, res) => {
     }
 };
 
-// Unsubscribe from newsletter
+
 exports.unsubscribe = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -42,16 +42,16 @@ exports.unsubscribe = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if user is subscribed
+        
         const subscription = await Newsletter.findOne({ email: user.email });
         if (!subscription) {
             return res.status(400).json({ message: 'You are not subscribed to the newsletter' });
         }
 
-        // Remove user's email from newsletter collection
+        
         await Newsletter.deleteOne({ email: user.email });
 
-        // Update user's newsletter preference
+        
         user.newsletterSubscribed = false;
         user.lastNewsletterToggle = Date.now();
         await user.save();

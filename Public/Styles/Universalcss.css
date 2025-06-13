@@ -6,7 +6,7 @@ body {
     "Helvetica Neue", sans-serif;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure the body takes up the full viewport height */
+    min-height: 100vh; 
 
 }
 * {
@@ -29,7 +29,7 @@ html, body {
     }
 }
 
-/* FOOTER STYLING */
+
 .footer {
     background: rgba(20, 20, 20, 0.9);
     color: white;
@@ -77,8 +77,8 @@ html, body {
 
 @media (max-width: 768px) {
     .footer {
-        flex-direction: row; /* Keep horizontal layout */
-        flex-wrap: nowrap; /* Allow wrapping if needed */
+        flex-direction: row; 
+        flex-wrap: nowrap; 
         justify-content: space-between;
         gap: 10px;
         padding: 15px;
@@ -86,11 +86,11 @@ html, body {
 
     .footer .logo {
         font-size: 16px;
-        flex: 0 0 auto; /* Prevent logo from growing */
+        flex: 0 0 auto; 
     }
 
     .footer .credentials {
         font-size: 11px;
-        flex: 0 0 auto; /* Prevent growing */
+        flex: 0 0 auto; 
     }
 }

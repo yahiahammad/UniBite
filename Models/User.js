@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false }, // Password is not selected by default
+  password: { type: String, required: true, select: false }, 
   phoneNumber: String,
   userType: {
     type: String,
@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Pre-save hook to hash password
+
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   try {
@@ -51,7 +51,7 @@ UserSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare passwords
+
 UserSchema.methods.comparePassword = async function(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
@@ -60,14 +60,14 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
   }
 };
 
-// Method to generate password reset token
+
 UserSchema.methods.generatePasswordResetToken = function() {
   const resetToken = crypto.randomBytes(32).toString('hex');
   this.resetPasswordToken = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-  this.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 minutes
+  this.resetPasswordExpires = Date.now() + 30 * 60 * 1000; 
   return resetToken;
 };
 

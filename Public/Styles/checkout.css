@@ -54,7 +54,7 @@ body {
     padding-bottom: 0.75rem;
 }
 
-/* Order Items Section */
+
 .order-items {
     margin-bottom: 2rem;
     background: var(--background);
@@ -128,7 +128,7 @@ body {
     color: var(--text-light);
 }
 
-/* Payment Method Section */
+
 .payment-methods {
     margin-bottom: 2rem;
     background: var(--background);
@@ -171,7 +171,7 @@ body {
     color: var(--text);
 }
 
-/* Notes Section */
+
 .order-notes {
     margin-bottom: 2rem;
     background: var(--background);
@@ -198,7 +198,7 @@ body {
     box-shadow: 0 0 0 3px rgba(255, 138, 0, 0.1);
 }
 
-/* Order Summary Section */
+
 .order-summary {
     background: var(--background);
     border-radius: var(--radius);

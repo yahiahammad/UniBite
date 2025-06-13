@@ -63,7 +63,7 @@ function renderCart() {
   cartTotal.textContent = subtotal + ' EGP';
 }
 
-// Quantity change
+
 document.getElementById('cart-items-list').addEventListener('click', function(e) {
   if (e.target.classList.contains('qty-btn')) {
     const idx = parseInt(e.target.getAttribute('data-idx'));
@@ -103,12 +103,12 @@ function proceedToCheckout() {
   window.location.href = '/checkout';
 }
 
-// Initial render
+
 document.addEventListener('DOMContentLoaded', function() {
   renderCart();
 });
 
-// Export functions for use in other files
+
 window.cartUtils = {
   getCartObj,
   setCartObj,

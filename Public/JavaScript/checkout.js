@@ -1,20 +1,20 @@
-// Initialize payment method selection
+
 function initPaymentMethods() {
     document.querySelectorAll('.payment-option').forEach(option => {
         option.addEventListener('click', function() {
-            // Remove selected class from all options
+            
             document.querySelectorAll('.payment-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-            // Add selected class to clicked option
+            
             this.classList.add('selected');
-            // Check the radio button
+            
             this.querySelector('input[type="radio"]').checked = true;
         });
     });
 }
 
-// Load cart from localStorage
+
 function getCartObj() {
     try {
         return JSON.parse(localStorage.getItem('cartObj')) || {};
@@ -31,7 +31,7 @@ function getVendorName() {
     return cartObj.vendorName || '';
 }
 
-// Render cart items
+
 function renderCheckout() {
     const cart = getCart();
     const vendorName = getVendorName();
@@ -40,7 +40,7 @@ function renderCheckout() {
 
     container.innerHTML = '';
 
-    // Add vendor name if available
+    
     if (vendorName) {
         const vendorDiv = document.createElement('div');
         vendorDiv.className = 'vendor-name';
@@ -74,7 +74,7 @@ function renderCheckout() {
     document.getElementById('total').textContent = subtotal + ' EGP';
 }
 
-// Handle order confirmation
+
 async function confirmOrder() {
     try {
         const cart = getCart();
@@ -84,10 +84,10 @@ async function confirmOrder() {
         }
 
         const cartObj = getCartObj();
-        // Get order notes
+        
         const notes = document.querySelector('.notes-input').value;
 
-        // Submit order to server
+        
         const response = await fetch('/api/orders/submit', {
             method: 'POST',
             headers: {
@@ -103,9 +103,9 @@ async function confirmOrder() {
         const data = await response.json();
 
         if (data.success) {
-            // Clear cart from localStorage
+            
             localStorage.removeItem('cartObj');
-            // Redirect to order confirmation page with order ID
+            
             window.location.href = `/order/confirmation?id=${data.orderId}`;
         } else {
             alert('Order failed: ' + (data.message || 'Unknown error'));
@@ -116,16 +116,16 @@ async function confirmOrder() {
     }
 }
 
-// Initialize checkout page
+
 function initCheckoutPage() {
     initPaymentMethods();
     renderCheckout();
 }
 
-// Initialize when DOM is loaded
+
 document.addEventListener('DOMContentLoaded', initCheckoutPage);
 
-// Export functions for use in other files
+
 window.checkoutUtils = {
     getCartObj,
     getCart,

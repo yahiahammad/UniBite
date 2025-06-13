@@ -4,14 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const submitButton = form.querySelector('button[type="submit"]');
 
-    // Password requirement elements
+    
     const reqLength = document.getElementById('req-length');
     const reqUppercase = document.getElementById('req-uppercase');
     const reqLowercase = document.getElementById('req-lowercase');
     const reqNumber = document.getElementById('req-number');
     const reqSpecial = document.getElementById('req-special');
 
-    // Get token from URL
+    
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Verify token immediately when page loads
+    
     verifyToken();
 
-    // Toggle password visibility
+    
     const toggleButtons = document.querySelectorAll('.password-toggle');
     toggleButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Function to update requirement icon and style
+    
     function updateRequirement(element, isValid) {
         const icon = element.querySelector('i');
         if (isValid) {
@@ -48,27 +48,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Password validation on keyup
+    
     passwordInput.addEventListener('keyup', () => {
         const password = passwordInput.value;
 
-        // Validate length
+        
         updateRequirement(reqLength, password.length >= 8);
 
-        // Validate uppercase
+        
         updateRequirement(reqUppercase, /[A-Z]/.test(password));
 
-        // Validate lowercase
+        
         updateRequirement(reqLowercase, /[a-z]/.test(password));
 
-        // Validate number
+        
         updateRequirement(reqNumber, /\d/.test(password));
 
-        // Validate special character
+        
         updateRequirement(reqSpecial, /[@$!%*?&]/.test(password));
     });
 
-    // Function to verify token
+    
     async function verifyToken() {
         try {
             const response = await fetch('/api/users/verify-reset-token', {
@@ -94,36 +94,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Password validation
+    
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Validate password
+        
         if (!passwordRegex.test(passwordInput.value)) {
             alert('Password must be at least 8 characters long and contain uppercase, lowercase, number and special character');
             return;
         }
 
-        // Check if passwords match
+        
         if (passwordInput.value !== confirmPasswordInput.value) {
             alert('Passwords do not match');
             return;
         }
 
-        // Show loading state
+        
         submitButton.classList.add('btn-loading');
         submitButton.disabled = true;
 
         try {
-            // First verify the token again before resetting password
+            
             const isTokenValid = await verifyToken();
             if (!isTokenValid) {
                 return;
             }
 
-            // Reset password
+            
             const response = await fetch('/api/users/reset-password', {
                 method: 'POST',
                 headers: {
@@ -138,11 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Show success message
+                
                 alert('Password has been reset successfully. Please login with your new password.');
                 window.location.href = '/login';
             } else {
-                // Show error message
+                
                 alert(data.message || 'An error occurred. Please try again.');
                 if (data.message.includes('Invalid or expired')) {
                     window.location.href = '/forgot-password';
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = '/forgot-password';
             }
         } finally {
-            // Remove loading state
+            
             submitButton.classList.remove('btn-loading');
             submitButton.disabled = false;
         }

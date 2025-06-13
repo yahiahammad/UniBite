@@ -2,18 +2,18 @@ const mongoose = require('mongoose');
 const User = require('../Models/User');
 const Vendor = require('../Models/Vendor');
 
-// Search users by name, email, or ID
+
 exports.searchUsers = async (req, res) => {
     try {
         const { query } = req.query;
         let users;
 
         if (mongoose.Types.ObjectId.isValid(query)) {
-            // Search by ID
+            
             users = await User.findById(query);
             users = users ? [users] : [];
         } else {
-            // Search by name or email
+            
             users = await User.find({
                 $or: [
                     { name: { $regex: query, $options: 'i' } },
@@ -29,7 +29,7 @@ exports.searchUsers = async (req, res) => {
     }
 };
 
-// Delete user
+
 exports.deleteUser = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -46,7 +46,7 @@ exports.deleteUser = async (req, res) => {
     }
 };
 
-// Create new restaurant
+
 exports.createRestaurant = async (req, res) => {
     try {
         const {
@@ -60,11 +60,11 @@ exports.createRestaurant = async (req, res) => {
             closingHours
         } = req.body;
 
-        // Create new vendor
+        
         const vendor = new Vendor({
             name,
             email: email.toLowerCase(),
-            password, // Note: In production, this should be hashed
+            password, 
             contactInfo: phoneNumber,
             location,
             cuisine,
@@ -86,18 +86,18 @@ exports.createRestaurant = async (req, res) => {
     }
 };
 
-// Search vendors by name, email, or ID
+
 exports.searchVendors = async (req, res) => {
     try {
         const { query } = req.query;
         let vendors;
 
         if (mongoose.Types.ObjectId.isValid(query)) {
-            // Search by ID
+            
             vendors = await Vendor.findById(query);
             vendors = vendors ? [vendors] : [];
         } else {
-            // Search by name or email
+            
             vendors = await Vendor.find({
                 $or: [
                     { name: { $regex: query, $options: 'i' } },
@@ -113,7 +113,7 @@ exports.searchVendors = async (req, res) => {
     }
 };
 
-// Delete vendor
+
 exports.deleteVendor = async (req, res) => {
     try {
         const { vendorId } = req.params;

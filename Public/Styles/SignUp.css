@@ -32,7 +32,7 @@
     text-decoration: none;
 }
 
-/* Navbar Links */
+
 .navbar .nav-links {
     display: flex;
     gap: 40px;
@@ -136,7 +136,7 @@ body {
 .button {
     width: 48%;
     padding: 10px;
-    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%); /* Given gradient */
+    background: linear-gradient(to right, #992D1F 0%, #FF4B33 100%); 
     color: white;
     border: none;
     border-radius: 6px;
@@ -149,7 +149,7 @@ body {
 .google-button {
     width: 48%;
     padding: 10px;
-    background: linear-gradient(to right, #FF4B33 0%, #992D1F 100%); /* Opposite gradient */
+    background: linear-gradient(to right, #FF4B33 0%, #992D1F 100%); 
     color: white;
     border: none;
     border-radius: 6px;

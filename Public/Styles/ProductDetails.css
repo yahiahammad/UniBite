@@ -7,24 +7,24 @@ main {
 
 
 .background {
-    width: 100%; /* Stretch from left to right */
-    height: 100vh; /* Full height of the viewport */
-    background: url(' Public/Images/back.jpeg') no-repeat center / cover; /* Proper background shorthand */
-    color: white; /* White text for contrast */
-    text-align: center; /* Center text alignment */
-    display: flex; /* Enable flex layout for centering content */
-    justify-content: center; /* Horizontally center the content */
-    align-items: center; /* Vertically center the content */
+    width: 100%; 
+    height: 100vh; 
+    background: url(' Public/Images/back.jpeg') no-repeat center / cover; 
+    color: white; 
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
 .title h1 {
-    font-family: 'Inter', sans-serif; /* Example font */
-    font-size: 90px; /*Big title sizing*/
+    font-family: 'Inter', sans-serif; 
+    font-size: 90px; 
     color: #000;
 }
 .title h2 {
-    font-family: 'Inter', sans-serif; /* Example font */
-    font-size: 45px; /*Big title sizing*/
+    font-family: 'Inter', sans-serif; 
+    font-size: 45px; 
     color: #000;
 }
 section{
@@ -38,33 +38,33 @@ section{
 .main-product{
     margin: 5%;
     display: flex;
-    justify-content: flex-start; /* Align items to the start */
-    align-items: flex-start; /* Align items to the start */
-    text-align: left; /* Align text to the left */
-    gap: 10%; /* Reduce the gap between image and details */
+    justify-content: flex-start; 
+    align-items: flex-start; 
+    text-align: left; 
+    gap: 10%; 
 
 }
 
 
 .main-product-image {
     display: flex;
-    justify-content: flex-start; /* Align the image to the left */
+    justify-content: flex-start; 
     width: 40%;
 }
 
 .main-product-image img {
-    width: 100%; /* Make the image responsive */
-    height: auto; /* Maintain aspect ratio */
+    width: 100%; 
+    height: auto; 
 
-    aspect-ratio: 1 / 1; /* Ensure the image is square */
-    object-fit: cover; /* Ensure the image covers the entire area */
-    border-radius: 6px; /* Keep the border radius */
+    aspect-ratio: 1 / 1; 
+    object-fit: cover; 
+    border-radius: 6px; 
 }
 
 .main-product-details {
     display: flex;
-    flex-direction: column; /* Stack the elements vertically */
-    align-items: flex-start; /* Align elements to the start */
+    flex-direction: column; 
+    align-items: flex-start; 
     align-self: center;
 }
 .price{
@@ -82,12 +82,12 @@ section{
     width: 100%;
     background-color: #FF4B33;
     color: white;
-    padding: 10px 20px; /* Adjust padding to make text horizontal */
+    padding: 10px 20px; 
     border-radius: 8px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
     border: 0;
-    text-align: center; /* Center the text horizontally */
-    display: inline-block; /* Ensure the button is inline */
+    text-align: center; 
+    display: inline-block; 
 
 }
 
@@ -111,19 +111,19 @@ section{
 .related-products-container{
     display: flex;
     justify-content: left;
-    flex-direction: row; /* Stack the elements vertically */
+    flex-direction: row; 
     align-items: flex-start;
     text-align: left;
     gap: 3%;
 }
 
 .related-products img{
-    width: 100%; /* Make the image responsive */
-    height: auto; /* Maintain aspect ratio */
-    object-position: center; /* Center the image */
+    width: 100%; 
+    height: auto; 
+    object-position: center; 
     aspect-ratio: 4 / 3;
-    object-fit: cover; /* Ensure the image covers the entire area */
-    border-radius: 6px; /* Keep the border radius */
+    object-fit: cover; 
+    border-radius: 6px; 
     box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
 
 }

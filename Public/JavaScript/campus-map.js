@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Food locations on campus
+  
   const FOOD_LOCATIONS = [
     { id: 1, name: "Gyro", description: "Greek-inspired wraps and bowls", lat: 30.171282, lng: 31.491855 },
     { id: 2, name: "MyCorner", description: "Egyptian sandwiches", lat: 30.169247, lng: 31.492369 },
@@ -9,23 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 6, name: "Batates & Zalabya", description: "Fries and dessert", lat: 30.170832, lng: 31.491603 },
   ]
 
-  // Default MIU coordinates
+  
   const DEFAULT_LOCATION = { lat: 30.169673, lng: 31.491933 }
 
-  // Initialize the map if the element exists
+  
   const mapElement = document.getElementById("campus-map")
   if (mapElement) {
     initializeMap()
   }
 
   function initializeMap() {
-    // Create map container
+    
     const mapContainer = document.createElement("div")
     mapContainer.className = "map-container"
     mapContainer.style.height = "100%"
     mapContainer.style.position = "relative"
 
-    // Create locations list
+    
     const locationsList = document.createElement("div")
     locationsList.className = "locations-list"
     locationsList.innerHTML = `
@@ -35,12 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="locations-items"></div>
     `
 
-    // Replace placeholder with actual map content
+    
     mapElement.innerHTML = ""
     mapElement.appendChild(mapContainer)
     mapElement.appendChild(locationsList)
 
-    // Add styles
+    
     const style = document.createElement("style")
     style.textContent = `
       .map-container {
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `
     document.head.appendChild(style)
 
-    // Add map image
+    
     const mapImage = document.createElement("img")
     mapImage.src =
       "https://maps.googleapis.com/maps/api/staticmap?center=30.169673,31.491933&zoom=17&size=600x400&maptype=satellite&key=YOUR_API_KEY"
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mapImage.style.objectFit = "cover"
     mapContainer.appendChild(mapImage)
 
-    // Populate locations list
+    
     const locationsItemsContainer = locationsList.querySelector(".locations-items")
     FOOD_LOCATIONS.forEach((location) => {
       const locationItem = document.createElement("div")
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `
 
       locationItem.addEventListener("click", function () {
-        // Remove active class from all items
+        
         document.querySelectorAll(".location-item").forEach((item) => {
           item.classList.remove("active")
           const statusElement = item.querySelector(".status")
@@ -166,16 +166,16 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         })
 
-        // Add active class to clicked item
+        
         this.classList.add("active")
 
-        // Add status text
+        
         const statusElement = document.createElement("p")
         statusElement.className = "status"
         statusElement.textContent = "Currently viewing"
         this.appendChild(statusElement)
 
-        // Update map (in a real implementation, this would pan/zoom the map)
+        
         console.log(`Selected location: ${location.name} at ${location.lat}, ${location.lng}`)
       })
 

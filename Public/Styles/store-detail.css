@@ -1,4 +1,4 @@
-/* Store Detail Page Styles */
+
 .store-detail-page {
     padding: 2rem 0;
 }
@@ -21,7 +21,7 @@
     color: var(--primary);
 }
 
-/* Store Hero */
+
 .store-hero {
     position: relative;
     border-radius: var(--radius);
@@ -70,7 +70,7 @@
     color: white;
 }
 
-/* Store Info Bar */
+
 .store-info-bar {
     display: flex;
     flex-direction: column;
@@ -112,7 +112,7 @@
     color: var(--text-light);
 }
 
-/* Store Hours */
+
 .store-hours {
     padding: 1.5rem;
     border: 1px solid var(--border);
@@ -130,7 +130,7 @@
     margin-bottom: 0;
 }
 
-/* Store Menu */
+
 .store-menu {
     margin-bottom: 3rem;
 }
@@ -140,7 +140,7 @@
     margin-bottom: 1.5rem;
 }
 
-/* Menu Search Bar */
+
 .menu-search-bar {
     position: relative;
     margin-bottom: 2rem;
@@ -371,7 +371,7 @@
     font-weight: 500;
 }
 
-/* Plus Add to Cart Button */
+
 .plus-btn {
     position: absolute;
     bottom: 1rem;
@@ -402,7 +402,7 @@
     transform: scale(0.95);
 }
 
-/* See Reviews Button Placement */
+
 .see-reviews-container {
     position: absolute;
     right: 2rem;
@@ -425,7 +425,7 @@
     background: #c97c1e;
 }
 
-/* Media Queries */
+
 @media (min-width: 768px) {
     .store-hero-image {
         height: 400px;
@@ -447,7 +447,7 @@
     }
 }
 
-/* Item Modal Styles */
+
 .item-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -570,7 +570,7 @@
     background: var(--primary-dark);
 }
 
-/* Reviews Modal Styles */
+
 .review-modal {
     display: none;
     position: fixed;

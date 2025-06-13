@@ -1,10 +1,10 @@
-// Application State
+
 let restaurantStatus = 'closed';
 let orders = [];
 let menuItems = [];
 let pendingStatusChange = null;
 
-// DOM Elements
+
 let menuToggle;
 const sidebar = document.querySelector('.sidebar');
 const navItems = document.querySelectorAll('.nav-item');
@@ -15,12 +15,12 @@ const statusConfirmMessage = document.getElementById('statusConfirmMessage');
 const confirmStatusChange = document.getElementById('confirmStatusChange');
 const cancelStatusChange = document.getElementById('cancelStatusChange');
 
-// Create overlay element
+
 const overlay = document.createElement('div');
 overlay.className = 'sidebar-overlay';
 document.body.appendChild(overlay);
 
-// Create menu toggle button
+
 function createMenuToggle() {
     menuToggle = document.createElement('button');
     menuToggle.className = 'menu-toggle';
@@ -28,38 +28,38 @@ function createMenuToggle() {
     document.body.appendChild(menuToggle);
 }
 
-// Helper function to get auth headers
+
 const getAuthHeaders = () => {
     return {
         'Content-Type': 'application/json'
     };
 };
 
-// Check authentication
+
 function checkAuth() {
-    return true; // Temporarily bypass auth check
+    return true; 
 }
 
-// Toggle sidebar
+
 function toggleSidebar() {
     sidebar.classList.toggle('show');
     overlay.classList.toggle('show');
 }
 
-// Show status confirmation modal
+
 function showStatusConfirmation(currentStatus, newStatus) {
     statusConfirmMessage.textContent = `Are you sure you want to change the status from "${currentStatus}" to "${newStatus}"?`;
     statusConfirmModal.style.display = 'block';
     pendingStatusChange = newStatus;
 }
 
-// Hide status confirmation modal
+
 function hideStatusConfirmation() {
     statusConfirmModal.style.display = 'none';
     pendingStatusChange = null;
 }
 
-// Handle status change confirmation
+
 async function handleStatusChange() {
     if (!pendingStatusChange) return;
 
@@ -83,20 +83,20 @@ async function handleStatusChange() {
     }
 }
 
-// Setup event listeners
+
 function setupEventListeners() {
-    // Mobile menu toggle
+    
     menuToggle?.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleSidebar();
     });
 
-    // Close sidebar when clicking overlay
+    
     overlay.addEventListener('click', () => {
         toggleSidebar();
     });
 
-    // Close sidebar when clicking outside on mobile
+    
     document.addEventListener('click', (e) => {
         if (window.innerWidth <= 768 &&
             !sidebar.contains(e.target) &&
@@ -106,24 +106,24 @@ function setupEventListeners() {
         }
     });
 
-    // Navigation
+    
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             const section = item.dataset.section;
             showSection(section);
 
-            // Update active state
+            
             navItems.forEach(nav => nav.classList.remove('active'));
             item.classList.add('active');
 
-            // Close sidebar on mobile after navigation
+            
             if (window.innerWidth <= 768) {
                 toggleSidebar();
             }
         });
     });
 
-    // Status controls
+    
     const statusControls = document.querySelector('.status-controls');
     if (statusControls) {
         statusControls.addEventListener('click', (e) => {
@@ -133,22 +133,22 @@ function setupEventListeners() {
             const newStatus = button.dataset.status;
             if (!newStatus) return;
 
-            // Get current status
+            
             const currentStatus = statusIndicator.textContent.toLowerCase();
 
-            // Skip if clicking the same status
+            
             if (currentStatus === newStatus) return;
 
-            // Show confirmation modal
+            
             showStatusConfirmation(currentStatus, newStatus);
         });
     }
 
-    // Status confirmation modal events
+    
     confirmStatusChange?.addEventListener('click', handleStatusChange);
     cancelStatusChange?.addEventListener('click', hideStatusConfirmation);
 
-    // Close modal when clicking the X or outside
+    
     const closeButtons = document.querySelectorAll('.modal .close');
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -162,7 +162,7 @@ function setupEventListeners() {
         }
     });
 
-    // Handle window resize
+    
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) {
             sidebar.classList.remove('show');
@@ -170,7 +170,7 @@ function setupEventListeners() {
         }
     });
 
-    // Handle escape key
+    
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sidebar.classList.contains('show')) {
             toggleSidebar();
@@ -178,7 +178,7 @@ function setupEventListeners() {
     });
 }
 
-// Show selected section
+
 function showSection(sectionId) {
     sections.forEach(section => {
         section.classList.remove('active');
@@ -187,7 +187,7 @@ function showSection(sectionId) {
         }
     });
 
-    // Update content based on section
+    
     switch (sectionId) {
         case 'dashboard':
             updateDashboard();
@@ -202,7 +202,7 @@ function showSection(sectionId) {
     }
 }
 
-// Update dashboard with latest stats
+
 async function updateDashboard() {
     try {
         const headers = getAuthHeaders();
@@ -228,7 +228,7 @@ async function updateDashboard() {
     }
 }
 
-// Update stats display
+
 function updateStatsDisplay(stats) {
     document.querySelector('.stat-card:nth-child(1) p').textContent = stats.totalOrders;
     document.querySelector('.stat-card:nth-child(2) p').textContent = stats.todayOrders;
@@ -236,7 +236,7 @@ function updateStatsDisplay(stats) {
     document.querySelector('.stat-card:nth-child(4) p').textContent = `${stats.todayRevenue.toFixed(2)} EGP`;
 }
 
-// Fetch and render recent orders
+
 async function fetchAndRenderRecentOrders() {
     try {
         const headers = getAuthHeaders();
@@ -279,7 +279,7 @@ async function fetchAndRenderRecentOrders() {
     }
 }
 
-// Fetch and render all orders
+
 async function fetchAndRenderOrders(page = 1) {
     try {
         const headers = getAuthHeaders();
@@ -310,14 +310,14 @@ async function fetchAndRenderOrders(page = 1) {
             return;
         }
 
-        // Render orders
+        
         ordersGrid.innerHTML = '';
         data.orders.forEach(order => {
             const orderCard = createOrderCard(order);
             ordersGrid.appendChild(orderCard);
         });
 
-        // Update pagination
+        
         const totalPages = Math.ceil(data.total / 15);
         updatePagination(page, totalPages);
     } catch (error) {
@@ -329,14 +329,14 @@ async function fetchAndRenderOrders(page = 1) {
     }
 }
 
-// Function to update pagination controls
+
 function updatePagination(currentPage, totalPages) {
     const paginationContainer = document.getElementById('ordersPagination');
     if (!paginationContainer) return;
 
     paginationContainer.innerHTML = '';
     
-    // Previous button
+    
     const prevLi = document.createElement('li');
     prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
     prevLi.innerHTML = `
@@ -346,7 +346,7 @@ function updatePagination(currentPage, totalPages) {
     `;
     paginationContainer.appendChild(prevLi);
 
-    // Page numbers
+    
     for (let i = 1; i <= totalPages; i++) {
         const li = document.createElement('li');
         li.className = `page-item ${i === currentPage ? 'active' : ''}`;
@@ -356,7 +356,7 @@ function updatePagination(currentPage, totalPages) {
         paginationContainer.appendChild(li);
     }
 
-    // Next button
+    
     const nextLi = document.createElement('li');
     nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
     nextLi.innerHTML = `
@@ -366,7 +366,7 @@ function updatePagination(currentPage, totalPages) {
     `;
     paginationContainer.appendChild(nextLi);
 
-    // Add click event listeners
+    
     paginationContainer.querySelectorAll('.page-link').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -378,7 +378,7 @@ function updatePagination(currentPage, totalPages) {
     });
 }
 
-// Create order card element
+
 function createOrderCard(order) {
     const card = document.createElement('div');
     card.className = 'order-card';
@@ -414,9 +414,9 @@ function createOrderCard(order) {
         </div>
     `;
 
-    // Add click event to show modal
+    
     card.addEventListener('click', (e) => {
-        // Don't show modal if clicking action buttons
+        
         if (e.target.closest('.order-actions')) return;
         showOrderModal(order);
     });
@@ -424,9 +424,9 @@ function createOrderCard(order) {
     return card;
 }
 
-// Show order modal
+
 function showOrderModal(order) {
-    // Remove any existing modals to prevent duplicates
+    
     const existingModal = document.querySelector('.order-modal');
     if (existingModal) {
         existingModal.remove();
@@ -504,7 +504,7 @@ function showOrderModal(order) {
     document.body.appendChild(modal);
     setTimeout(() => modal.classList.add('show'), 10);
 
-    // Add event listeners for closing modal
+    
     const closeButtons = modal.querySelectorAll('.close, .close-modal');
     closeButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -513,7 +513,7 @@ function showOrderModal(order) {
         });
     });
 
-    // Close modal when clicking outside
+    
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.classList.remove('show');
@@ -521,7 +521,7 @@ function showOrderModal(order) {
         }
     });
 
-    // Close modal with escape key
+    
     document.addEventListener('keydown', function closeOnEscape(e) {
         if (e.key === 'Escape') {
             modal.classList.remove('show');
@@ -531,7 +531,7 @@ function showOrderModal(order) {
     });
 }
 
-// Get order action buttons based on status
+
 function getOrderActionButtons(order) {
     const buttons = [];
 
@@ -573,7 +573,7 @@ function getOrderActionButtons(order) {
     return buttons.join('');
 }
 
-// Update order status
+
 async function updateOrderStatus(orderId, newStatus) {
     try {
         const headers = getAuthHeaders();
@@ -595,44 +595,44 @@ async function updateOrderStatus(orderId, newStatus) {
             throw new Error(errorData.message || 'Failed to update order status');
         }
 
-        // Fetch the updated order to refresh all its details
+        
         const updatedOrderResponse = await fetch(`/api/admin/orders/${orderId}`, { headers: getAuthHeaders() });
         if (!updatedOrderResponse.ok) {
             throw new Error('Failed to fetch updated order details');
         }
         const updatedOrder = await updatedOrderResponse.json();
 
-        // Update the order card in the UI
+        
         const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
         if (orderCard) {
             const newOrderCard = createOrderCard(updatedOrder);
             orderCard.replaceWith(newOrderCard);
         }
 
-        // Update the order modal if it's open
+        
         const currentModal = document.querySelector('.order-modal.show');
         if (currentModal && currentModal.querySelector(`h3`).textContent.includes(orderId.toString().slice(-6))) {
-            currentModal.remove(); // Remove existing modal
-            showOrderModal(updatedOrder); // Show new modal with updated data
+            currentModal.remove(); 
+            showOrderModal(updatedOrder); 
         }
 
-        // Refresh the orders list if it's the active section (for all orders view)
+        
         const activeSection = document.querySelector('.section.active');
         if (activeSection && activeSection.id === 'orders') {
             fetchAndRenderOrders();
         }
 
-        // Also update dashboard stats as revenue/today's orders might change
+        
         updateDashboard();
 
-        // Show success message
+        
         showNotification('Order status updated successfully', 'success');
     } catch (error) {
         showNotification(error.message || 'Failed to update order status', 'error');
     }
 }
 
-// Update restaurant status display
+
 function updateRestaurantStatusDisplay(status) {
     const statusIndicator = document.getElementById('statusIndicator');
     if (statusIndicator) {
@@ -641,7 +641,7 @@ function updateRestaurantStatusDisplay(status) {
     }
 }
 
-// Show notification
+
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -652,19 +652,19 @@ function showNotification(message, type = 'success') {
 
     document.body.appendChild(notification);
 
-    // Remove notification after 3 seconds
+    
     setTimeout(() => {
         notification.classList.add('slide-out');
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Menu Management Functions
+
 let itemToDelete = null;
 let menuItemModal;
 let deleteConfirmModal;
 
-// Load menu items
+
 async function loadMenuItems() {
     try {
         const response = await fetch('/api/menu-items/vendor', {
@@ -683,7 +683,7 @@ async function loadMenuItems() {
     }
 }
 
-// Render menu items in table
+
 function renderMenuItems() {
     const tbody = document.getElementById('menuItemsTable');
     if (!tbody) return;
@@ -718,7 +718,7 @@ function renderMenuItems() {
     `).join('');
 }
 
-// Open add item modal
+
 function openAddItemModal() {
     document.getElementById('modalTitle').textContent = 'Add New Menu Item';
     document.getElementById('menuItemForm').reset();
@@ -726,7 +726,7 @@ function openAddItemModal() {
     menuItemModal.show();
 }
 
-// Edit menu item
+
 function editMenuItem(id) {
     const item = menuItems.find(i => i._id === id);
     if (!item) return;
@@ -742,7 +742,7 @@ function editMenuItem(id) {
     menuItemModal.show();
 }
 
-// Save menu item
+
 async function saveMenuItem() {
     const formData = new FormData();
     const id = document.getElementById('itemId').value;
@@ -781,7 +781,7 @@ async function saveMenuItem() {
     }
 }
 
-// Toggle item availability
+
 async function toggleAvailability(id, available) {
     try {
         const response = await fetch(`/api/menu-items/${id}`, {
@@ -802,13 +802,13 @@ async function toggleAvailability(id, available) {
     }
 }
 
-// Show delete confirmation
+
 function showDeleteConfirm(id) {
     itemToDelete = id;
     deleteConfirmModal.show();
 }
 
-// Confirm delete
+
 async function confirmDelete() {
     if (!itemToDelete) return;
 
@@ -833,22 +833,22 @@ async function confirmDelete() {
     }
 }
 
-// Initialize
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize modal instances
+    
     menuItemModal = new bootstrap.Modal(document.getElementById('menuItemModal'));
     deleteConfirmModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
 
-    // Check authentication first
+    
     if (!checkAuth()) return;
 
-    // Create menu toggle button for mobile
+    
     createMenuToggle();
 
     setupEventListeners();
-    showSection('dashboard'); // Show dashboard by default
+    showSection('dashboard'); 
 
-    // Set up periodic updates
+    
     setInterval(() => {
         if (checkAuth()) {
             const activeSection = document.querySelector('.section.active');
@@ -863,5 +863,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-    }, 30000); // Update every 30 seconds
+    }, 30000); 
 });

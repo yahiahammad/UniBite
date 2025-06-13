@@ -1,36 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Menu tabs functionality
+  
   const menuTabs = document.querySelectorAll(".menu-tab")
   const menuCategories = document.querySelectorAll(".menu-category")
 
-  // Function to activate a specific menu category and its tab
+  
   window.activateMenuCategory = (categoryName) => {
-    // Remove active class from all tabs
+    
     menuTabs.forEach((t) => t.classList.remove("active"));
-    // Remove active class and set display: none for all categories
+    
     menuCategories.forEach((c) => {
       c.classList.remove("active");
-      c.style.display = 'none'; // Ensure it's hidden
+      c.style.display = 'none'; 
     });
 
-    // Find and activate the corresponding tab
+    
     const targetTab = document.querySelector(`.menu-tab[data-category="${categoryName}"]`);
     if (targetTab) {
       targetTab.classList.add("active");
     }
 
-    // Show corresponding category
+    
     const category = document.getElementById(categoryName);
     if (category) {
       category.classList.add("active");
-      category.style.display = 'block'; // Ensure it's visible
+      category.style.display = 'block'; 
     }
   };
 
-  // Initialize menu tab listeners
+  
   const initializeMenuTabListeners = () => {
     menuTabs.forEach((tab) => {
-      tab.removeEventListener("click", handleMenuTabClick); // Remove existing to prevent duplicates
+      tab.removeEventListener("click", handleMenuTabClick); 
       tab.addEventListener("click", handleMenuTabClick);
     });
   };
@@ -42,13 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializeMenuTabListeners();
 
-  // Initially activate the first category if none is active
+  
   if (!document.querySelector('.menu-tab.active') && menuTabs.length > 0) {
     const firstCategory = menuTabs[0].getAttribute('data-category');
     window.activateMenuCategory(firstCategory);
   }
 
-  // Mobile menu toggle
+  
   const mobileMenuToggle = document.querySelector(".mobile-menu-toggle")
   const mobileMenu = document.getElementById("mobile-menu")
   const mobileMenuClose = document.querySelector(".mobile-menu-close")
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Header scroll effect
+  
   const header = document.getElementById("site-header")
   let lastScroll = 0
 
@@ -78,10 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (currentScroll > lastScroll && !header.classList.contains("hidden")) {
-        // Scrolling down
+        
         header.classList.add("hidden")
       } else if (currentScroll < lastScroll && header.classList.contains("hidden")) {
-        // Scrolling up
+        
         header.classList.remove("hidden")
       }
 
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Add to cart modal logic
+  
   const itemModal = document.getElementById('item-modal');
   const modalClose = document.getElementById('modal-close');
   const modalItemName = document.getElementById('modal-item-name');
@@ -108,16 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentOptions = {};
   let pendingVendorItem = null;
 
-  // Function to attach/reattach add to cart listeners
+  
   window.attachAddToCartListeners = () => {
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-      // Remove existing listener to prevent duplicates if function is called multiple times
+      
       btn.removeEventListener('click', handleAddToCartClick);
       btn.addEventListener('click', handleAddToCartClick);
     });
   };
 
-  // Unified click handler for add to cart buttons
+  
   const handleAddToCartClick = function(e) {
     e.preventDefault();
     currentQty = 1;
@@ -138,13 +138,13 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       currentItem.options = [];
     }
-    // Fill modal
+    
     modalItemName.textContent = currentItem.name;
     modalItemDescription.textContent = currentItem.description;
     modalQty.textContent = currentQty;
     modalItemPrice.textContent = currentItem.price;
     modalNotes.value = '';
-    // Render options
+    
     modalOptionsSection.innerHTML = '';
     if (currentItem.options && currentItem.options.length > 0) {
       currentItem.options.forEach((opt, idx) => {
@@ -182,10 +182,10 @@ document.addEventListener("DOMContentLoaded", () => {
     itemModal.style.display = 'flex';
   };
 
-  // Initial call to attach listeners for existing buttons
+  
   window.attachAddToCartListeners();
 
-  // Modal close
+  
   modalClose.addEventListener('click', () => {
     itemModal.style.display = 'none';
   });
@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === itemModal) itemModal.style.display = 'none';
   });
 
-  // Quantity logic
+  
   modalQtyMinus.addEventListener('click', () => {
     if (currentQty > 1) {
       currentQty--;
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modalQty.textContent = currentQty;
   });
 
-  // Add a modal for vendor conflict
+  
   (function addVendorModal() {
     if (!document.getElementById('vendor-modal')) {
       const modal = document.createElement('div');
@@ -229,9 +229,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  // Add to cart from modal
+  
   modalAddToCart.addEventListener('click', function() {
-    // Validate required options
+    
     if (currentItem.options && currentItem.options.length > 0) {
       for (const opt of currentItem.options) {
         if (opt.required && !currentOptions[opt.name]) {
@@ -252,29 +252,29 @@ document.addEventListener("DOMContentLoaded", () => {
       vendorId: String(currentItem.vendorId),
       vendorName: currentItem.vendorName
     };
-    // --- localStorage cart logic with vendor enforcement ---
+    
     let cartObj = {};
     try {
       cartObj = JSON.parse(localStorage.getItem('cartObj')) || {};
     } catch (e) { cartObj = {}; }
     const cart = cartObj.items || [];
     
-    // If cart is empty or vendorId is not set, set vendorId/vendorName
+    
     if (!cartObj.vendorId) {
       cartObj.vendorId = String(itemData.vendorId);
       cartObj.vendorName = itemData.vendorName;
       cartObj.items = cart;
     }
-    // If vendor matches, add as usual
+    
     if (String(cartObj.vendorId) === String(itemData.vendorId)) {
       addItemToCart(cartObj, itemData);
       return;
     }
-    // If vendor does not match, show modal and store pending item
+    
     pendingVendorItem = { cartObj, itemData };
     showVendorModal(cartObj.vendorName, function(confirmed) {
       if (confirmed && pendingVendorItem) {
-        // Clear cart and add new item
+        
         let { cartObj, itemData } = pendingVendorItem;
         cartObj.vendorId = String(itemData.vendorId);
         cartObj.vendorName = itemData.vendorName;
@@ -287,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function addItemToCart(cartObj, itemData) {
     const cart = cartObj.items || [];
-    // Check if item already exists in cart
+    
     const existingItemIndex = cart.findIndex(item => 
       item.id === itemData.id && 
       JSON.stringify(item.options) === JSON.stringify(itemData.options) &&
@@ -295,21 +295,21 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     if (existingItemIndex !== -1) {
-      // Update quantity of existing item
+      
       cart[existingItemIndex].quantity += itemData.quantity;
     } else {
-      // Add new item
+      
       cart.push(itemData);
     }
 
-    // Update cart in localStorage
+    
     cartObj.items = cart;
     localStorage.setItem('cartObj', JSON.stringify(cartObj));
 
-    // Show success message
+    
     showCartToast('Item added to cart');
     
-    // Close modal
+    
     itemModal.style.display = 'none';
   }
 
@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showCartToast(msg) {
-    // Create toast element if it doesn't exist
+    
     let toast = document.getElementById('cart-toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -354,17 +354,17 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(toast);
     }
 
-    // Show toast
+    
     toast.textContent = msg;
     toast.style.opacity = '1';
 
-    // Hide toast after 2 seconds
+    
     setTimeout(() => {
       toast.style.opacity = '0';
     }, 2000);
   }
 
-  // --- Reviews Modal Logic ---
+  
   const showReviewsBtn = document.getElementById('show-reviews-btn');
   const reviewsModal = document.getElementById('reviews-modal');
   const closeReviewsModal = document.getElementById('close-reviews-modal');

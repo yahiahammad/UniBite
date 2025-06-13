@@ -1,4 +1,4 @@
-/* Base Styles */
+
 :root {
   --primary: #ff8a00;
   --primary-dark: #ff6b00;
@@ -62,7 +62,7 @@ img {
   padding: 0 1.5rem;
 }
 
-/* Typography */
+
 h1,
 h2,
 h3,
@@ -104,7 +104,7 @@ p {
   }
 }
 
-/* Buttons */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -177,7 +177,7 @@ p {
   width: 100%;
 }
 
-/* Desktop-only elements */
+
 .desktop-only {
   display: none;
 }
@@ -188,8 +188,8 @@ p {
   }
 }
 
-/* Header */
-/* Default header styles for all pages */
+
+
 .site-header {
   position: fixed;
   top: 0;
@@ -201,7 +201,7 @@ p {
   transition: transform 0.3s ease;
 }
 
-/* Scrolled header animation */
+
 .site-header.scrolled {
   transform: translateY(0);
 }
@@ -251,7 +251,7 @@ p {
   color: var(--primary);
 }
 
-/* User Actions */
+
 .user-actions {
   display: flex;
   align-items: center;
@@ -291,7 +291,7 @@ p {
   color: white;
 }
 
-/* Mobile styles for header actions */
+
 @media (max-width: 991px) {
   .user-actions {
     display: none;
@@ -311,7 +311,7 @@ p {
   gap: 1rem;
 }
 
-/* Mobile Menu Toggle */
+
 .mobile-menu-toggle {
   display: flex;
   align-items: center;
@@ -334,7 +334,7 @@ p {
   }
 }
 
-/* Mobile Menu */
+
 .mobile-menu {
   position: fixed;
   top: 0;
@@ -419,7 +419,7 @@ p {
   height: 24px;
 }
 
-/* Overlay for mobile menu */
+
 .overlay {
   position: fixed;
   top: 0;
@@ -438,7 +438,7 @@ p {
   visibility: visible;
 }
 
-/* Hero Section */
+
 .hero {
   padding: 8rem 0 4rem;
   background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
@@ -485,7 +485,7 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Features Section */
+
 .features {
   padding: 5rem 0;
 }
@@ -530,7 +530,7 @@ p {
   color: var(--text-light);
 }
 
-/* How It Works Section */
+
 .how-it-works {
   padding: 5rem 0;
   background-color: var(--background-alt);
@@ -568,7 +568,7 @@ p {
   color: var(--text-light);
 }
 
-/* App Preview Section */
+
 .app-preview {
   padding: 5rem 0;
 }
@@ -636,7 +636,7 @@ p {
   background-color: var(--background-alt);
 }
 
-/* Testimonials Section */
+
 .testimonials {
   padding: 5rem 0;
   background-color: var(--background-alt);
@@ -685,7 +685,7 @@ p {
   font-style: italic;
 }
 
-/* FAQ Section */
+
 .faq {
   padding: 5rem 0;
 }
@@ -711,7 +711,7 @@ p {
   margin-bottom: 0;
 }
 
-/* CTA Section */
+
 .cta {
   padding: 5rem 0;
   background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
@@ -737,7 +737,7 @@ p {
   align-items: center;
 }
 
-/* Footer */
+
 .site-footer {
   padding: 2rem 0;
   border-top: 1px solid var(--border);
@@ -769,7 +769,7 @@ p {
   color: var(--primary);
 }
 
-/* Media Queries */
+
 @media (min-width: 576px) {
   .hero-buttons {
     flex-direction: row;
@@ -821,7 +821,7 @@ p {
   }
 }
 
-/* Ensure the body doesn't scroll when mobile menu is open */
+
 body.mobile-menu-open {
   overflow: hidden;
 }

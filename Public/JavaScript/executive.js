@@ -1,4 +1,4 @@
-// User search functionality
+
 async function searchUsers() {
     const query = document.getElementById('userSearch').value;
     try {
@@ -65,7 +65,7 @@ async function deleteUser(userId) {
 
         if (response.ok) {
             alert('User deleted successfully');
-            searchUsers(); // Refresh the search results
+            searchUsers(); 
         } else {
             throw new Error('Failed to delete user');
         }
@@ -75,7 +75,7 @@ async function deleteUser(userId) {
     }
 }
 
-// Vendor search functionality
+
 async function searchVendors() {
     const query = document.getElementById('vendorSearch').value;
     try {
@@ -105,7 +105,7 @@ async function deleteVendor(vendorId) {
 
         if (response.ok) {
             alert('Vendor deleted successfully');
-            searchVendors(); // Refresh the search results
+            searchVendors(); 
         } else {
             throw new Error('Failed to delete vendor');
         }
@@ -115,7 +115,7 @@ async function deleteVendor(vendorId) {
     }
 }
 
-// Restaurant creation functionality
+
 function initRestaurantForm() {
     document.getElementById('restaurantForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -154,15 +154,15 @@ function initRestaurantForm() {
     });
 }
 
-// Initialize executive dashboard
+
 function initExecutiveDashboard() {
     initRestaurantForm();
 }
 
-// Initialize when DOM is loaded
+
 document.addEventListener('DOMContentLoaded', initExecutiveDashboard);
 
-// Export functions for use in other files
+
 window.executiveUtils = {
     searchUsers,
     searchVendors,

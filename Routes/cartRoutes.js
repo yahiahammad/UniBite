@@ -3,7 +3,7 @@ const router = express.Router();
 const { protect } = require('../Middleware/auth');
 const User = require('../Models/User');
 
-// Get cart page
+
 router.get('/', protect, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
@@ -13,9 +13,9 @@ router.get('/', protect, async (req, res) => {
         
         const cartItems = user.cart || [];
         
-        // Calculate totals
+        
         const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const total = subtotal; // Add any additional fees here if needed
+        const total = subtotal; 
 
         res.render('Cart', {
             cartItems,
@@ -28,7 +28,7 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
-// Update item quantity
+
 router.post('/update', protect, async (req, res) => {
     try {
         const { itemId, name, price, category, image, change } = req.body;
@@ -62,7 +62,7 @@ router.post('/update', protect, async (req, res) => {
     }
 });
 
-// Remove item from cart
+
 router.post('/remove', protect, async (req, res) => {
     try {
         const { itemId } = req.body;
@@ -87,7 +87,7 @@ router.post('/remove', protect, async (req, res) => {
     }
 });
 
-// Clear cart
+
 router.post('/clear', protect, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);

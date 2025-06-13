@@ -1,6 +1,6 @@
-// server.js
 
-// --- Dependencies ---
+
+
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
@@ -9,27 +9,27 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-// --- Models ---
+
 const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
 
-// --- Middleware ---
+
 const { requireLogin, checkAuth, authenticateExecutive } = require('./Middleware/auth');
 
-// --- Socket.IO Setup ---
+
 const { init } = require('./socket');
 
-// --- Initialize Express App ---
+
 const app = express();
 const server = http.createServer(app);
 const io = init(server);
 
-// --- View Engine Setup ---
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
 app.set('auth', 'Views/Auth');
 
-// --- Middleware Configuration ---
+
 app.use(cors({
     origin: true,
     credentials: true,
@@ -42,10 +42,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'Public')));
 
-// --- Authentication Middleware ---
+
 app.use(checkAuth);
 
-// --- User Data Sanitization Middleware ---
+
 app.use((req, res, next) => {
     if (req.user) {
         const sanitizedUser = {
@@ -62,19 +62,19 @@ app.use((req, res, next) => {
     next();
 });
 
-// --- View Helpers Middleware ---
+
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated;
     res.locals.isExecutive = !!(req.user && req.user.userType === 'admin');
     next();
 });
 
-// --- Database Connection ---
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected'))
     .catch(err => console.log('❌ DB Error:', err));
 
-// --- Route Imports ---
+
 const userRoutes = require('./routes/userRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
 const menuItemRoutes = require('./routes/menuItemRoutes');
@@ -85,12 +85,12 @@ const cartRoutes = require('./routes/cartRoutes');
 const executiveRoutes = require('./routes/executiveRoutes');
 const newsletterRoutes = require('./routes/newsletterRoutes');
 
-// --- Route Mounting ---
-// User routes (both API and page rendering)
+
+
 app.use('/', userRoutes);
 app.use('/api/users', userRoutes);
 
-// API routes
+
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/menu-items', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
@@ -99,16 +99,16 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/executive', executiveRoutes);
 
-// Page routes
+
 app.use('/', orderRoutes);
 app.use('/', adminRoutes);
 
-// --- Test Route ---
+
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
 });
 
-// --- Page Routes ---
+
 app.get('/', (req, res) => {
     res.render('UniBite');
 });
@@ -186,7 +186,7 @@ app.get('/cart', requireLogin, (req, res) => {
     res.render('Cart', { active: 'cart' });
 });
 
-// --- Error Handler ---
+
 app.use((req, res) => {
     res.status(404).render('error', {
         message: 'Page Not Found',
@@ -194,6 +194,6 @@ app.use((req, res) => {
     });
 });
 
-// --- Server Start ---
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

@@ -1,32 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if user is logged in
+  
   const user = JSON.parse(localStorage.getItem("unibite-user"))
   if (!user) {
     window.location.href = "/login.html"
     return
   }
 
-  // Tab functionality
+  
   const tabButtons = document.querySelectorAll(".tab-btn")
   const tabPanes = document.querySelectorAll(".tab-pane")
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", function () {
-      // Remove active class from all buttons and panes
+      
       tabButtons.forEach((btn) => btn.classList.remove("active"))
       tabPanes.forEach((pane) => pane.classList.remove("active"))
 
-      // Add active class to clicked button and corresponding pane
+      
       this.classList.add("active")
       const tabId = this.getAttribute("data-tab")
       document.getElementById(tabId).classList.add("active")
 
-      // Update URL hash
+      
       window.location.hash = tabId
     })
   })
 
-  // Check URL hash on page load
+  
   if (window.location.hash) {
     const hash = window.location.hash.substring(1)
     const tabButton = document.querySelector(`.tab-btn[data-tab="${hash}"]`)
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Password visibility toggle
+  
   const passwordToggles = document.querySelectorAll(".password-toggle")
   passwordToggles.forEach((toggle) => {
     toggle.addEventListener("click", function () {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const type = input.getAttribute("type") === "password" ? "text" : "password"
       input.setAttribute("type", type)
 
-      // Update icon
+      
       const eyeIcon = this.querySelector(".eye-icon")
       if (type === "text") {
         eyeIcon.innerHTML = `
@@ -59,13 +59,13 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Personal info form submission
+  
   const personalInfoForm = document.getElementById("personal-info-form")
   if (personalInfoForm) {
     personalInfoForm.addEventListener("submit", async function (e) {
       e.preventDefault()
 
-      // Show loading state
+      
       const submitButton = this.querySelector('button[type="submit"]')
       submitButton.textContent = "Saving..."
       submitButton.disabled = true
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Update user data in localStorage
+          
           user.name = document.getElementById("name").value;
           user.phoneNumber = document.getElementById("phone").value;
           localStorage.setItem("unibite-user", JSON.stringify(user));
@@ -97,14 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         showToast("Error", "An error occurred while updating profile", "error");
       } finally {
-        // Reset button state
+        
         submitButton.textContent = "Save Changes"
         submitButton.disabled = false
       }
     })
   }
 
-  // Password form submission
+  
   const passwordForm = document.getElementById("password-form")
   if (passwordForm) {
     passwordForm.addEventListener("submit", async function (e) {
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const newPassword = document.getElementById("newPassword").value
       const confirmNewPassword = document.getElementById("confirmNewPassword").value
 
-      // Validate passwords
+      
       if (!currentPassword || !newPassword || !confirmNewPassword) {
         showToast("Error", "Please fill in all password fields.", "error")
         return
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return
       }
 
-      // Show loading state
+      
       const submitButton = this.querySelector('button[type="submit"]')
       submitButton.textContent = "Changing..."
       submitButton.disabled = true
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await response.json();
 
         if (response.ok) {
-          // Reset form
+          
           this.reset();
           showToast("Success", "Your password has been changed successfully.");
         } else {
@@ -159,14 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         showToast("Error", "An error occurred while changing password", "error");
       } finally {
-        // Reset button state
+        
         submitButton.textContent = "Change Password"
         submitButton.disabled = false
       }
     })
   }
 
-  // Newsletter toggle functionality
+  
   const newsletterToggle = document.getElementById('newsletter');
   if (newsletterToggle) {
     newsletterToggle.addEventListener('change', async function() {
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Sync newsletter toggle state with user's database state
+  
   const newsletterToggleSync = document.getElementById('newsletter');
   if (newsletterToggleSync) {
     if (user && user.newsletterSubscribed !== undefined) {
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Format and display member since date
+  
   const memberSinceElement = document.getElementById('member-since');
   if (memberSinceElement) {
     if (user && user.createdAt) {
@@ -246,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Logout functionality
+  
   const logoutButtons = document.querySelectorAll("#logout-btn, #mobile-logout-btn")
   logoutButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -255,19 +255,19 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Order history functionality
+  
   function switchTab(tabName) {
-    // Hide all sections
+    
     document.querySelectorAll('.order-section').forEach(section => {
       section.classList.add('hidden');
     });
 
-    // Remove active class from all tabs
+    
     document.querySelectorAll('.tab').forEach(tab => {
       tab.classList.remove('active');
     });
 
-    // Show selected section and activate tab
+    
     const section = document.getElementById(tabName + '-order-history');
     const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
 
@@ -275,14 +275,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tab) tab.classList.add('active');
   }
 
-  // Add click event listeners to order tabs
+  
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       switchTab(tab.dataset.tab);
     });
   });
 
-  // Function to load orders
+  
   async function loadOrders() {
     try {
       const response = await fetch('/api/orders/user');
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const orders = await response.json();
 
-      // Separate ongoing and completed orders
+      
       const ongoingOrders = orders.filter(order =>
           ['pending', 'preparing', 'ready for pickup'].includes(order.status.toLowerCase())
       );
@@ -300,11 +300,11 @@ document.addEventListener("DOMContentLoaded", () => {
           ['picked up', 'cancelled'].includes(order.status.toLowerCase())
       );
 
-      // Sort orders by date (newest first)
+      
       ongoingOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
       completedOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
 
-      // Render ongoing orders
+      
       const ongoingList = document.getElementById('ongoing-orders-list');
       if (ongoingOrders.length === 0) {
         ongoingList.innerHTML = '<p class="no-orders">No ongoing orders at the moment.</p>';
@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ongoingList.innerHTML = ongoingOrders.map(order => createOrderCard(order)).join('');
       }
 
-      // Render order history
+      
       const historyList = document.getElementById('order-history-list');
       if (completedOrders.length === 0) {
         historyList.innerHTML = '<p class="no-orders">No order history available.</p>';
@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
         historyList.innerHTML = completedOrders.map(order => createOrderCard(order)).join('');
       }
 
-      // Make sure the correct tab is shown
+      
       const activeTab = document.querySelector('.tab.active');
       if (activeTab) {
         switchTab(activeTab.dataset.tab);
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Function to create order card HTML
+  
   function createOrderCard(order) {
     const statusClass = order.status.toLowerCase().replace(/\s+/g, '-');
     const paymentClass = order.paymentStatus.toLowerCase();
@@ -410,9 +410,9 @@ document.addEventListener("DOMContentLoaded", () => {
           Total: ${order.totalPrice} EGP
         </div>
 
-        <!-- Review Button/Modal Placement -->
+        
         <div class="order-review-placement">
-          <!-- Show review button only for picked up, unreviewed orders -->
+          
           ${(order.status === 'picked up' && order.reviewed === false) ? `
             <button class="btn btn-review" onclick="openReviewModal('${order._id}', '${order.vendorId._id}', '${order.vendorId.name}')">Leave a Review</button>
           ` : (order.status === 'picked up' && order.reviewed === true ? `
@@ -423,19 +423,19 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // Load orders when the orders tab is clicked
+  
   const ordersTab = document.querySelector('[data-tab="orders"]');
   if (ordersTab) {
     ordersTab.addEventListener('click', loadOrders);
   }
 
-  // Load orders immediately if we're on the orders page
+  
   if (document.getElementById('orders')) {
     loadOrders();
   }
 
-  // --- Review Modal Logic ---
-  // Modal HTML
+  
+  
   if (!document.getElementById('review-modal')) {
     const modalDiv = document.createElement('div');
     modalDiv.id = 'review-modal';
@@ -457,14 +457,14 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(modalDiv);
   }
-  // Helper to rebind star events
+  
   function bindReviewStarEvents() {
-    // Remove existing event listeners to prevent duplicates
+    
     document.querySelectorAll('#review-stars .star').forEach(star => {
       star.replaceWith(star.cloneNode(true));
     });
 
-    // Add new event listeners
+    
     document.querySelectorAll('#review-stars .star').forEach(star => {
       star.addEventListener('mouseenter', function() {
         const val = parseInt(this.dataset.value);
@@ -481,29 +481,29 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('#review-stars .star').forEach(s => {
           s.classList.toggle('selected', parseInt(s.dataset.value) <= val);
         });
-        console.log('Selected rating:', val); // Debug log
+        console.log('Selected rating:', val); 
       });
     });
   }
 
-  // Wait for DOM to be ready before binding events
+  
   setTimeout(() => {
     bindReviewStarEvents();
   }, 100);
-  // Modal open/close logic
+  
   window.openReviewModal = function(orderId, vendorId, vendorName) {
     const modal = document.getElementById('review-modal');
     modal.style.display = 'flex';
     document.getElementById('review-vendor-name').textContent = vendorName;
     modal.dataset.orderId = orderId;
     modal.dataset.vendorId = vendorId;
-    // Reset stars and comment
+    
     document.getElementById('review-comment').value = '';
     document.querySelectorAll('#review-stars .star').forEach(star => {
       star.classList.remove('selected', 'hovered');
     });
     window.selectedRating = 0;
-    // Rebind events after modal is shown
+    
     setTimeout(() => {
       bindReviewStarEvents();
     }, 50);
@@ -516,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target === modal) modal.style.display = 'none';
   };
 
-  // Submit review logic
+  
   document.getElementById('submit-review-btn').onclick = async function() {
     const modal = document.getElementById('review-modal');
     const orderId = modal.dataset.orderId;
@@ -548,7 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 });
 
-// Toast notification function
+
 function showToast(title, message, type = "success") {
   const toast = document.getElementById("toast")
   const toastTitle = toast.querySelector("h4")
@@ -558,7 +558,7 @@ function showToast(title, message, type = "success") {
   toastTitle.textContent = title
   toastMessage.textContent = message
 
-  // Set icon based on type
+  
   if (type === "success") {
     toastIcon.innerHTML = `
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -574,16 +574,16 @@ function showToast(title, message, type = "success") {
     toast.classList.add('error');
   }
 
-  // Show toast
+  
   toast.classList.add("show")
 
-  // Hide toast after 3 seconds
+  
   setTimeout(() => {
     toast.classList.remove("show")
   }, 3000)
 }
 
-// Close toast on click
+
 const toastClose = document.querySelector(".toast-close")
 if (toastClose) {
   toastClose.addEventListener("click", () => {

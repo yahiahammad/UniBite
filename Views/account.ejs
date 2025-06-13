@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
+  
   <%- include('partials/Header', { active: 'account' }) %>
 
   <main class="account-page">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="tabs-content">
-          <!-- Personal Info Tab -->
+          
           <div class="tab-pane active" id="personal-info">
             <div class="account-grid">
               <div class="account-card">
@@ -98,7 +98,7 @@
             </div>
           </div>
 
-          <!-- Security Tab -->
+          
           <div class="tab-pane" id="security">
             <div class="account-card">
               <div class="card-header">
@@ -150,14 +150,14 @@
             </div>
           </div>
 
-          <!-- Order History Tab -->
+          
           <div class="tab-pane" id="orders">
             <div class="tabs">
               <button class="tab active" data-tab="ongoing">Ongoing Orders</button>
               <button class="tab" data-tab="history">Order History</button>
             </div>
 
-            <!-- Ongoing Orders Section -->
+            
             <div class="order-section" id="ongoing-order-history">
               <h2>Ongoing Orders</h2>
               <div id="ongoing-orders-list">
@@ -165,7 +165,7 @@
               </div>
             </div>
 
-            <!-- Order History Section -->
+            
             <div class="order-section hidden" id="history-order-history">
               <h2>Order History</h2>
               <div id="order-history-list">
@@ -180,7 +180,7 @@
 
   <%- include('partials/Footer') %>
 
-  <!-- Toast Notification -->
+  
   <div class="toast" id="toast">
     <div class="toast-content">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toast-icon">
@@ -200,7 +200,7 @@
     </button>
   </div>
 
-  <!-- Scripts -->
+  
   <script src="/JavaScript/main.js"></script>
   <script src="/JavaScript/account.js"></script>
 </body>

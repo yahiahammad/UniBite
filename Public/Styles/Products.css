@@ -5,24 +5,24 @@ main {
 }
 
 .background {
-    width: 100%; /* Stretch from left to right */
-    height: 100vh; /* Full height of the viewport */
-    background: url('/Images/back.jpeg') no-repeat center / cover; /* Proper background shorthand */
-    color: white; /* White text for contrast */
-    text-align: center; /* Center text alignment */
-    display: flex; /* Enable flex layout for centering content */
-    justify-content: center; /* Horizontally center the content */
-    align-items: center; /* Vertically center the content */
+    width: 100%; 
+    height: 100vh; 
+    background: url('/Images/back.jpeg') no-repeat center / cover; 
+    color: white; 
+    text-align: center; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 
 .title h1 {
-    font-family: 'Inter', sans-serif; /* Example font */
-    font-size: 90px; /*Big title sizing*/
+    font-family: 'Inter', sans-serif; 
+    font-size: 90px; 
     color: #000;
 }
 .title h2 {
-    font-family: 'Inter', sans-serif; /* Example font */
-    font-size: 45px; /*Big title sizing*/
+    font-family: 'Inter', sans-serif; 
+    font-size: 45px; 
     color: #000;
 }
 section{
@@ -33,10 +33,10 @@ section{
 }
 .Storeshow{
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/Images/corner_upscaled.png") no-repeat center center;
-    background-size: contain; /* Ensures the full image is visible */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-size: contain; 
+    background-repeat: no-repeat; 
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,7 +82,7 @@ section{
 
 }
 .trending-products summary::-webkit-details-marker {
-    display: none; /* Hides the default arrow in WebKit browsers */
+    display: none; 
 }
 
 .trending-products details {
@@ -103,29 +103,29 @@ section{
 }
 
 .trending-products details[open] > div {
-    max-height: 500px; /* Adjust height based on content */
+    max-height: 500px; 
     opacity: 1;
     transform: translateY(0);
 }
 
 .trending-products-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Adjust the number of columns as needed */
-    gap: 5%; /* Adjust the gap between items */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 5%; 
     width: 100%;
     justify-content: center;
-    align-items: center; /* Center items vertically */
+    align-items: center; 
 }
 
 
 .trending-products-container {
     display: grid;
-    grid-template-columns: repeat(3, 2fr); /* Create a 2x2 grid */
-    gap: 5%; /* Reduce the gap between items */
-    margin: 5% auto; /* Center the container horizontally */
-    width: 60%; /* Adjust the width as needed */
+    grid-template-columns: repeat(3, 2fr); 
+    gap: 5%; 
+    margin: 5% auto; 
+    width: 60%; 
     justify-content: center;
-    align-items: center; /* Center items vertically */
+    align-items: center; 
 }
 
 .trending-product{
@@ -140,8 +140,8 @@ section{
 
 .trending-product:hover {
 
-    transform: scale(1.05); /* Scale up the product on hover */
-    transition: transform 0.3s ease; /* Smooth transition */
+    transform: scale(1.05); 
+    transition: transform 0.3s ease; 
     box-shadow: 2px 2px 14px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -150,7 +150,7 @@ section{
     height: auto;
     aspect-ratio: 1/1;
     object-fit: cover;
-    border-radius: 6px; /* Keep the border radius */
+    border-radius: 6px; 
     box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
 
 }
@@ -164,7 +164,7 @@ section{
 .Product-item {
     display: inline-block;
     background: rgba(245, 245, 245, 0.8);
-    padding: 10px; /* Add some padding for spacing */
+    padding: 10px; 
     margin-left: 9vh;
 }
 .product-name{
@@ -178,8 +178,8 @@ section{
     height: 200px;
     object-fit: cover;
     border-radius: 6px;
-    display: block; /* Ensures the image is displayed as a block element */
-    margin-top: 10px; /* Adds spacing between text and image */
+    display: block; 
+    margin-top: 10px; 
 }
 .price{
     font-size: 16px;
@@ -191,12 +191,12 @@ section{
     width: 100%;
     background-color: #FF4B33;
     color: white;
-    padding: 10px 20px; /* Adjust padding to make text horizontal */
+    padding: 10px 20px; 
     border-radius: 8px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
     border: 0;
-    text-align: center; /* Center the text horizontally */
-    display: inline-block; /* Ensure the button is inline */
+    text-align: center; 
+    display: inline-block; 
 
 }
 
@@ -215,12 +215,12 @@ section{
     width: 100%;
     background-color: #FF4B33;
     color: white;
-    padding: 10px 20px; /* Adjust padding to make text horizontal */
+    padding: 10px 20px; 
     border-radius: 8px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
     border: 0;
-    text-align: center; /* Center the text horizontally */
-    display: inline-block; /* Ensure the button is inline */
+    text-align: center; 
+    display: inline-block; 
 
 }
 
@@ -237,19 +237,19 @@ section{
 .products-list-container{
     display: flex;
     justify-content: left;
-    flex-direction: row; /* Stack the elements vertically */
+    flex-direction: row; 
     align-items: flex-start;
     text-align: left;
     gap: 3%;
 }
 
 .products-list img{
-    width: 100%; /* Make the image responsive */
-    height: auto; /* Maintain aspect ratio */
-    object-position: center; /* Center the image */
+    width: 100%; 
+    height: auto; 
+    object-position: center; 
     aspect-ratio: 4 / 3;
-    object-fit: cover; /* Ensure the image covers the entire area */
-    border-radius: 6px; /* Keep the border radius */
+    object-fit: cover; 
+    border-radius: 6px; 
     box-shadow: 10px 10px 26px 2px rgba(0, 0, 0, 0.25);
 
 }
