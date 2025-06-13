@@ -4,6 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const submitButton = form.querySelector('button[type="submit"]');
 
+    // Password requirement elements
+    const reqLength = document.getElementById('req-length');
+    const reqUppercase = document.getElementById('req-uppercase');
+    const reqLowercase = document.getElementById('req-lowercase');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+
     // Get token from URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
@@ -24,6 +31,38 @@ document.addEventListener('DOMContentLoaded', () => {
             button.querySelector('i').classList.toggle('fa-eye');
             button.querySelector('i').classList.toggle('fa-eye-slash');
         });
+    });
+
+    // Function to update requirement icon and style
+    function updateRequirement(element, isValid) {
+        const icon = element.querySelector('i');
+        if (isValid) {
+            icon.classList.remove('fa-times-circle', 'error');
+            icon.classList.add('fa-check-circle', 'success');
+        } else {
+            icon.classList.remove('fa-check-circle', 'success');
+            icon.classList.add('fa-times-circle', 'error');
+        }
+    }
+
+    // Password validation on keyup
+    passwordInput.addEventListener('keyup', () => {
+        const password = passwordInput.value;
+
+        // Validate length
+        updateRequirement(reqLength, password.length >= 8);
+
+        // Validate uppercase
+        updateRequirement(reqUppercase, /[A-Z]/.test(password));
+
+        // Validate lowercase
+        updateRequirement(reqLowercase, /[a-z]/.test(password));
+
+        // Validate number
+        updateRequirement(reqNumber, /\d/.test(password));
+
+        // Validate special character
+        updateRequirement(reqSpecial, /[@$!%*?&]/.test(password));
     });
 
     // Password validation
