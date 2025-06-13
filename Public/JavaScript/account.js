@@ -457,7 +457,39 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.body.appendChild(modalDiv);
   }
-
+  // Helper to rebind star events
+  function bindReviewStarEvents() {
+    // Remove existing event listeners to prevent duplicates
+    document.querySelectorAll('#review-stars .star').forEach(star => {
+      star.replaceWith(star.cloneNode(true));
+    });
+    
+    // Add new event listeners
+    document.querySelectorAll('#review-stars .star').forEach(star => {
+      star.addEventListener('mouseenter', function() {
+        const val = parseInt(this.dataset.value);
+        document.querySelectorAll('#review-stars .star').forEach(s => {
+          s.classList.toggle('hovered', parseInt(s.dataset.value) <= val);
+        });
+      });
+      star.addEventListener('mouseleave', function() {
+        document.querySelectorAll('#review-stars .star').forEach(s => s.classList.remove('hovered'));
+      });
+      star.addEventListener('click', function() {
+        const val = parseInt(this.dataset.value);
+        window.selectedRating = val;
+        document.querySelectorAll('#review-stars .star').forEach(s => {
+          s.classList.toggle('selected', parseInt(s.dataset.value) <= val);
+        });
+        console.log('Selected rating:', val); // Debug log
+      });
+    });
+  }
+  
+  // Wait for DOM to be ready before binding events
+  setTimeout(() => {
+    bindReviewStarEvents();
+  }, 100);
   // Modal open/close logic
   window.openReviewModal = function(orderId, vendorId, vendorName) {
     const modal = document.getElementById('review-modal');
@@ -471,6 +503,10 @@ document.addEventListener("DOMContentLoaded", () => {
       star.classList.remove('selected', 'hovered');
     });
     window.selectedRating = 0;
+    // Rebind events after modal is shown
+    setTimeout(() => {
+      bindReviewStarEvents();
+    }, 50);
   };
   document.getElementById('close-review-modal').onclick = function() {
     document.getElementById('review-modal').style.display = 'none';
@@ -479,26 +515,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById('review-modal');
     if (event.target === modal) modal.style.display = 'none';
   };
-
-  // Star rating logic
-  document.querySelectorAll('#review-stars .star').forEach(star => {
-    star.addEventListener('mouseenter', function() {
-      const val = parseInt(this.dataset.value);
-      document.querySelectorAll('#review-stars .star').forEach(s => {
-        s.classList.toggle('hovered', parseInt(s.dataset.value) <= val);
-      });
-    });
-    star.addEventListener('mouseleave', function() {
-      document.querySelectorAll('#review-stars .star').forEach(s => s.classList.remove('hovered'));
-    });
-    star.addEventListener('click', function() {
-      const val = parseInt(this.dataset.value);
-      window.selectedRating = val;
-      document.querySelectorAll('#review-stars .star').forEach(s => {
-        s.classList.toggle('selected', parseInt(s.dataset.value) <= val);
-      });
-    });
-  });
 
   // Submit review logic
   document.getElementById('submit-review-btn').onclick = async function() {
