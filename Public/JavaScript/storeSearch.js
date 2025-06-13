@@ -8,6 +8,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let searchTimeout;
 
+    // Function to reset the menu to its initial categorized view
+    function resetMenuToInitialCategoryView() {
+        searchResults.style.display = 'none'; // Ensure search results are hidden
+
+        // Show category tabs
+        menuTabs.forEach(tab => {
+            tab.style.display = 'block'; // Or 'flex' depending on your CSS for tabs container
+            tab.classList.remove('active'); // Remove active from all tabs first
+        });
+
+        // Hide all categories except the first one, and activate the first tab
+        menuCategories.forEach((category, index) => {
+            if (index === 0) {
+                category.style.display = 'block'; // Show only the first category
+                if (menuTabs.length > 0) {
+                    menuTabs[0].classList.add('active'); // Activate the first tab
+                }
+            } else {
+                category.style.display = 'none'; // Hide other categories
+            }
+        });
+    }
+
     // Function to show/hide clear search icon
     function toggleClearIcon() {
         if (searchInput.value.trim()) {
@@ -17,21 +40,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to show all categories
-    function showAllCategories() {
-        menuCategories.forEach(category => {
-            category.style.display = 'block';
-        });
-        menuTabs.forEach(tab => {
-            tab.classList.remove('active');
-        });
-        if (menuTabs.length > 0) {
-            menuTabs[0].classList.add('active');
-        }
-    }
-
     // Function to render search results
     function renderSearchResults(items) {
+        // Hide all category related elements
+        menuCategories.forEach(category => {
+            category.style.display = 'none';
+        });
+        menuTabs.forEach(tab => {
+            tab.style.display = 'none'; // Hide the category tabs
+        });
+
+        // Show search results container
+        searchResults.style.display = 'block';
+
         if (!items || items.length === 0) {
             searchResults.innerHTML = '<div class="no-results">No items found</div>';
             return;
@@ -92,31 +113,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!query) {
             searchResults.innerHTML = '';
-            showAllCategories();
+            resetMenuToInitialCategoryView(); // Call new function to reset to initial category view
             return;
         }
 
         // Set new timeout for search
         searchTimeout = setTimeout(async () => {
             try {
+                // Ensure categories and tabs are hidden when search is active
+                menuCategories.forEach(category => {
+                    category.style.display = 'none';
+                });
+                menuTabs.forEach(tab => {
+                    tab.style.display = 'none';
+                });
+
                 const response = await fetch(`/api/menu-items/search/${vendorId}?query=${encodeURIComponent(query)}`);
                 if (!response.ok) {
                     throw new Error('Search failed');
                 }
                 const items = await response.json();
                 
-                // Hide all categories when showing search results
-                menuCategories.forEach(category => {
-                    category.style.display = 'none';
-                });
-                menuTabs.forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                
-                renderSearchResults(items);
+                renderSearchResults(items); // renderSearchResults now handles visibility itself
             } catch (error) {
                 console.error('Search error:', error);
                 searchResults.innerHTML = '<div class="error">Error performing search</div>';
+                searchResults.style.display = 'block'; // Ensure error is visible
             }
         }, 300); // 300ms debounce
     });
@@ -126,9 +148,10 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.value = '';
         searchResults.innerHTML = '';
         clearSearchIcon.classList.remove('visible');
-        showAllCategories();
+        resetMenuToInitialCategoryView(); // Call new function to reset to initial category view
     });
 
     // Initial setup
     toggleClearIcon();
+    resetMenuToInitialCategoryView(); // Set initial state on page load
 }); 
