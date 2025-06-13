@@ -152,6 +152,13 @@
                 <div class="orders-grid" id="allOrdersGrid">
                     <!-- All orders will be loaded here via AJAX -->
                 </div>
+                <div class="pagination-controls mt-4">
+                    <nav aria-label="Orders pagination">
+                        <ul class="pagination justify-content-center" id="ordersPagination">
+                            <!-- Pagination will be dynamically inserted here -->
+                        </ul>
+                    </nav>
+                </div>
             </section>
 
             <!-- Menu Section -->
@@ -283,9 +290,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const socket = io();
+            const ITEMS_PER_PAGE = 15;
+            let currentPage = 1;
+            let totalPages = 1;
 
             const notificationContainer = document.getElementById('notificationContainer');
             const recentOrdersGrid = document.getElementById('recentOrdersGrid');
+            const allOrdersGrid = document.getElementById('allOrdersGrid');
+            const ordersPagination = document.getElementById('ordersPagination');
             const notificationSound = document.getElementById('notificationSound');
             let isAudioUnlocked = false;
 
@@ -313,6 +325,84 @@
             // Function to refresh the page to update EJS
             function refreshPage() {
                 window.location.reload();
+            }
+
+            // Function to load orders with pagination
+            async function loadOrders(page = 1) {
+                try {
+                    const response = await fetch(`/api/admin/orders?page=${page}&limit=${ITEMS_PER_PAGE}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch orders');
+                    }
+                    const data = await response.json();
+                    
+                    allOrdersGrid.innerHTML = ''; // Clear existing content
+                    
+                    if (data.orders && data.orders.length > 0) {
+                        data.orders.forEach(order => {
+                            if (order.status !== 'cancelled') {
+                                const orderCard = createOrderCard(order);
+                                allOrdersGrid.appendChild(orderCard);
+                            }
+                        });
+                        
+                        // Update pagination
+                        totalPages = Math.ceil(data.total / ITEMS_PER_PAGE);
+                        updatePagination(page);
+                    } else {
+                        allOrdersGrid.innerHTML = '<p>No orders found.</p>';
+                    }
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                    allOrdersGrid.innerHTML = '<p>Could not load orders.</p>';
+                }
+            }
+
+            // Function to update pagination controls
+            function updatePagination(currentPage) {
+                ordersPagination.innerHTML = '';
+                
+                // Previous button
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `
+                    <a class="page-link" href="#" aria-label="Previous" data-page="${currentPage - 1}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                `;
+                ordersPagination.appendChild(prevLi);
+
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement('li');
+                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    li.innerHTML = `
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    `;
+                    ordersPagination.appendChild(li);
+                }
+
+                // Next button
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `
+                    <a class="page-link" href="#" aria-label="Next" data-page="${currentPage + 1}">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                `;
+                ordersPagination.appendChild(nextLi);
+
+                // Add click event listeners
+                ordersPagination.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = parseInt(e.target.closest('.page-link').dataset.page);
+                        if (page && page !== currentPage && page > 0 && page <= totalPages) {
+                            currentPage = page;
+                            loadOrders(page);
+                        }
+                    });
+                });
             }
 
             // Listen for new orders
@@ -476,7 +566,7 @@
             // Load initial orders from the API endpoint
             async function loadInitialOrders() {
                 try {
-                    const response = await fetch('/api/admin/recent-orders');
+                    const response = await fetch('/api/admin/recent-orders?limit=15');
                     if (!response.ok) {
                         throw new Error('Failed to fetch recent orders');
                     }
@@ -499,6 +589,11 @@
                     recentOrdersGrid.innerHTML = '<p>Could not load recent orders.</p>';
                 }
             }
+
+            // Load orders when orders section is shown
+            document.querySelector('[data-section="orders"]').addEventListener('click', () => {
+                loadOrders(currentPage);
+            });
             
             loadInitialOrders();
         });

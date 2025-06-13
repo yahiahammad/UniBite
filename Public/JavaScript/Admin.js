@@ -280,10 +280,10 @@ async function fetchAndRenderRecentOrders() {
 }
 
 // Fetch and render all orders
-async function fetchAndRenderOrders() {
+async function fetchAndRenderOrders(page = 1) {
     try {
         const headers = getAuthHeaders();
-        const response = await fetch('/api/admin/orders', {
+        const response = await fetch(`/api/admin/orders?page=${page}&limit=15`, {
             headers: headers
         });
 
@@ -297,6 +297,7 @@ async function fetchAndRenderOrders() {
 
         const data = await response.json();
         const ordersGrid = document.getElementById('allOrdersGrid');
+        const paginationContainer = document.getElementById('ordersPagination');
 
         if (!ordersGrid) {
             console.error('Orders grid element not found');
@@ -305,14 +306,20 @@ async function fetchAndRenderOrders() {
 
         if (data.orders.length === 0) {
             ordersGrid.innerHTML = '<p class="no-orders">No orders found</p>';
+            paginationContainer.innerHTML = '';
             return;
         }
 
+        // Render orders
         ordersGrid.innerHTML = '';
         data.orders.forEach(order => {
             const orderCard = createOrderCard(order);
             ordersGrid.appendChild(orderCard);
         });
+
+        // Update pagination
+        const totalPages = Math.ceil(data.total / 15);
+        updatePagination(page, totalPages);
     } catch (error) {
         console.error('Error fetching orders:', error);
         const ordersGrid = document.getElementById('allOrdersGrid');
@@ -320,6 +327,55 @@ async function fetchAndRenderOrders() {
             ordersGrid.innerHTML = '<p class="no-orders">Error loading orders. Please try again.</p>';
         }
     }
+}
+
+// Function to update pagination controls
+function updatePagination(currentPage, totalPages) {
+    const paginationContainer = document.getElementById('ordersPagination');
+    if (!paginationContainer) return;
+
+    paginationContainer.innerHTML = '';
+    
+    // Previous button
+    const prevLi = document.createElement('li');
+    prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+    prevLi.innerHTML = `
+        <a class="page-link" href="#" aria-label="Previous" data-page="${currentPage - 1}">
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    `;
+    paginationContainer.appendChild(prevLi);
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+        li.innerHTML = `
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+        `;
+        paginationContainer.appendChild(li);
+    }
+
+    // Next button
+    const nextLi = document.createElement('li');
+    nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+    nextLi.innerHTML = `
+        <a class="page-link" href="#" aria-label="Next" data-page="${currentPage + 1}">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    `;
+    paginationContainer.appendChild(nextLi);
+
+    // Add click event listeners
+    paginationContainer.querySelectorAll('.page-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = parseInt(e.target.closest('.page-link').dataset.page);
+            if (page && page !== currentPage && page > 0 && page <= totalPages) {
+                fetchAndRenderOrders(page);
+            }
+        });
+    });
 }
 
 // Create order card element
