@@ -11,19 +11,21 @@ const transporter = nodemailer.createTransport({
 
 // Send verification email
 const sendVerificationEmail = async (email, token) => {
-  const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const subject = 'Verify your UniBite account';
+  const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const html = `
+    <h1>Welcome to UniBite!</h1>
+    <p>Please verify your email address by clicking the link below:</p>
+    <a href="${url}">Verify Email</a>
+    <p>This link will expire in 24 hours.</p>
+    <p>If you didn't create an account, you can safely ignore this email.</p>
+  `;
   
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Verify your UniBite account',
-    html: `
-      <h1>Welcome to UniBite!</h1>
-      <p>Please verify your email address by clicking the link below:</p>
-      <a href="${verificationUrl}">Verify Email</a>
-      <p>This link will expire in 24 hours.</p>
-      <p>If you didn't create an account, you can safely ignore this email.</p>
-    `
+    subject,
+    html
   };
 
   try {
@@ -35,6 +37,34 @@ const sendVerificationEmail = async (email, token) => {
   }
 };
 
+// Send password reset email
+const sendResetPasswordEmail = async (email, token) => {
+  const subject = 'Password Reset Request';
+  const url = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
+  const html = `
+    <h1>Password Reset Request</h1>
+    <p>You are receiving this email because you (or someone else) has requested to reset your password.</p>
+    <p>Please click the link below to reset your password:</p>
+    <a href="${url}">Reset Password</a>
+    <p>This link will expire in 30 minutes.</p>
+    <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+  `;
+  
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject,
+    html
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    return false;
+  }
+};
 
 // Send order status email (accepted/declined/ready for pickuo)
 const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '', items = []) => {
@@ -73,7 +103,7 @@ const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '',
   } else if (status === 'cancelled') {
     subject = 'Your Order Has Been Declined';
     html = `<h1>Order Declined</h1>
-      <p>We’re sorry, but your order from <b>${restaurantName} #${orderId}</b> has been <b>declined</b>.</p>
+      <p>We're sorry, but your order from <b>${restaurantName} #${orderId}</b> has been <b>declined</b>.</p>
       ${orderDetailsHtml}
       <p>If you have questions, please contact support.</p>`;
   } else if (status === 'ready for pickup') {
@@ -104,5 +134,6 @@ const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '',
 
 module.exports = {
   sendVerificationEmail,
+  sendResetPasswordEmail,
   sendOrderStatusEmail
 };

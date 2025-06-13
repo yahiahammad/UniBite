@@ -4,11 +4,29 @@ const router = express.Router();
 const userController = require('../Controllers/userController'); // Import the controller
 const { requireLogin } = require('../Middleware/auth');
 const User = require('../Models/User');
+const rateLimit = require('express-rate-limit');
 
+// Rate limiter for forgot password
+const forgotPasswordLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 4, // 4 requests per hour
+    message: 'Too many password reset requests, please try again after an hour'
+});
+
+// Public routes for page rendering
+router.get('/forgot-password', (req, res) => {
+    res.render('Auth/ForgotPassword');
+});
+
+router.get('/reset-password', (req, res) => {
+    res.render('Auth/ResetPassword');
+});
+
+// API routes
 router.post('/login', userController.loginUser);
-router.post('/register', userController.registerUser);
-router.get('/verify-email', userController.verifyEmail);
-
+router.post('/forgot-password', forgotPasswordLimiter, userController.forgotPassword);
+router.post('/reset-password', userController.resetPassword);
+router.post('/verify-reset-token', userController.verifyResetToken);
 
 // Update user profile
 router.post('/update-profile', requireLogin, async (req, res) => {

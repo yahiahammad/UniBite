@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -21,6 +22,8 @@ const UserSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   verificationToken: String,
   verificationTokenExpires: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   createdAt: { type: Date, default: Date.now },
   cart: [{
     id: String,
@@ -50,7 +53,22 @@ UserSchema.pre('save', async function(next) {
 
 // Method to compare passwords
 UserSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Method to generate password reset token
+UserSchema.methods.generatePasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 minutes
+  return resetToken;
 };
 
 module.exports = mongoose.model('User', UserSchema);

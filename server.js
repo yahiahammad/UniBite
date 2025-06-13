@@ -21,7 +21,7 @@ app.set('auth', 'Views/Auth');
 
 // CORS configuration
 app.use(cors({
-    origin: 'http://localhost:5000',
+    origin: true, // Allow all origins in development
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -65,8 +65,12 @@ const cartRoutes = require('./Routes/cartRoutes');
 const executiveRoutes = require('./Routes/executiveRoutes');
 const newsletterRoutes = require('./Routes/newsletterRoutes');
 
-// --- MOUNT YOUR ROUTES (This was missing!) ---
-app.use('/api/users', userRoutes);
+// --- MOUNT YOUR ROUTES ---
+// Mount user routes for both API and page rendering
+app.use('/', userRoutes); // This will handle page rendering routes
+app.use('/api/users', userRoutes); // This will handle API routes
+
+// Mount other routes
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/menu-items', menuItemRoutes);
 app.use('/api/orders', orderRoutes);
