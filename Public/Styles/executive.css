@@ -7,7 +7,7 @@ body {
     background-color: #f0f2f5; /* Lighter background */
     color: #34495e; /* Darker text for contrast */
     line-height: 1.6;
-    margin: 0;
+    margin: 20px;
     padding: 0;
 }
 
@@ -197,7 +197,8 @@ form .col-md-6 {
     font-weight: 600;
     padding: 10px 24px;
     transition: background 0.2s;
-    margin-top: 10px;  
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 .btn-primary:hover {
     background: #e67c00;
