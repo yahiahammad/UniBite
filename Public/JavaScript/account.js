@@ -172,19 +172,19 @@ document.addEventListener("DOMContentLoaded", () => {
     newsletterToggle.addEventListener('change', async function() {
       const isSubscribed = this.checked;
       const user = JSON.parse(localStorage.getItem("unibite-user"));
-      
+
       const lastToggle = user.lastNewsletterToggle;
       if (lastToggle) {
         const timeSinceLastToggle = Date.now() - new Date(lastToggle).getTime();
         const hoursSinceLastToggle = timeSinceLastToggle / (1000 * 60 * 60);
-        
+
         if (hoursSinceLastToggle < 24) {
           this.checked = !isSubscribed;
           const hoursRemaining = Math.ceil(24 - hoursSinceLastToggle);
           showToast(
-            "Error", 
-            `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
-            "error"
+              "Error",
+              `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
+              "error"
           );
           return;
         }
@@ -211,8 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
           localStorage.setItem("unibite-user", JSON.stringify(user));
 
           showToast(
-            "Success", 
-            isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
+              "Success",
+              isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
           );
         } else {
           this.checked = !isSubscribed;
@@ -261,16 +261,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.order-section').forEach(section => {
       section.classList.add('hidden');
     });
-    
+
     // Remove active class from all tabs
     document.querySelectorAll('.tab').forEach(tab => {
       tab.classList.remove('active');
     });
-    
+
     // Show selected section and activate tab
     const section = document.getElementById(tabName + '-order-history');
     const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-    
+
     if (section) section.classList.remove('hidden');
     if (tab) tab.classList.add('active');
   }
@@ -289,15 +289,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) {
         throw new Error('Failed to fetch orders');
       }
-      
+
       const orders = await response.json();
-      
+
       // Separate ongoing and completed orders
-      const ongoingOrders = orders.filter(order => 
-        ['pending', 'preparing', 'ready for pickup'].includes(order.status.toLowerCase())
+      const ongoingOrders = orders.filter(order =>
+          ['pending', 'preparing', 'ready for pickup'].includes(order.status.toLowerCase())
       );
-      const completedOrders = orders.filter(order => 
-        ['picked up', 'cancelled'].includes(order.status.toLowerCase())
+      const completedOrders = orders.filter(order =>
+          ['picked up', 'cancelled'].includes(order.status.toLowerCase())
       );
 
       // Sort orders by date (newest first)
@@ -327,10 +327,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (error) {
       console.error('Error loading orders:', error);
-      document.getElementById('ongoing-orders-list').innerHTML = 
-        '<p class="error-message">Error loading orders. Please try again later.</p>';
-      document.getElementById('order-history-list').innerHTML = 
-        '<p class="error-message">Error loading orders. Please try again later.</p>';
+      document.getElementById('ongoing-orders-list').innerHTML =
+          '<p class="error-message">Error loading orders. Please try again later.</p>';
+      document.getElementById('order-history-list').innerHTML =
+          '<p class="error-message">Error loading orders. Please try again later.</p>';
     }
   }
 
@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createOrderCard(order) {
     const statusClass = order.status.toLowerCase().replace(/\s+/g, '-');
     const paymentClass = order.paymentStatus.toLowerCase();
-    
+
     return `
       <div class="order-card ${statusClass}">
         <div class="order-header">
@@ -463,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('#review-stars .star').forEach(star => {
       star.replaceWith(star.cloneNode(true));
     });
-    
+
     // Add new event listeners
     document.querySelectorAll('#review-stars .star').forEach(star => {
       star.addEventListener('mouseenter', function() {
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
-  
+
   // Wait for DOM to be ready before binding events
   setTimeout(() => {
     bindReviewStarEvents();
