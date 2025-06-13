@@ -14,6 +14,23 @@ const forgotPasswordLimiter = rateLimit({
 });
 
 // Public routes for page rendering
+router.get('/login', (req, res) => {
+    res.render('Auth/Login');
+});
+
+router.get('/SignUp', (req, res) => {
+    res.render('Auth/SignUp');
+});
+
+router.get('/logout', (req, res) => {
+    res.clearCookie('jwt');
+    res.redirect('/login');
+});
+
+router.get('/verify-email', (req, res) => {
+    res.render('Auth/VerifyEmail');
+});
+
 router.get('/forgot-password', (req, res) => {
     res.render('Auth/ForgotPassword');
 });
@@ -76,8 +93,28 @@ router.post('/change-password', requireLogin, async (req, res) => {
     }
 });
 
-router.get('/account', (req, res) => {
-    res.render('account');
+router.get('/account', requireLogin, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id)
+            .select('name email phoneNumber role createdAt userType');
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.render('account', { 
+            active: 'account',
+            user: user,
+            memberSince: new Date(user.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+        });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ message: 'Error fetching user data' });
+    }
 });
 
 module.exports = router;

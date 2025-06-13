@@ -35,6 +35,25 @@ app.use(express.urlencoded({ extended: true }));
 // Add checkAuth middleware to all routes
 app.use(checkAuth);
 
+// Sanitize user data before making it available to views
+app.use((req, res, next) => {
+    if (req.user) {
+        // Create a sanitized version of the user object
+        const sanitizedUser = {
+            _id: req.user._id,
+            name: req.user.name,
+            email: req.user.email,
+            phoneNumber: req.user.phoneNumber,
+            role: req.user.role,
+            createdAt: req.user.createdAt,
+            userType: req.user.userType
+        };
+        // Replace the user object with the sanitized version
+        req.user = sanitizedUser;
+    }
+    next();
+});
+
 // Make isAuthenticated available to all views
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated;
@@ -73,7 +92,8 @@ app.use('/api/users', userRoutes); // This will handle API routes
 // Mount other routes
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/menu-items', menuItemRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/', orderRoutes); // Mount order page routes at root level
+app.use('/api/orders', orderRoutes); // Mount order API routes
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/newsletter', newsletterRoutes);
@@ -89,14 +109,6 @@ app.use(express.static(path.join(__dirname, 'Public')));
 //Routing
 app.get('/', (req, res) => {
     res.render('UniBite');
-});
-
-app.get('/login', (req, res) => {
-    res.render('Auth/Login');
-});
-
-app.get('/SignUp', (req, res) => {
-    res.render('Auth/SignUp');
 });
 
 app.get('/Product-details', (req, res) => {
@@ -167,51 +179,14 @@ app.get('/stores/:name', requireLogin, async (req, res) => {
     }
 });
 
-app.get('/logout', (req, res) => {
-    res.clearCookie('jwt');
-    res.redirect('/login');
-});
-
-app.get('/order/confirmation', (req, res) => {
-    res.render('order-confirmation');
-});
-
-// Add checkout route
-app.get('/checkout', requireLogin, (req, res) => {
-    res.render('checkout');
-});
-
-app.get('/account', requireLogin, (req, res) => {
-    // Pass user data to the account page
-    res.render('account', { 
-        active: 'account',
-        user: req.user,
-        memberSince: new Date(req.user.createdAt).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })
-    });
-});
-
-app.get('/orders', requireLogin, (req, res) => {
-    res.render('orders', { 
-        active: 'orders',
-        user: req.user
-    });
-});
-
 app.get('/executive', authenticateExecutive, (req, res) => {
     res.render('executive', { active: 'executive', authenticateExecutive: true });
-})
-
-// Add route for email verification page
-app.get('/verify-email', (req, res) => {
-    res.render('Auth/VerifyEmail');
 });
+
 app.get('/cart', requireLogin, (req, res) => {
     res.render('Cart', { active: 'cart' });
 });
+
 // 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('error', {
@@ -219,7 +194,6 @@ app.use((req, res) => {
         active: ''
     });
 });
-
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`)); // Use server.listen

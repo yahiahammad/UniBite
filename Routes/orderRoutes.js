@@ -1,15 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../Controllers/orderController');
 const { requireLogin } = require('../Middleware/auth');
+const orderController = require('../Controllers/orderController');
 
-// GET /api/orders/user - get all orders for the current user
+// Page routes (these will be mounted at root level)
+router.get('/checkout', requireLogin, (req, res) => {
+    res.render('checkout');
+});
+
+router.get('/orders', requireLogin, (req, res) => {
+    res.render('orders', { 
+        active: 'orders',
+        user: req.user
+    });
+});
+
+router.get('/order/confirmation', (req, res) => {
+    res.render('order-confirmation');
+});
+
+// API routes (these will be mounted at /api/orders)
 router.get('/user', requireLogin, orderController.getUserOrders);
-
-// PUT /api/orders/:id — update order status
-router.put('/:id', orderController.updateOrderStatus);
-
-// POST /order/submit — submit a new order
-router.post('/submit', orderController.submitOrder);
+router.post('/submit', requireLogin, orderController.submitOrder);
 
 module.exports = router;
