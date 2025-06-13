@@ -1,44 +1,53 @@
 // server.js
+
+// --- Dependencies ---
 const express = require('express');
-const http = require('http'); // Import http module
+const http = require('http');
 const mongoose = require('mongoose');
-const path = require("path");
+const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
+
+// --- Models ---
 const Vendor = require('./Models/Vendor');
 const MenuItem = require('./Models/MenuItems');
-require('dotenv').config(); // Load environment variables from .env
-const cookieParser = require('cookie-parser');
-const { requireLogin, checkAuth, authenticateExecutive} = require('./Middleware/auth');
-const { init } = require('./socket'); // Import the init function
 
+// --- Middleware ---
+const { requireLogin, checkAuth, authenticateExecutive } = require('./Middleware/auth');
+
+// --- Socket.IO Setup ---
+const { init } = require('./socket');
+
+// --- Initialize Express App ---
 const app = express();
-const server = http.createServer(app); // Create HTTP server
-const io = init(server); // Initialize Socket.IO and pass the server
+const server = http.createServer(app);
+const io = init(server);
 
+// --- View Engine Setup ---
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
 app.set('auth', 'Views/Auth');
 
-// CORS configuration
+// --- Middleware Configuration ---
 app.use(cors({
-    origin: true, // Allow all origins in development
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware
-app.use(express.json()); // Parse incoming JSON requests
+app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'Public')));
 
-// Add checkAuth middleware to all routes
+// --- Authentication Middleware ---
 app.use(checkAuth);
 
-// Sanitize user data before making it available to views
+// --- User Data Sanitization Middleware ---
 app.use((req, res, next) => {
     if (req.user) {
-        // Create a sanitized version of the user object
         const sanitizedUser = {
             _id: req.user._id,
             name: req.user.name,
@@ -48,65 +57,58 @@ app.use((req, res, next) => {
             createdAt: req.user.createdAt,
             userType: req.user.userType
         };
-        // Replace the user object with the sanitized version
         req.user = sanitizedUser;
     }
     next();
 });
 
-// Make isAuthenticated available to all views
+// --- View Helpers Middleware ---
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated;
-    next();
-});
-
-// Middleware to check if the user is an executive (admin)
-// This makes `isExecutive` available to all templates
-app.use((req, res, next) => {
     res.locals.isExecutive = !!(req.user && req.user.userType === 'admin');
     next();
 });
 
-// Connect to MongoDB (removed deprecated options)
+// --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ MongoDB connected'))
     .catch(err => console.log('❌ DB Error:', err));
 
-// --- Import all your modular route files (using capital 'Routes') ---
-// Make sure these files exist in your 'Routes/' directory
-const userRoutes = require('./Routes/userRoutes');
-const vendorRoutes = require('./Routes/vendorRoutes');
-const menuItemRoutes = require('./Routes/menuItemRoutes');
-const orderRoutes = require('./Routes/orderRoutes');
-const reviewRoutes = require('./Routes/reviewRoutes');
-const adminRoutes = require('./Routes/adminRoutes');
-const cartRoutes = require('./Routes/cartRoutes');
-const executiveRoutes = require('./Routes/executiveRoutes');
-const newsletterRoutes = require('./Routes/newsletterRoutes');
+// --- Route Imports ---
+const userRoutes = require('./routes/userRoutes');
+const vendorRoutes = require('./routes/vendorRoutes');
+const menuItemRoutes = require('./routes/menuItemRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const executiveRoutes = require('./routes/executiveRoutes');
+const newsletterRoutes = require('./routes/newsletterRoutes');
 
-// --- MOUNT YOUR ROUTES ---
-// Mount user routes for both API and page rendering
-app.use('/', userRoutes); // This will handle page rendering routes
-app.use('/api/users', userRoutes); // This will handle API routes
+// --- Route Mounting ---
+// User routes (both API and page rendering)
+app.use('/', userRoutes);
+app.use('/api/users', userRoutes);
 
-// Mount other routes
+// API routes
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/menu-items', menuItemRoutes);
-app.use('/', orderRoutes); // Mount order page routes at root level
-app.use('/api/orders', orderRoutes); // Mount order API routes
+app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/newsletter', newsletterRoutes);
-app.use('/', adminRoutes);
 app.use('/api/executive', executiveRoutes);
 
+// Page routes
+app.use('/', orderRoutes);
+app.use('/', adminRoutes);
+
+// --- Test Route ---
 app.get('/api/test', (req, res) => {
     res.status(200).json({ message: 'Server is up and running! 🎉 /api/test works!' });
 });
 
-app.use(express.static(path.join(__dirname, 'Public')));
-
-//Routing
+// --- Page Routes ---
 app.get('/', (req, res) => {
     res.render('UniBite');
 });
@@ -154,10 +156,7 @@ app.get('/stores/:name', requireLogin, async (req, res) => {
             return res.status(404).render('error', { message: 'Store not found' });
         }
 
-        // Fetch menu items for this vendor
         const menuItems = await MenuItem.find({ vendorId: vendor._id, available: true });
-
-        // Group menu items by category
         const menuByCategory = menuItems.reduce((acc, item) => {
             if (!acc[item.category]) {
                 acc[item.category] = [];
@@ -187,7 +186,7 @@ app.get('/cart', requireLogin, (req, res) => {
     res.render('Cart', { active: 'cart' });
 });
 
-// 404 handler - must be after all other routes
+// --- Error Handler ---
 app.use((req, res) => {
     res.status(404).render('error', {
         message: 'Page Not Found',
@@ -195,5 +194,6 @@ app.use((req, res) => {
     });
 });
 
+// --- Server Start ---
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`)); // Use server.listen
+server.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
