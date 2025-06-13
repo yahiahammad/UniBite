@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #4CAF50;
+  --primary-color: #ff8a00;
   --primary-rgb: 76, 175, 80;
   --text-primary: #333;
   --text-secondary: #666;
@@ -608,7 +608,10 @@
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain; /* changed from cover to contain */
+    background: #fff;
+    border: 1px solid var(--border-color);
+    padding: 2px;
   }
   
   .order-times {
