@@ -186,9 +186,10 @@ exports.getDashboardStats = async (req, res) => {
 exports.getRecentOrders = async (req, res) => {
     try {
         const vendorId = req.user.id;
+        const limit =  10;
         const recentOrders = await Order.find({ vendorId })
             .sort({ orderTime: -1 })
-            .limit(20)
+            .limit(limit)
             .populate('userId', 'name email')
             .populate('items.menuItemId');
         
@@ -204,7 +205,7 @@ exports.getAllOrders = async (req, res) => {
     try {
         const vendorId = req.user.id;
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = 15;
         const skip = (page - 1) * limit;
 
         const orders = await Order.find({ vendorId })
@@ -218,9 +219,7 @@ exports.getAllOrders = async (req, res) => {
 
         res.json({
             orders,
-            currentPage: page,
-            totalPages: Math.ceil(total / limit),
-            totalOrders: total
+            total
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching orders', error: error.message });
