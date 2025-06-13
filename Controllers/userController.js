@@ -52,8 +52,9 @@ exports.loginUser = async (req, res) => {
         email: user.email,
         role: user.userType,
         newsletterSubscribed: user.newsletterSubscribed,
-        lastNewsletterToggle: user.lastNewsletterToggle
-      }
+        lastNewsletterToggle: user.lastNewsletterToggle,
+        phoneNumber: user.phoneNumber
+      },
     });
   } catch (error) {
     console.error('Login error:', error);

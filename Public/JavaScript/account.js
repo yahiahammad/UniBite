@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Password visibility toggle
   const passwordToggles = document.querySelectorAll(".password-toggle")
-
   passwordToggles.forEach((toggle) => {
     toggle.addEventListener("click", function () {
       const input = this.parentElement.querySelector("input")
@@ -88,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (response.ok) {
           // Update user data in localStorage
           user.name = document.getElementById("name").value;
-          user.phone = document.getElementById("phone").value;
+          user.phoneNumber = document.getElementById("phone").value;
           localStorage.setItem("unibite-user", JSON.stringify(user));
 
           showToast("Success", "Your personal information has been updated successfully.");
@@ -166,86 +165,86 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   }
-  
-    // Newsletter toggle functionality
-    const newsletterToggle = document.getElementById('newsletter');
-    if (newsletterToggle) {
-        newsletterToggle.addEventListener('change', async function() {
-            const isSubscribed = this.checked;
-            const user = JSON.parse(localStorage.getItem("unibite-user"));
-            
-            const lastToggle = user.lastNewsletterToggle;
-            if (lastToggle) {
-                const timeSinceLastToggle = Date.now() - new Date(lastToggle).getTime();
-                const hoursSinceLastToggle = timeSinceLastToggle / (1000 * 60 * 60);
-                
-                if (hoursSinceLastToggle < 24) {
-                    this.checked = !isSubscribed;
-                    const hoursRemaining = Math.ceil(24 - hoursSinceLastToggle);
-                    showToast(
-                        "Error", 
-                        `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
-                        "error"
-                    );
-                    return;
-                }
-            }
 
-            try {
-                const endpoint = isSubscribed ? '/api/newsletter/subscribe' : '/api/newsletter/unsubscribe';
-                const token = localStorage.getItem('token');
+  // Newsletter toggle functionality
+  const newsletterToggle = document.getElementById('newsletter');
+  if (newsletterToggle) {
+    newsletterToggle.addEventListener('change', async function() {
+      const isSubscribed = this.checked;
+      const user = JSON.parse(localStorage.getItem("unibite-user"));
+      
+      const lastToggle = user.lastNewsletterToggle;
+      if (lastToggle) {
+        const timeSinceLastToggle = Date.now() - new Date(lastToggle).getTime();
+        const hoursSinceLastToggle = timeSinceLastToggle / (1000 * 60 * 60);
+        
+        if (hoursSinceLastToggle < 24) {
+          this.checked = !isSubscribed;
+          const hoursRemaining = Math.ceil(24 - hoursSinceLastToggle);
+          showToast(
+            "Error", 
+            `Please wait ${hoursRemaining} hour${hoursRemaining !== 1 ? 's' : ''} before changing your newsletter preference again.`,
+            "error"
+          );
+          return;
+        }
+      }
 
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    credentials: 'include'
-                });
+      try {
+        const endpoint = isSubscribed ? '/api/newsletter/subscribe' : '/api/newsletter/unsubscribe';
+        const token = localStorage.getItem('token');
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    user.newsletterSubscribed = isSubscribed;
-                    user.lastNewsletterToggle = Date.now();
-                    localStorage.setItem("unibite-user", JSON.stringify(user));
-
-                    showToast(
-                        "Success", 
-                        isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
-                    );
-                } else {
-                    this.checked = !isSubscribed;
-                    showToast("Error", data.message || "Failed to update newsletter preference", "error");
-                }
-            } catch (error) {
-                this.checked = !isSubscribed;
-                showToast("Error", "An error occurred while updating newsletter preference", "error");
-            }
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          credentials: 'include'
         });
-    }
 
-    // Sync newsletter toggle state with user's database state
-    const newsletterToggleSync = document.getElementById('newsletter');
-    if (newsletterToggleSync) {
-        if (user && user.newsletterSubscribed !== undefined) {
-            newsletterToggleSync.checked = user.newsletterSubscribed;
-        }
-    }
+        const data = await response.json();
 
-    // Format and display member since date
-    const memberSinceElement = document.getElementById('member-since');
-    if (memberSinceElement) {
-        if (user && user.createdAt) {
-            const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            memberSinceElement.textContent = memberSince;
+        if (response.ok) {
+          user.newsletterSubscribed = isSubscribed;
+          user.lastNewsletterToggle = Date.now();
+          localStorage.setItem("unibite-user", JSON.stringify(user));
+
+          showToast(
+            "Success", 
+            isSubscribed ? "Successfully subscribed to newsletter" : "Successfully unsubscribed from newsletter"
+          );
+        } else {
+          this.checked = !isSubscribed;
+          showToast("Error", data.message || "Failed to update newsletter preference", "error");
         }
+      } catch (error) {
+        this.checked = !isSubscribed;
+        showToast("Error", "An error occurred while updating newsletter preference", "error");
+      }
+    });
+  }
+
+  // Sync newsletter toggle state with user's database state
+  const newsletterToggleSync = document.getElementById('newsletter');
+  if (newsletterToggleSync) {
+    if (user && user.newsletterSubscribed !== undefined) {
+      newsletterToggleSync.checked = user.newsletterSubscribed;
     }
+  }
+
+  // Format and display member since date
+  const memberSinceElement = document.getElementById('member-since');
+  if (memberSinceElement) {
+    if (user && user.createdAt) {
+      const memberSince = new Date(user.createdAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      memberSinceElement.textContent = memberSince;
+    }
+  }
 
   // Logout functionality
   const logoutButtons = document.querySelectorAll("#logout-btn, #mobile-logout-btn")
@@ -256,46 +255,215 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Toast notification
-  function showToast(title, message, type = "success") {
-    const toast = document.getElementById("toast")
-    const toastTitle = toast.querySelector("h4")
-    const toastMessage = toast.querySelector("p")
-    const toastIcon = toast.querySelector(".toast-icon")
+  // Order history functionality
+  function switchTab(tabName) {
+    // Hide all sections
+    document.querySelectorAll('.order-section').forEach(section => {
+      section.classList.add('hidden');
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    
+    // Show selected section and activate tab
+    const section = document.getElementById(tabName + '-order-history');
+    const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+    
+    if (section) section.classList.remove('hidden');
+    if (tab) tab.classList.add('active');
+  }
 
-    toastTitle.textContent = title
-    toastMessage.textContent = message
+  // Add click event listeners to order tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchTab(tab.dataset.tab);
+    });
+  });
 
-    // Set icon based on type
-    if (type === "success") {
-      toastIcon.innerHTML = `
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-      `
-      toast.classList.remove('error');
-    } else if (type === "error") {
-      toastIcon.innerHTML = `
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-      `
-      toast.classList.add('error');
+  // Function to load orders
+  async function loadOrders() {
+    try {
+      const response = await fetch('/api/orders/user');
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+      
+      const orders = await response.json();
+      
+      // Separate ongoing and completed orders
+      const ongoingOrders = orders.filter(order => 
+        ['pending', 'preparing', 'ready for pickup'].includes(order.status.toLowerCase())
+      );
+      const completedOrders = orders.filter(order => 
+        ['picked up', 'cancelled'].includes(order.status.toLowerCase())
+      );
+
+      // Sort orders by date (newest first)
+      ongoingOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+      completedOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+
+      // Render ongoing orders
+      const ongoingList = document.getElementById('ongoing-orders-list');
+      if (ongoingOrders.length === 0) {
+        ongoingList.innerHTML = '<p class="no-orders">No ongoing orders at the moment.</p>';
+      } else {
+        ongoingList.innerHTML = ongoingOrders.map(order => createOrderCard(order)).join('');
+      }
+
+      // Render order history
+      const historyList = document.getElementById('order-history-list');
+      if (completedOrders.length === 0) {
+        historyList.innerHTML = '<p class="no-orders">No order history available.</p>';
+      } else {
+        historyList.innerHTML = completedOrders.map(order => createOrderCard(order)).join('');
+      }
+
+      // Make sure the correct tab is shown
+      const activeTab = document.querySelector('.tab.active');
+      if (activeTab) {
+        switchTab(activeTab.dataset.tab);
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      document.getElementById('ongoing-orders-list').innerHTML = 
+        '<p class="error-message">Error loading orders. Please try again later.</p>';
+      document.getElementById('order-history-list').innerHTML = 
+        '<p class="error-message">Error loading orders. Please try again later.</p>';
     }
-
-    // Show toast
-    toast.classList.add("show")
-
-    // Hide toast after 3 seconds
-    setTimeout(() => {
-      toast.classList.remove("show")
-    }, 3000)
   }
 
-  // Close toast on click
-  const toastClose = document.querySelector(".toast-close")
-  if (toastClose) {
-    toastClose.addEventListener("click", () => {
-      document.getElementById("toast").classList.remove("show")
-    })
+  // Function to create order card HTML
+  function createOrderCard(order) {
+    const statusClass = order.status.toLowerCase().replace(/\s+/g, '-');
+    const paymentClass = order.paymentStatus.toLowerCase();
+    
+    return `
+      <div class="order-card ${statusClass}">
+        <div class="order-header">
+          <div>
+            <span class="order-id">Order #${order._id.toString().slice(-6)}</span>
+            <span class="payment-status payment-${paymentClass}">
+              ${order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
+            </span>
+          </div>
+          <div class="order-status-container">
+            <span class="order-status status-${statusClass}">
+              ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            </span>
+            ${order.status === 'preparing' ? `
+              <div class="estimated-time">
+                <i class="fas fa-hourglass-half"></i>
+                <span>Estimated time: 15-20 mins</span>
+              </div>
+            ` : order.status === 'ready for pickup' ? `
+              <div class="estimated-time">
+                <i class="fas fa-box"></i>
+                <span>Ready for pickup now</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="vendor-info">
+          <img src="/Images/store-logo.png" alt="${order.vendorId.name} Logo" class="vendor-logo">
+          <span>${order.vendorId.name}</span>
+        </div>
+
+        <div class="order-times">
+          <div class="order-time">
+            <i class="fas fa-clock"></i>
+            <span>Ordered: ${new Date(order.orderTime).toLocaleString()}</span>
+          </div>
+          ${order.acceptedTime ? `
+            <div class="order-time">
+              <i class="fas fa-check-circle"></i>
+              <span>Accepted: ${new Date(order.acceptedTime).toLocaleString()}</span>
+            </div>
+          ` : ''}
+          ${order.pickupTime ? `
+            <div class="order-time">
+              <i class="fas fa-box"></i>
+              <span>Picked Up: ${new Date(order.pickupTime).toLocaleString()}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="order-items">
+          ${order.items.map(item => `
+            <div class="order-item">
+              <span>${item.nameAtOrder}</span>
+              <span>x${item.quantity} - ${item.priceAtOrder} EGP</span>
+            </div>
+          `).join('')}
+        </div>
+
+        ${order.notes ? `
+          <div class="order-notes">
+            <i class="fas fa-info-circle"></i>
+            ${order.notes}
+          </div>
+        ` : ''}
+
+        <div class="order-total">
+          Total: ${order.totalPrice} EGP
+        </div>
+      </div>
+    `;
   }
-})
+
+  // Load orders when the orders tab is clicked
+  const ordersTab = document.querySelector('[data-tab="orders"]');
+  if (ordersTab) {
+    ordersTab.addEventListener('click', loadOrders);
+  }
+
+  // Load orders immediately if we're on the orders page
+  if (document.getElementById('orders')) {
+    loadOrders();
+  }
+});
+
+// Toast notification function
+function showToast(title, message, type = "success") {
+  const toast = document.getElementById("toast")
+  const toastTitle = toast.querySelector("h4")
+  const toastMessage = toast.querySelector("p")
+  const toastIcon = toast.querySelector(".toast-icon")
+
+  toastTitle.textContent = title
+  toastMessage.textContent = message
+
+  // Set icon based on type
+  if (type === "success") {
+    toastIcon.innerHTML = `
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    `
+    toast.classList.remove('error');
+  } else if (type === "error") {
+    toastIcon.innerHTML = `
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    `
+    toast.classList.add('error');
+  }
+
+  // Show toast
+  toast.classList.add("show")
+
+  // Hide toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove("show")
+  }, 3000)
+}
+
+// Close toast on click
+const toastClose = document.querySelector(".toast-close")
+if (toastClose) {
+  toastClose.addEventListener("click", () => {
+    document.getElementById("toast").classList.remove("show")
+  })
+}

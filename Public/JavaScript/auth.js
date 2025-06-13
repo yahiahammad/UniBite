@@ -74,7 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
           role: result.user.role || "student",
           newsletterSubscribed: result.user.newsletterSubscribed || false,
           lastNewsletterToggle: result.user.lastNewsletterToggle || null,
-          createdAt: result.user.createdAt || new Date().toISOString()
+          createdAt: result.user.createdAt || new Date().toISOString(),
+          phoneNumber: result.user.phoneNumber || null
         }
 
         localStorage.setItem("unibite-user", JSON.stringify(userData))
