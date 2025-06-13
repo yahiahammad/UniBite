@@ -7,7 +7,7 @@ exports.getUserOrders = async (req, res) => {
         const userId = req.user.id;
         const orders = await Order.find({ userId })
             .sort({ orderTime: -1 })
-            .populate('vendorId', 'name')
+            .populate('vendorId', 'name logoURL')
             .populate('items.menuItemId');
 
         res.json(orders);

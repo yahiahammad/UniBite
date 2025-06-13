@@ -367,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div class="vendor-info">
-          <img src="/Images/store-logo.png" alt="${order.vendorId.name} Logo" class="vendor-logo">
+          <img src="${order.vendorId.logoURL}" alt="${order.vendorId.name} Logo" class="vendor-logo" onerror="this.src='/Images/default-store.jpg'">
           <span>${order.vendorId.name}</span>
         </div>
 
