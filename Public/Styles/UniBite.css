@@ -1,3 +1,4 @@
+/* Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -42,23 +43,6 @@ html, body {
     top: 0;
     left: 0;
     z-index: 1;
-}
-
-.logo-container {
-    margin-bottom: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.Main-logo {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12%;
-    z-index: 1000;
-    transition: all 0.3s ease;
 }
 
 .hero-content {
@@ -188,10 +172,6 @@ html, body {
 }
 
 @media (max-width: 768px) {
-    .Main-logo {
-        width: 20%;
-    }
-
     .hero-title {
         font-size: 2.5rem;
         margin-top: 2rem;

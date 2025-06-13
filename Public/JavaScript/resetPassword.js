@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Verify token immediately when page loads
+    verifyToken();
+
     // Toggle password visibility
     const toggleButtons = document.querySelectorAll('.password-toggle');
     toggleButtons.forEach(button => {
@@ -65,6 +68,32 @@ document.addEventListener('DOMContentLoaded', () => {
         updateRequirement(reqSpecial, /[@$!%*?&]/.test(password));
     });
 
+    // Function to verify token
+    async function verifyToken() {
+        try {
+            const response = await fetch('/api/users/verify-reset-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                alert(data.message || 'Invalid or expired password reset link. Please request a new one.');
+                window.location.href = '/forgot-password';
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error('Token verification error:', error);
+            alert('Error verifying reset token. Please try again.');
+            window.location.href = '/forgot-password';
+            return false;
+        }
+    }
+
     // Password validation
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -88,17 +117,10 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.disabled = true;
 
         try {
-            // First verify the token
-            const verifyResponse = await fetch('/api/users/verify-reset-token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ token })
-            });
-
-            if (!verifyResponse.ok) {
-                throw new Error('Invalid or expired password reset token');
+            // First verify the token again before resetting password
+            const isTokenValid = await verifyToken();
+            if (!isTokenValid) {
+                return;
             }
 
             // Reset password
@@ -122,6 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Show error message
                 alert(data.message || 'An error occurred. Please try again.');
+                if (data.message.includes('Invalid or expired')) {
+                    window.location.href = '/forgot-password';
+                }
             }
         } catch (error) {
             console.error('Error:', error);

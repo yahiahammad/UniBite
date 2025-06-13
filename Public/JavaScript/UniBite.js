@@ -37,8 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Header scroll effect
     const header = document.getElementById("site-header")
     if (header) {
+        const scrollThreshold = 50
+
         window.addEventListener("scroll", () => {
-            if (window.scrollY > 50) {
+            const currentScroll = window.scrollY
+
+            if (currentScroll > scrollThreshold) {
                 header.classList.add("scrolled")
             } else {
                 header.classList.remove("scrolled")
@@ -46,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
         // Initialize scroll position check on page load
-        if (window.scrollY > 50) {
+        if (window.scrollY > scrollThreshold) {
             header.classList.add("scrolled")
         }
     }
