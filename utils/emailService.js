@@ -42,12 +42,71 @@ const sendResetPasswordEmail = async (email, token) => {
   const subject = 'Password Reset Request';
   const url = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
   const html = `
-    <h1>Password Reset Request</h1>
-    <p>You are receiving this email because you (or someone else) has requested to reset your password.</p>
-    <p>Please click the link below to reset your password:</p>
-    <a href="${url}">Reset Password</a>
-    <p>This link will expire in 30 minutes.</p>
-    <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>${subject}</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f6f8;
+          color: #333333;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          max-width: 600px;
+          margin: 40px auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          padding: 40px;
+        }
+        h1 {
+          font-size: 22px;
+          margin-bottom: 20px;
+          color: #2c3e50;
+        }
+        p {
+          font-size: 16px;
+          line-height: 1.5;
+        }
+        .button {
+          display: inline-block;
+          margin: 30px 0;
+          padding: 14px 24px;
+          background-color: #007BFF;
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 6px;
+          font-size: 16px;
+        }
+        .footer {
+          font-size: 14px;
+          color: #888888;
+          margin-top: 30px;
+          text-align: center;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>${subject}</h1>
+        <p>Hello,</p>
+        <p>We received a request to reset your account password. If this was you, please click the button below to set a new password.</p>
+        <div style="text-align: center;">
+          <a href="${url}" class="button">Reset Password</a>
+        </div>
+        <p><strong>Note:</strong> This link will expire in <strong>30 minutes</strong> for your security.</p>
+        <p>If you did not request this, you can safely ignore this email. Your password will remain unchanged.</p>
+        <div class="footer">
+          If you need help, contact our support team.
+        </div>
+      </div>
+    </body>
+    </html>
   `;
   
   const mailOptions = {

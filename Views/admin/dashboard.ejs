@@ -126,11 +126,11 @@
                     </div>
                     <div class="stat-card">
                         <h3>Total Revenue</h3>
-                        <p class="stat-value">$<%= stats.totalRevenue.toFixed(2) %></p>
+                        <p class="stat-value"><%= stats.totalRevenue.toFixed(2) %> EGP</p>
                     </div>
                     <div class="stat-card">
                         <h3>Today's Revenue</h3>
-                        <p class="stat-value">$<%= stats.todayRevenue.toFixed(2) %></p>
+                        <p class="stat-value"><%= stats.todayRevenue.toFixed(2) %> EGP</p>
                     </div>
                     <div class="stat-card">
                         <h3>Average Pickup Time</h3>
@@ -502,7 +502,7 @@
                     </div>
                     <div class="order-body">
                         <ul>${itemsHtml}</ul>
-                        <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
+                        <p><strong>Total:</strong> ${order.totalPrice.toFixed(2)} EGP</p>
                     </div>
                     <div class="order-footer">
                         ${order.status === 'pending' ? 

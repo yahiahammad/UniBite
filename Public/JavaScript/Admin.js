@@ -232,8 +232,8 @@ async function updateDashboard() {
 function updateStatsDisplay(stats) {
     document.querySelector('.stat-card:nth-child(1) p').textContent = stats.totalOrders;
     document.querySelector('.stat-card:nth-child(2) p').textContent = stats.todayOrders;
-    document.querySelector('.stat-card:nth-child(3) p').textContent = `$${stats.totalRevenue.toFixed(2)}`;
-    document.querySelector('.stat-card:nth-child(4) p').textContent = `$${stats.todayRevenue.toFixed(2)}`;
+    document.querySelector('.stat-card:nth-child(3) p').textContent = `${stats.totalRevenue.toFixed(2)} EGP`;
+    document.querySelector('.stat-card:nth-child(4) p').textContent = `${stats.todayRevenue.toFixed(2)} EGP`;
 }
 
 // Fetch and render recent orders
@@ -396,7 +396,7 @@ function createOrderCard(order) {
                 <div class="order-item">
                     <span class="order-item-quantity">${item.quantity}x</span>
                     <span class="order-item-name">${item.nameAtOrder}</span>
-                    <span class="order-item-price">$${(item.priceAtOrder * item.quantity).toFixed(2)}</span>
+                    <span class="order-item-price">${(item.priceAtOrder * item.quantity).toFixed(2)} EGP</span>
                 </div>
             `).join('')}
         </div>
@@ -406,7 +406,7 @@ function createOrderCard(order) {
                 ${order.userId ? order.userId.name : 'Unknown User'}
             </div>
             <div class="order-total">
-                Total: $${order.totalPrice.toFixed(2)}
+                Total: ${order.totalPrice.toFixed(2)} EGP
             </div>
         </div>
         <div class="order-actions">
@@ -470,7 +470,7 @@ function showOrderModal(order) {
                     ` : ''}
                     <div class="order-detail-item">
                         <span class="order-detail-label">Order Total</span>
-                        <span class="order-detail-value">$${order.totalPrice.toFixed(2)}</span>
+                        <span class="order-detail-value">${order.totalPrice.toFixed(2)} EGP</span>
                     </div>
                 </div>
                 <div class="order-items-list">
@@ -482,7 +482,7 @@ function showOrderModal(order) {
                         <div class="order-item-detail">
                             <span class="order-item-quantity">${item.quantity}x</span>
                             <span class="order-item-name">${itemName}</span>
-                            <span class="order-item-price">$${(itemPrice * item.quantity).toFixed(2)}</span>
+                            <span class="order-item-price">${(itemPrice * item.quantity).toFixed(2)} EGP</span>
                         </div>
                         `;
     }).join('')}
@@ -697,7 +697,7 @@ function renderMenuItems() {
             </td>
             <td>${item.name}</td>
             <td>${item.description || ''}</td>
-            <td>$${item.price.toFixed(2)}</td>
+            <td>${item.price.toFixed(2)} EGP</td>
             <td>${item.category || ''}</td>
             <td>
                 <div class="form-check form-switch">
