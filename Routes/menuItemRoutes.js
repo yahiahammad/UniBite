@@ -24,6 +24,9 @@ const upload = multer({
     }
 });
 
+// GET /api/menu-items/search/:vendorId - Search menu items for a vendor
+router.get('/search/:vendorId', menuItemController.searchMenuItems);
+
 // GET /api/menu-items/vendor - Get menu items for the logged-in vendor
 router.get('/vendor', auth, menuItemController.getVendorMenuItems);
 

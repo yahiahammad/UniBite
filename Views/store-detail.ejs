@@ -11,7 +11,7 @@
     <script src="/JavaScript/mobile-menu.js"></script>
     <script src="/JavaScript/store-detail.js"></script>
 </head>
-<body>
+<body data-vendor-id="<%= vendor._id %>">
 <!-- Header -->
 <%- include('partials/header') %>
 
@@ -93,6 +93,23 @@
         <div class="store-menu">
             <h2>Menu</h2>
 
+            <div class="menu-search-bar">
+                <div class="search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input type="text" id="menu-search-input" placeholder="Search dishes, categories...">
+                <div class="clear-search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+            <div id="menu-search-results"></div>
+
             <div class="menu-tabs">
                 <% categories.forEach((category, index) => { %>
                     <button class="menu-tab <%= index === 0 ? 'active' : '' %>" data-category="<%= category.toLowerCase() %>">
@@ -167,5 +184,6 @@
 </div>
 
 <%- include('partials/footer') %>
+<script src="/JavaScript/storeSearch.js"></script>
 </body>
 </html>

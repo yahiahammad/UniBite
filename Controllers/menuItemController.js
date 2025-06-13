@@ -27,8 +27,29 @@ const convertToWebP = async (inputBuffer, originalFilename) => {
     }
 };
 
+// Search menu items for a vendor
+exports.searchMenuItems = async (req, res) => {
+    try {
+        const { vendorId } = req.params;
+        const { query } = req.query;
 
+        if (!query) {
+            return res.json([]);
+        }
 
+        const searchRegex = new RegExp(query, 'i');
+        const menuItems = await MenuItem.find({
+            vendorId,
+            name: searchRegex,
+            available: true
+        }).sort({ name: 1 });
+
+        res.json(menuItems);
+    } catch (error) {
+        console.error('Error searching menu items:', error);
+        res.status(500).json({ message: 'Failed to search menu items' });
+    }
+};
 
 // Get all menu items for a vendor
 exports.getMenuItems = async (req, res) => {
