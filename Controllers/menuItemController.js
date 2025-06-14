@@ -9,7 +9,7 @@ const convertToWebP = async (inputBuffer, originalFilename) => {
         
         const timestamp = Date.now();
         const webpFilename = `${timestamp}-${originalFilename.replace(/\.[^/.]+$/, '.webp')}`;
-        const outputPath = path.join(__dirname, '..', 'Public', 'Images', 'menu', webpFilename);
+        const outputPath = path.join(__dirname, '..', 'public', 'Images', 'menu', webpFilename);
 
         await sharp(inputBuffer)
             .webp({ quality: 80 }) 
@@ -118,7 +118,7 @@ exports.createMenuItem = async (req, res) => {
                 
                 const timestamp = Date.now();
                 const filename = `${timestamp}-${req.file.originalname}`;
-                const filePath = path.join(__dirname, '..', 'Public', 'Images', 'menu', filename);
+                const filePath = path.join(__dirname, '..', 'public', 'Images', 'menu', filename);
 
                 await fs.writeFile(filePath, req.file.buffer);
                 imageURL = `/Images/menu/${filename}`;
@@ -170,7 +170,7 @@ exports.updateMenuItem = async (req, res) => {
 
             
             if (menuItem.imageURL && menuItem.imageURL !== '/Images/default-food.webp') {
-                const oldImagePath = path.join(__dirname, '..', 'Public', menuItem.imageURL);
+                const oldImagePath = path.join(__dirname, '..', 'public', menuItem.imageURL);
                 try {
                     await fs.unlink(oldImagePath);
                     console.log('Old image deleted:', oldImagePath);
@@ -189,7 +189,7 @@ exports.updateMenuItem = async (req, res) => {
                 
                 const timestamp = Date.now();
                 const filename = `${timestamp}-${req.file.originalname}`;
-                const filePath = path.join(__dirname, '..', 'Public', 'Images', 'menu', filename);
+                const filePath = path.join(__dirname, '..', 'public', 'Images', 'menu', filename);
 
                 await fs.writeFile(filePath, req.file.buffer);
                 menuItem.imageURL = `/Images/menu/${filename}`;
@@ -228,7 +228,7 @@ exports.deleteMenuItem = async (req, res) => {
 
         
         if (menuItem.imageURL && menuItem.imageURL !== '/Images/default-food.webp') {
-            const imagePath = path.join(__dirname, '..', 'Public', menuItem.imageURL);
+            const imagePath = path.join(__dirname, '..', 'public', menuItem.imageURL);
             try {
                 await fs.unlink(imagePath);
                 console.log('Image deleted:', imagePath);

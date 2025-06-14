@@ -21,6 +21,7 @@ const app = express();
 const server = http.createServer(app);
 const io = init(server);
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'Views'));
@@ -37,7 +38,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'Public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(checkAuth);

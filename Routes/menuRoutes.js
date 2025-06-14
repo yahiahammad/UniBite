@@ -8,7 +8,7 @@ const menuItemController = require('../Controllers/menuItemController');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../Public/Images/menu'));
+        cb(null, path.join(__dirname, '../public/Images/menu'));
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

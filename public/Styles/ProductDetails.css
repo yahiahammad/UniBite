@@ -9,7 +9,7 @@ main {
 .background {
     width: 100%; 
     height: 100vh; 
-    background: url(' Public/Images/back.jpeg') no-repeat center / cover; 
+    background: url('../Images/back.jpeg') no-repeat center / cover;
     color: white; 
     text-align: center; 
     display: flex; 
