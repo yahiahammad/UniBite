@@ -23,6 +23,7 @@ const io = init(server);
 
 
 app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'Public')));
 app.set('views', path.join(__dirname, 'Views'));
 app.set('auth', 'Views/Auth');
 
