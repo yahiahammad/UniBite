@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniBite - Sign up</title>
     <link rel="stylesheet" href="/Styles/Login.css">
+    <link rel="stylesheet" href="/Styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="dark-theme">
 
-
-<div class="navbar">
-    <div class="logo"><a href="/">UniBite</a></div>
-    <div class="nav-links">
-        <a href="/Help">Help</a>
-    </div>
-    <a href="/login" class="signup-btn">Login</a>
-</div>
-
+<%- include('../partials/Header', { active: 'signup' }) %>
 
 <div class="main-content">
     <div class="login-container">
@@ -65,9 +59,12 @@
                 </ul>
             </div>
             <label class="termsAndConditions">By creating an account you agree to the Privacy Policy and to the terms of use</label>
-            <div class="button-container" style="width: 100%;">
-                <button type="submit" class="button" style="width: 100%;">Sign Up</button>
-            
+            <div class="button-container">
+                <button type="submit" class="button">Sign Up</button>
+                <button type="button" class="google-button" onclick="window.location.href='/login'">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login
+                </button>
             </div>
             <div class="already-customer">
                 <a href="/login">Already a customer?</a>
@@ -76,16 +73,7 @@
     </div>
 </div>
 
-
-<div class="footer">
-    <div class="logo">UniBite.</div>
-    <div class="footer-links">
-        <a href="/Stores">Restaurants</a>
-        <a href="/About-us">About Us</a>
-        <a href="/Help">Help</a>
-    </div>
-    <div class="credentials">© 2025 UniBite. All rights reserved.</div>
-</div>
+<%- include('../partials/footer') %>
 
 <script src="/JavaScript/signup.js"></script>
 <script src="/JavaScript/EmailValidation.js"></script>

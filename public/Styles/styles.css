@@ -743,16 +743,30 @@ p {
   border-top: 1px solid var(--border);
 }
 
+
+/* Dark theme footer for pages with dark backgrounds */
+.dark-theme .site-footer {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
 .footer-content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   align-items: center;
+  gap: 0.8rem;
+  text-align: center;
 }
 
-.footer-copyright {
+.footer-copyright p {
   color: var(--text-light);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.2px;
+}
+
+.dark-theme .footer-copyright p {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .footer-links {

@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -10,9 +9,17 @@ html, body {
     font-size: 16px;
     font-family: 'Inter', sans-serif;
     background-color: #f8f9fa;
+    background-image: url('../Images/HeroBackV2.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 @media (max-width: 768px) {
+    html, body {
+        background-image: url('../Images/MobileBack.jpg');
+    }
+
     html {
         font-size: 14px;
     }
@@ -23,7 +30,6 @@ html, body {
 
 
 .Section1 {
-    min-height: 100vh;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -35,10 +41,6 @@ html, body {
 .Background-Container {
     width: 100%;
     height: 100%;
-    background-image: url('../Images/HeroBackV2.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     position: absolute;
     top: 0;
     left: 0;
@@ -52,7 +54,7 @@ html, body {
     max-width: 1200px;
     width: 100%;
     padding: 2rem;
-    margin-top: 4rem;
+    margin-top: 16rem;
 }
 
 .hero-title {
@@ -76,6 +78,7 @@ html, body {
 }
 
 .hero-buttons {
+    flex-direction: row;
     display: flex;
     gap: 1.5rem;
     justify-content: center;
@@ -83,6 +86,7 @@ html, body {
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards 0.4s;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .hero-buttons button {
@@ -125,24 +129,26 @@ html, body {
     min-width: 250px;
     max-width: 300px;
     padding: 2rem;
-    background: rgba(255, 255, 255, 0.95);
+    background: transparent;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(255, 138, 0, 0.1);
     transition: all 0.3s ease;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease forwards 0.6s;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 138, 0, 0.2);
 }
 
 .feature:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 40px rgba(255, 138, 0, 0.25);
 }
 
 .feature-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    color: #ff8a00;
 }
 
 .feature h3 {
@@ -183,14 +189,15 @@ html, body {
     }
 
     .hero-buttons {
-        flex-direction: column;
+        flex-direction: row;
         gap: 1rem;
         padding: 0 1rem;
+        justify-content: center;
     }
 
     .hero-buttons button {
-        width: 100%;
-        padding: 1rem;
+        min-width: 160px;
+        padding: 0.8rem 1.5rem;
         font-size: 1rem;
     }
 
@@ -205,10 +212,6 @@ html, body {
         min-width: 100%;
         padding: 1.5rem;
     }
-
-    .Background-Container {
-        background-image: url('../Images/MobileBack.jpg');
-    }
 }
 
 
@@ -219,10 +222,11 @@ html, body {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 2.5rem;
-    padding: 3rem;
-    min-height: 100vh;
-    background: #f8f9fa;
+    padding: 3rem 3rem 0;
+    background: transparent;
     font-family: 'Inter', sans-serif;
+    margin-top: 4rem;
+    margin-bottom: 6rem;
 }
 
 .Section2 div:not(.LogIn-SignUp-buttons) {
@@ -252,9 +256,9 @@ html, body {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.6)
+            to bottom,
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.6)
     );
     z-index: 0;
     transition: all 0.4s ease;
@@ -262,9 +266,9 @@ html, body {
 
 .Section2 div:hover::before {
     background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.4),
-        rgba(0, 0, 0, 0.7)
+            to bottom,
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.7)
     );
 }
 
@@ -293,19 +297,19 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-image: url('../Images/Eat.jpg');
+    background-image: url('../Images/IMG_0346.JPG');
 }
 
 .Help {
-    background-image: url('../Images/Help.jpg');
+    background-image: url('../Images/IMG_0367.JPG');
 }
 
 .Restaurants {
-    background-image: url('../Images/Food.jpeg');
+    background-image: url('../Images/IMG_0374.JPG');
 }
 
 .Our-story {
-    background-image: url('../Images/aboutUs.jpg');
+    background-image: url('../Images/IMG_0383.JPG');
 }
 
 .LogIn-SignUp-buttons {
@@ -396,12 +400,14 @@ html, body {
 
 
 .Section3 {
-    padding: 60px 20px;
-    background: linear-gradient(to bottom, #fff, #f8f9fa);
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 40px;
-    min-height: 400px;
+    padding: 0 2rem;
+    text-align: center;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10rem;
 }
 
 .Section-Title {
@@ -462,8 +468,13 @@ html, body {
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border-radius: 12px;
+    background: #2c2c2c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
 }
 

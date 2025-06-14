@@ -5,19 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniBite - Login</title>
     <link rel="stylesheet" href="/Styles/Login.css">
+    <link rel="stylesheet" href="/Styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dark-theme">
 
+<%- include('../partials/Header', { active: 'login' }) %>
 
-<div class="navbar">
-    <div class="logo"><a href="/">UniBite</a></div>
-    <div class="nav-links">
-        <a href="/Help">Help</a>
-    </div>
-    <a href="/signup" class="signup-btn">Sign Up</a>
-</div>
-
-
+<!-- Login Form Container -->
 <div class="main-content">
     <div class="login-container">
         <h2>Login</h2>
@@ -56,26 +51,17 @@
         <div class="forgot-password">
             <a href="/api/users/forgot-password">Forgot password?</a>
         </div>
-        
+
         <div class="restaurant-owner">
             <a href="/admin-login">Are you a restaurant owner? Login here</a>
         </div>
     </div>
 </div>
 
-
-<div class="footer">
-    <div class="logo">UniBite</div>
-    <div class="footer-links">
-        <a href="#">Stores</a>
-        <a href="#">About Us</a>
-        <a href="#">Help</a>
-    </div>
-    <div class="credentials">© 2025 UniBite. All rights reserved.</div>
-</div>
+<%- include('../partials/footer') %>
 
 <script>
-    
+    // Google login placeholder function
     function continueWithGoogle() {
         alert('Google login functionality will be implemented soon!');
     }
