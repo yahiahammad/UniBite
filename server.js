@@ -1,6 +1,3 @@
-
-
-
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
@@ -75,15 +72,15 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log('❌ DB Error:', err));
 
 
-const userRoutes = require('./routes/userRoutes');
-const vendorRoutes = require('./routes/vendorRoutes');
-const menuItemRoutes = require('./routes/menuItemRoutes');
-const orderRoutes = require('./routes/orderRoutes');
-const reviewRoutes = require('./routes/reviewRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const cartRoutes = require('./routes/cartRoutes');
-const executiveRoutes = require('./routes/executiveRoutes');
-const newsletterRoutes = require('./routes/newsletterRoutes');
+const userRoutes = require('./Routes/userRoutes');
+const vendorRoutes = require('./Routes/vendorRoutes');
+const menuItemRoutes = require('./Routes/menuItemRoutes');
+const orderRoutes = require('./Routes/orderRoutes');
+const reviewRoutes = require('./Routes/reviewRoutes');
+const adminRoutes = require('./Routes/adminRoutes');
+const cartRoutes = require('./Routes/cartRoutes');
+const executiveRoutes = require('./Routes/executiveRoutes');
+const newsletterRoutes = require('./Routes/newsletterRoutes');
 
 
 
