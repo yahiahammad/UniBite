@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 const sendVerificationEmail = async (email, token) => {
   const subject = 'Verify your UniBite account';
-  const url = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const url = `${process.env.FRONTEND_URL}verify-email?token=${token}`;
   const html = `
     <h1>Welcome to UniBite!</h1>
     <p>Please verify your email address by clicking the link below:</p>
