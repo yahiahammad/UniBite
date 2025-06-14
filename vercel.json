@@ -9,19 +9,19 @@
   "routes": [
     {
       "src": "/Styles/(.*)",
-      "dest": "/public/Styles/$1"
+      "dest": "/Public/Styles/$1"
     },
     {
       "src": "/JavaScript/(.*)",
-      "dest": "/public/JavaScript/$1"
+      "dest": "/Public/JavaScript/$1"
     },
     {
       "src": "/Images/(.*)",
-      "dest": "/public/Images/$1"
+      "dest": "/Public/Images/$1"
     },
     {
       "src": "/Audio/(.*)",
-      "dest": "/public/Audio/$1"
+      "dest": "/Public/Audio/$1"
     },
     {
       "src": "/api/(.*)",
