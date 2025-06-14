@@ -1,22 +1,38 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "server.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/public/(.*)",
-            "dest": "/Public/$1"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "server.js"
-        }
-    ]
-    "env": {
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/public/(.*)",
+      "dest": "/Public/$1"
+    },
+    {
+      "src": "/JavaScript/(.*)",
+      "dest": "/Public/JavaScript/$1"
+    },
+    {
+      "src": "/Styles/(.*)",
+      "dest": "/Public/Styles/$1"
+    },
+    {
+      "src": "/Images/(.*)",
+      "dest": "/Public/Images/$1"
+    },
+    {
+      "src": "/Audio/(.*)",
+      "dest": "/Public/Audio/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
     "NODE_ENV": "production"
   }
-} 
+
