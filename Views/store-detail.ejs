@@ -36,7 +36,7 @@
             <div class="store-hero-overlay">
                 <div class="store-hero-content">
                     <h1><%= vendor.name %></h1>
-                    <p><%= vendor.description %></p>
+                    <p><%= vendor.description || 'No description available.' %></p>
                     <div class="store-tags">
                         <% if (vendor.tags && vendor.tags.length) { %>
                             <% vendor.tags.forEach(tag => { %>
@@ -80,7 +80,7 @@
                     </svg>
                 </div>
                 <div class="info-text">
-                    <span>Pickup in <%= vendor.averagePickupTime %> min</span>
+                    <span>Pickup in <%= vendor.averagePickupTime || 'N/A' %> min</span>
                 </div>
             </div>
             <div class="info-item">
@@ -91,7 +91,7 @@
                     </svg>
                 </div>
                 <div class="info-text">
-                    <span><%= vendor.contactInfo %></span>
+                    <span><%= vendor.contactInfo || 'No contact info' %></span>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
         
         <div class="store-hours">
             <h2>Hours</h2>
-            <p><%= vendor.openingHours %></p>
+            <p><%= vendor.openingHours || 'Hours not available' %></p>
         </div>
 
         
@@ -144,7 +144,7 @@
                                         <h3><%= item.name %></h3>
                                         <span class="menu-item-price"><%= item.price %> EGP</span>
                                     </div>
-                                    <p class="menu-item-description"><%= item.description %></p>
+                                    <p class="menu-item-description"><%= item.description || '' %></p>
                                     
                                     <button class="add-to-cart-btn plus-btn"
                                             data-id="<%= item._id %>"
