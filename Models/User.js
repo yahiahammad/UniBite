@@ -13,12 +13,6 @@ const UserSchema = new mongoose.Schema({
     default: 'student',
     required: true,
   },
-  vendorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Vendor',
-    required: function() { return this.userType === 'admin'; },
-    default: null
-  },
   isVerified: { type: Boolean, default: false },
   verificationToken: String,
   verificationTokenExpires: Date,
