@@ -38,9 +38,11 @@
                     <h1><%= vendor.name %></h1>
                     <p><%= vendor.description %></p>
                     <div class="store-tags">
-                        <% vendor.tags.forEach(tag => { %>
-                            <span class="tag"><%= tag %></span>
-                        <% }); %>
+                        <% if (vendor.tags && vendor.tags.length) { %>
+                            <% vendor.tags.forEach(tag => { %>
+                                <span class="tag"><%= tag %></span>
+                            <% }); %>
+                        <% } %>
                     </div>
                 </div>
                 <div class="see-reviews-container">
@@ -58,8 +60,16 @@
                     </svg>
                 </div>
                 <div class="info-text">
-                    <span class="rating-score"><%= vendor.rating.score.toFixed(1) %></span>
-                    <span class="rating-count">(<%= vendor.rating.count %> reviews)</span>
+                    <% if (vendor.rating && vendor.rating.score) { %>
+                        <span class="rating-score"><%= vendor.rating.score.toFixed(1) %></span>
+                    <% } else { %>
+                        <span class="rating-score">N/A</span>
+                    <% } %>
+                    <% if (vendor.rating && vendor.rating.count) { %>
+                        <span class="rating-count">(<%= vendor.rating.count %> reviews)</span>
+                    <% } else { %>
+                        <span class="rating-count">(0 reviews)</span>
+                    <% } %>
                 </div>
             </div>
             <div class="info-item">
