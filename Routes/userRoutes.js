@@ -44,7 +44,7 @@ router.post('/login', userController.loginUser);
 router.post('/forgot-password', forgotPasswordLimiter, userController.forgotPassword);
 router.post('/reset-password', userController.resetPassword);
 router.post('/verify-reset-token', userController.verifyResetToken);
-router.get('/verify-email', userController.verifyEmail);
+router.get('/verify', userController.verifyEmail);
 
 
 router.post('/update-profile', requireLogin, async (req, res) => {

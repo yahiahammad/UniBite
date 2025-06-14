@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function verifyEmail(token) {
     try {
-        const response = await fetch(`/api/users/verify-email?token=${token}`, {
+        const response = await fetch(`/api/users/verify?token=${token}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
