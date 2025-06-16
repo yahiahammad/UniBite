@@ -58,7 +58,7 @@ exports.renderDashboard = async (req, res) => {
         endOfCurrentHour.setUTCMilliseconds(-1);
 
         const recentCompletedOrders = await Order.find({
-            vendorId: vendor._id,
+            vendorId: vendor.id,
             status: 'picked up',
             pickupTime: { $gte: startOfCurrentHour, $lte: endOfCurrentHour }
         });

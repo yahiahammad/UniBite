@@ -322,7 +322,16 @@
             document.addEventListener('click', unlockAudio);
             document.addEventListener('keydown', unlockAudio);
 
-            
+            // Register the vendor with its ID
+            const vendorId = "<%= vendor.id %>"; // Get vendorId from EJS
+            if (vendorId) {
+                socket.emit('register_vendor', vendorId);
+                console.log(`Attempting to register vendor with ID: ${vendorId}`);
+            } else {
+                console.error('Vendor ID not available for socket registration.');
+            }
+
+
             function refreshPage() {
                 window.location.reload();
             }

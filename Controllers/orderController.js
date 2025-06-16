@@ -96,12 +96,21 @@ exports.submitOrder = async (req, res) => {
 
         
         const populatedOrder = await Order.findById(order._id)
-            .populate('vendorId', 'name')
+            .populate('vendorId', 'name _id') // Ensure _id is populated for vendorId
             .populate('items.menuItemId', 'name');
 
         
         const io = getIO();
-        io.emit('new_order', populatedOrder);
+        if (populatedOrder && populatedOrder.vendorId && populatedOrder.vendorId._id) {
+            const roomName = `vendor_${populatedOrder.vendorId._id}`;
+            io.to(roomName).emit('new_order', populatedOrder);
+            console.log(`Emitted 'new_order' for order ${populatedOrder._id} to room ${roomName}`);
+        } else {
+            console.error('Vendor ID not found on populated order, cannot emit new_order to specific vendor.');
+            console.error('Order details:', JSON.stringify(populatedOrder, null, 2));
+            // Fallback or error handling if necessary, though this case should ideally not happen
+            // For now, we prevent a global emit if the vendorId is missing.
+        }
 
         
         res.json({ success: true, orderId: order._id });

@@ -1,4 +1,3 @@
-
 const { Server } = require('socket.io');
 const Order = require('./Models/orders'); 
 const { sendOrderStatusEmail } = require('./utils/emailService');
@@ -17,6 +16,14 @@ function init(httpServer) {
     io.on('connection', (socket) => {
         console.log('✅ A user connected with socket ID:', socket.id);
 
+        socket.on('register_vendor', (vendorId) => {
+            if (vendorId) {
+                socket.join(`vendor_${vendorId}`);
+                console.log(`Socket ${socket.id} joined room for vendor ${vendorId}`);
+            } else {
+                console.log(`Attempt to join vendor room with invalid vendorId by socket ${socket.id}`);
+            }
+        });
         
         socket.on('accept_order', async (data) => {
             try {
