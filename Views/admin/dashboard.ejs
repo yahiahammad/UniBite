@@ -370,59 +370,6 @@
             }
 
             
-            function updatePagination(currentPage) {
-                ordersPagination.innerHTML = '';
-                
-                
-                if (totalPages <= 1) {
-                    return;
-                }
-
-                
-                const prevLi = document.createElement('li');
-                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-                prevLi.innerHTML = `
-                    <a class="page-link" href="#" aria-label="Previous" data-page="${currentPage - 1}">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                `;
-                ordersPagination.appendChild(prevLi);
-
-                
-                for (let i = 1; i <= totalPages; i++) {
-                    const li = document.createElement('li');
-                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                    li.innerHTML = `
-                        <a class="page-link" href="#" data-page="${i}">${i}</a>
-                    `;
-                    ordersPagination.appendChild(li);
-                }
-
-                
-                const nextLi = document.createElement('li');
-                nextLi.className = `page-item ${currentPage >= totalPages ? 'disabled' : ''}`;
-                nextLi.innerHTML = `
-                    <a class="page-link" href="#" aria-label="Next" data-page="${currentPage + 1}">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                `;
-                ordersPagination.appendChild(nextLi);
-            }
-            
-            
-            ordersPagination.addEventListener('click', (e) => {
-                e.preventDefault();
-                const link = e.target.closest('.page-link');
-                if (link && !link.closest('.page-item').classList.contains('disabled')) {
-                    const page = parseInt(link.dataset.page);
-                    if (page) {
-                        currentPage = page;
-                        loadOrders(page);
-                    }
-                }
-            });
-
-            
             socket.on('new_order', (order) => {
                 if (isAudioUnlocked) {
                     notificationSound.play().catch(e => console.error("Error playing sound.", e));
