@@ -6,7 +6,7 @@ const { sendVerificationEmail, sendResetPasswordEmail } = require('../utils/emai
 
 
 exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, remember } = req.body;
 
   try {
     
@@ -27,19 +27,23 @@ exports.loginUser = async (req, res) => {
     }
 
     
+    const tokenExpiration = remember ? '30d' : '24h';
+    
     const token = jwt.sign(
         { id: user._id, email: user.email, userType: user.userType },
         process.env.JWT_SECRET,
-        { expiresIn: '7d' }
+        { expiresIn: tokenExpiration }
     );
 
     
-    res.cookie('jwt', token, {
+    const cookieOptions = {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
+      maxAge: remember ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000 //milliseconds
+    };
+
+    res.cookie('jwt', token, cookieOptions);
 
     
     user.password = undefined;

@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  
+  // Check for remember me preference
+  const rememberCheckbox = document.getElementById("remember")
+  if (rememberCheckbox) {
+    const rememberMe = localStorage.getItem("remember-me")
+    if (rememberMe === "true") {
+      rememberCheckbox.checked = true
+    }
+  }
+
   const passwordToggles = document.querySelectorAll(".password-toggle")
 
   passwordToggles.forEach((toggle) => {
@@ -60,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, remember })
       })
 
       const result = await response.json()
@@ -79,6 +87,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         localStorage.setItem("unibite-user", JSON.stringify(userData))
+
+        
+        if (remember) {
+          localStorage.setItem("remember-me", "true")
+        } else {
+          localStorage.removeItem("remember-me")
+        }
 
         
         setTimeout(() => {
