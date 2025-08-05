@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../Controllers/userController'); 
-const { requireLogin } = require('../Middleware/auth');
+const { requireLogin, redirectIfAuthenticated } = require('../Middleware/auth');
 const User = require('../Models/User');
 const rateLimit = require('express-rate-limit');
 
@@ -13,11 +13,11 @@ const forgotPasswordLimiter = rateLimit({
 });
 
 
-router.get('/login', (req, res) => {
+router.get('/login', redirectIfAuthenticated, (req, res) => {
     res.render('Auth/Login');
 });
 
-router.get('/SignUp', (req, res) => {
+router.get('/SignUp', redirectIfAuthenticated, (req, res) => {
     res.render('Auth/SignUp');
 });
 

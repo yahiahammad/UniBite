@@ -1,4 +1,3 @@
-
 const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
 const Vendor = require('../Models/Vendor');
@@ -122,4 +121,22 @@ const authenticateExecutive = async (req, res, next) => {
     }
 };
 
-module.exports = { auth, protect, checkAuth, requireLogin, isAuthenticated, authenticateExecutive };
+// Middleware to redirect authenticated users away from auth pages
+const redirectIfAuthenticated = (req, res, next) => {
+    const token = req.cookies.jwt;
+    if (token) {
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+            // User is authenticated, redirect to homepage
+            return res.redirect('/');
+        } catch (err) {
+            // Token is invalid, continue to login page
+            next();
+        }
+    } else {
+        // No token, continue to login page
+        next();
+    }
+};
+
+module.exports = { auth, protect, checkAuth, requireLogin, isAuthenticated, authenticateExecutive, redirectIfAuthenticated };
