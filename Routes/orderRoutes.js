@@ -15,10 +15,8 @@ router.get('/orders', requireLogin, (req, res) => {
     });
 });
 
-const path = require('path');
-
 router.get('/order/confirmation', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Views/payment/gateway.html'));
+    res.render('payment/gateway');
 });
 
 
