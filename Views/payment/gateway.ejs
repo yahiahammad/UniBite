@@ -11,14 +11,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <script type="text/javascript">
-        var AmountTrxn =  process.env.AmountTrxn;
-        var MID =  process.env.MID;
-        console.log("MID", MID);
-        var TID = process.env.TID;
-        var MerchantReference =  process.env.MerchantReference;
-        var Secret =  process.env.Secretj
-        var TrxDateTime =  new Date().toGMTString();
-        var SecureHash =  generateSecureHash(TrxDateTime,AmountTrxn,MerchantReference,MID,TID,Secret);
+        var AmountTrxn = '<%= AmountTrxn %>';
+        var MID = '<%= MID %>';
+        var TID = '<%= TID %>';
+        var MerchantReference = '<%= MerchantReference %>';
+        var Secret = '<%= Secret %>';
+        var TrxDateTime = new Date().toGMTString();
+        var SecureHash = generateSecureHash(TrxDateTime,AmountTrxn,MerchantReference,MID,TID,Secret);
         console.warn("Please Don't Used Secret on JavaScipt")
         Lightbox.Checkout.configure = {
             MID: MID,
@@ -66,5 +65,3 @@
 </button>
 </body>
 </html>
-
-

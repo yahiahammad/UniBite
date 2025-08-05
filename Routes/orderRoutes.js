@@ -16,7 +16,13 @@ router.get('/orders', requireLogin, (req, res) => {
 });
 
 router.get('/order/confirmation', (req, res) => {
-    res.render('payment/gateway');
+    res.render('payment/gateway', {
+        AmountTrxn: process.env.AmountTrxn,
+        MID: process.env.MID,
+        TID: process.env.TID,
+        MerchantReference: process.env.MerchantReference,
+        Secret: process.env.Secret
+    });
 });
 
 
