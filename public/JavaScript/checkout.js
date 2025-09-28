@@ -1,4 +1,3 @@
-
 function initPaymentMethods() {
     document.querySelectorAll('.payment-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -29,6 +28,11 @@ function getCart() {
 function getVendorName() {
     const cartObj = getCartObj();
     return cartObj.vendorName || '';
+}
+
+function isCardSelected() {
+    const card = document.getElementById('card');
+    return !!(card && card.checked);
 }
 
 
@@ -103,10 +107,32 @@ async function confirmOrder() {
         const data = await response.json();
 
         if (data.success) {
-            
-            localStorage.removeItem('cartObj');
-            
-            window.location.href = `/order/confirmation?id=${data.orderId}`;
+            const useCard = isCardSelected();
+            if (useCard) {
+                // Initiate payment with Paymob
+                const payResp = await fetch('/api/orders/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId: data.orderId })
+                });
+                const payData = await payResp.json();
+
+                if (payData.alreadyPaid && payData.redirect) {
+                    window.location.href = payData.redirect;
+                    return;
+                }
+
+                if (payData.success && payData.paymentUrl) {
+                    // Redirect to Paymob iframe URL
+                    window.location.href = payData.paymentUrl;
+                } else {
+                    alert('Could not initiate payment. Please try cash or try again.');
+                }
+            } else {
+                // Cash on pickup: clear cart and show confirmation
+                localStorage.removeItem('cartObj');
+                window.location.href = `/order/confirmation?id=${data.orderId}`;
+            }
         } else {
             alert('Order failed: ' + (data.message || 'Unknown error'));
         }

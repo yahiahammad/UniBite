@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
@@ -26,7 +25,13 @@ const OrderSchema = new mongoose.Schema({
     enum: ['unpaid', 'paid', 'refunded'],
     default: 'unpaid',
   },
-  notes: String, 
+  // Payment provider metadata
+  paymentProvider: { type: String },
+  providerOrderId: { type: String },
+  paymentKey: { type: String },
+  transactionId: { type: String },
+
+  notes: String,
   reviewed: { type: Boolean, default: false }, 
 });
 
