@@ -11,6 +11,19 @@ router.get('/admin-login', (req, res) => {
 router.post('/api/admin/login', adminController.login);
 
 
+// Admin logout (JSON API)
+router.post('/api/admin/logout', (req, res) => {
+    res.clearCookie('jwt');
+    return res.status(200).json({ message: 'Logged out' });
+});
+
+// Admin logout (redirect)
+router.get('/admin/logout', (req, res) => {
+    res.clearCookie('jwt');
+    return res.redirect('/admin-login');
+});
+
+
 router.use('/api/admin', auth);
 
 
@@ -37,4 +50,4 @@ router.get('/admin/menu', (req, res) => {
     res.render('admin/menu-management');
 });
 
-module.exports = router; 
+module.exports = router;
