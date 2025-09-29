@@ -1,6 +1,7 @@
 const axios = require('axios');
 const crypto = require('crypto');
 const Order = require('../Models/orders');
+const User = require('../Models/User');
 
 const PAYMOB_API_KEY = process.env.PAYMOB_API_KEY;
 const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
@@ -60,10 +61,33 @@ async function createPaymentKey(authToken, orderId, amountCents, billingData) {
 }
 
 function buildBillingDataFromUser(user, fallback = {}) {
-    // Paymob requires many fields; use safe fallbacks where unknown
-    const name = (user?.name || 'Customer').split(' ');
-    const first_name = name[0] || 'Customer';
-    const last_name = name.slice(1).join(' ') || 'User';
+    // Robust name split
+    function splitName(name) {
+        const trimmed = (name || '').trim().replace(/\s+/g, ' ');
+        if (!trimmed) return { first_name: 'Customer', last_name: 'User' };
+        const parts = trimmed.split(' ');
+        if (parts.length === 1) return { first_name: parts[0], last_name: 'User' };
+        return { first_name: parts[0], last_name: parts.slice(1).join(' ') };
+    }
+
+    // Normalize phone into international-like format if possible
+    function normalizePhone(phone, country = (fallback.country || 'EG')) {
+        const raw = (phone || '').toString().trim();
+        if (!raw) return fallback.phone_number || '01000000000';
+        // Keep leading + and digits only
+        let p = raw.replace(/[^+\d]/g, '');
+        if (p.startsWith('+')) return p; // already international
+        // Egypt default: convert leading 0xxxxxxxxxx to +20xxxxxxxxxx
+        if ((country === 'EG' || country === 'egypt') && /^0\d{10}$/.test(p)) {
+            return `+20${p.slice(1)}`;
+        }
+        // If starts with country code without +, add +
+        if (/^20\d{10}$/.test(p)) return `+${p}`;
+        // Fallback to digits as-is
+        return p;
+    }
+
+    const { first_name, last_name } = splitName(user?.name || fallback.name);
 
     return {
         apartment: fallback.apartment || 'NA',
@@ -72,7 +96,7 @@ function buildBillingDataFromUser(user, fallback = {}) {
         first_name,
         street: fallback.street || 'NA',
         building: fallback.building || 'NA',
-        phone_number: user?.phoneNumber || fallback.phone_number || '01000000000',
+        phone_number: normalizePhone(user?.phoneNumber || fallback.phone_number),
         shipping_method: 'NA',
         postal_code: fallback.postal_code || 'NA',
         city: fallback.city || 'Cairo',
@@ -158,7 +182,16 @@ async function createPayment(req, res) {
         }
 
         const amountCents = Math.round(Number(order.totalPrice) * 100);
-        const billingData = buildBillingDataFromUser(req.user, billingDataInput || {});
+
+        // Load full user from DB to ensure accurate name and phone
+        let dbUser = null;
+        const uid = req.user?.id || req.user?._id || order.userId;
+        if (uid) {
+            try { dbUser = await User.findById(uid).select('name email phoneNumber'); } catch (_) {}
+        }
+
+        // Build billing with accurate user data
+        const billingData = buildBillingDataFromUser(dbUser, billingDataInput || {});
         const currency = 'EGP';
 
         // Build absolute callback URLs from request
