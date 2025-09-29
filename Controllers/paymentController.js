@@ -93,8 +93,20 @@ function verifyPaymobHmac(params) {
         'amount_cents', 'created_at', 'currency', 'error_occured', 'has_parent_transaction', 'id', 'integration_id', 'is_3d_secure', 'is_auth', 'is_capture', 'is_refunded', 'is_standalone_payment', 'is_voided', 'order.id', 'owner', 'pending', 'source_data.pan', 'source_data.sub_type', 'source_data.type', 'success'
     ];
 
+    function resolveKey(obj, key) {
+        // Prefer direct key (handles flat dotted keys in callback like 'source_data.pan')
+        if (Object.prototype.hasOwnProperty.call(obj, key)) return obj[key];
+        // Special fallback: use 'order' when 'order.id' is not nested but present flat
+        if (key === 'order.id' && Object.prototype.hasOwnProperty.call(obj, 'order')) return obj['order'];
+        // Nested traversal for webhook structure
+        if (key.includes('.')) {
+            return key.split('.').reduce((acc, k) => (acc && typeof acc === 'object') ? acc[k] : undefined, obj);
+        }
+        return obj[key];
+    }
+
     const data = keysOrder.map(k => {
-        const v = k.includes('.') ? k.split('.').reduce((acc, key) => acc?.[key], base) : base[k];
+        const v = resolveKey(base, k);
         return v === undefined || v === null ? '' : String(v);
     }).join('');
 
