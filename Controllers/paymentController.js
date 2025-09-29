@@ -180,6 +180,10 @@ async function createPayment(req, res) {
         if (order.paymentStatus === 'paid') {
             return res.status(200).json({ success: true, alreadyPaid: true, redirect: `/order/confirmation?id=${order._id}` });
         }
+        // Only credit orders can proceed with online payment
+        if (order.paymentMethod && order.paymentMethod !== 'credit') {
+            return res.status(400).json({ success: false, message: `Online payment is only available for credit card orders (this order is '${order.paymentMethod}').` });
+        }
 
         const amountCents = Math.round(Number(order.totalPrice) * 100);
 

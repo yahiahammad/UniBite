@@ -25,6 +25,11 @@ const OrderSchema = new mongoose.Schema({
     enum: ['unpaid', 'paid', 'refunded'],
     default: 'unpaid',
   },
+  paymentMethod: {
+    type: String,
+    enum: ['cash', 'credit', 'wallet'],
+    default: 'cash'
+  },
   // Payment provider metadata
   paymentProvider: { type: String },
   providerOrderId: { type: String },

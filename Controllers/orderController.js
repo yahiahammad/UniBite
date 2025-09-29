@@ -53,12 +53,18 @@ exports.updateOrderStatus = async (req, res) => {
 
 exports.submitOrder = async (req, res) => {
     try {
-        const { items, notes } = req.body;
+        const { items, notes, paymentMethod } = req.body;
         if (!items || !Array.isArray(items) || items.length === 0) {
             return res.status(400).json({ success: false, message: 'Cart is empty' });
         }
 
-        
+        // Validate payment method
+        const allowed = ['cash', 'credit', 'wallet'];
+        const method = (paymentMethod || 'cash').toLowerCase();
+        if (!allowed.includes(method)) {
+            return res.status(400).json({ success: false, message: 'Invalid payment method' });
+        }
+
         const firstMenuItem = await MenuItem.findById(items[0].id);
         if (!firstMenuItem) {
             return res.status(400).json({ success: false, message: 'Invalid menu item' });
@@ -89,7 +95,8 @@ exports.submitOrder = async (req, res) => {
             totalPrice,
             notes: notes || '',
             status: 'pending',
-            paymentStatus: 'unpaid'
+            paymentStatus: 'unpaid',
+            paymentMethod: method
         });
 
         await order.save();
@@ -108,11 +115,8 @@ exports.submitOrder = async (req, res) => {
         } else {
             console.error('Vendor ID not found on populated order, cannot emit new_order to specific vendor.');
             console.error('Order details:', JSON.stringify(populatedOrder, null, 2));
-            // Fallback or error handling if necessary, though this case should ideally not happen
-            // For now, we prevent a global emit if the vendorId is missing.
         }
 
-        
         res.json({ success: true, orderId: order._id });
     } catch (error) {
         console.error('Error submitting order:', error);
