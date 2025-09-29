@@ -4,7 +4,7 @@
 }
 
 .back-link {
-    margin-bottom: 1.5rem;
+    margin-top: 3rem;
 }
 
 .back-link a {
@@ -132,6 +132,7 @@
 
 
 .store-menu {
+    margin: 2rem;
     margin-bottom: 3rem;
 }
 
