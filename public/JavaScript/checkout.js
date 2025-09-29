@@ -5,14 +5,20 @@ function initPaymentMethods() {
             document.querySelectorAll('.payment-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-            
             this.classList.add('selected');
-            
             this.querySelector('input[type="radio"]').checked = true;
         });
     });
 }
 
+function getSelectedPaymentMethod() {
+    const cash = document.getElementById('cash');
+    const card = document.getElementById('card');
+    const wallet = document.getElementById('wallet');
+    if (card && card.checked) return 'credit';
+    if (wallet && wallet.checked) return 'wallet';
+    return 'cash';
+}
 
 function getCartObj() {
     try {
@@ -31,6 +37,7 @@ function getVendorName() {
 }
 
 function isCardSelected() {
+    // Deprecated in favor of getSelectedPaymentMethod
     const card = document.getElementById('card');
     return !!(card && card.checked);
 }
@@ -88,10 +95,9 @@ async function confirmOrder() {
         }
 
         const cartObj = getCartObj();
-        
         const notes = document.querySelector('.notes-input').value;
+        const paymentMethod = getSelectedPaymentMethod();
 
-        
         const response = await fetch('/api/orders/submit', {
             method: 'POST',
             headers: {
@@ -100,15 +106,15 @@ async function confirmOrder() {
             body: JSON.stringify({
                 items: cart,
                 notes: notes,
-                vendorId: cartObj.vendorId
+                vendorId: cartObj.vendorId,
+                paymentMethod: paymentMethod
             })
         });
 
         const data = await response.json();
 
         if (data.success) {
-            const useCard = isCardSelected();
-            if (useCard) {
+            if (paymentMethod === 'credit') {
                 // Initiate payment with Paymob
                 const payResp = await fetch('/api/orders/create-payment', {
                     method: 'POST',
@@ -129,7 +135,7 @@ async function confirmOrder() {
                     alert('Could not initiate payment. Please try cash or try again.');
                 }
             } else {
-                // Cash on pickup: clear cart and show confirmation
+                // Cash or wallet: clear cart and show confirmation
                 localStorage.removeItem('cartObj');
                 window.location.href = `/order/confirmation?id=${data.orderId}`;
             }
