@@ -27,7 +27,7 @@ const OrderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['cash', 'credit', 'wallet'],
+    enum: ['cash', 'credit'],
     default: 'cash'
   },
   // Payment provider metadata
