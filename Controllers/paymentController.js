@@ -152,12 +152,13 @@ async function paymobCallback(req, res) {
         const params = req.query || {};
         const valid = verifyPaymobHmac(params);
         const success = params.success === 'true' || params.success === true;
-        const paymobOrderId = params['order']?.id || params['order.id'] || params.order_id || params.orderId || '';
+        const paymobOrderId = (params['order'] && typeof params['order'] === 'object' ? params['order'].id : null)
+            || params['order.id'] || params.order || params.order_id || params.orderId || '';
         const providerTxId = params.id;
         const merchantOrderId = params.merchant_order_id || params.merchantOrderId || '';
 
         if (!valid) {
-            return res.status(400).render('error', { message: 'Invalid payment signature' });
+            return res.status(400).render('error', { code: 400, title: 'Payment Error', message: 'Invalid payment signature' });
         }
 
         // Prefer merchant_order_id to map to our local order id
@@ -170,7 +171,7 @@ async function paymobCallback(req, res) {
         }
 
         if (!order) {
-            return res.status(404).render('error', { message: 'Order not found for payment' });
+            return res.status(404).render('error', { code: 404, title: 'Order Not Found', message: 'Order not found for payment' });
         }
 
         if (success) {
@@ -179,11 +180,11 @@ async function paymobCallback(req, res) {
             await order.save();
             return res.redirect(`/order/confirmation?id=${order._id}`);
         } else {
-            return res.status(400).render('error', { message: 'Payment failed' });
+            return res.status(400).render('error', { code: 400, title: 'Payment Failed', message: 'Payment failed' });
         }
     } catch (err) {
         console.error('Callback error:', err);
-        return res.status(500).render('error', { message: 'Payment processing error' });
+        return res.status(500).render('error', { code: 500, title: 'Payment Processing Error', message: 'Payment processing error' });
     }
 }
 
