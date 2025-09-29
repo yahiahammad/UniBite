@@ -152,7 +152,14 @@
 
             
             <section id="orders" class="section">
-                <h2>All Orders</h2>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="mb-0">All Orders</h2>
+                    <div class="input-group" style="max-width: 420px;">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" id="ordersSearchInput" class="form-control" placeholder="Search orders (ID, item, customer, status)" aria-label="Search orders">
+                        <button class="btn btn-outline-secondary" type="button" id="ordersClearSearch">Clear</button>
+                    </div>
+                </div>
                 <div class="orders-grid" id="allOrdersGrid">
                     
                 </div>
@@ -302,110 +309,63 @@
             const recentOrdersGrid = document.getElementById('recentOrdersGrid');
             const allOrdersGrid = document.getElementById('allOrdersGrid');
             const ordersPagination = document.getElementById('ordersPagination');
+            const ordersSearchInput = document.getElementById('ordersSearchInput');
+            const ordersClearSearch = document.getElementById('ordersClearSearch');
             const notificationSound = document.getElementById('notificationSound');
             let isAudioUnlocked = false;
 
-            
+
             function unlockAudio() {
                 if (!isAudioUnlocked) {
                     notificationSound.play().then(() => {
                         notificationSound.pause();
                         notificationSound.currentTime = 0;
                         isAudioUnlocked = true;
-                        console.log("Audio unlocked by user interaction.");
-                        
+
                         document.removeEventListener('click', unlockAudio);
                         document.removeEventListener('keydown', unlockAudio);
-                    }).catch(error => {
-                         console.warn("Could not unlock audio on interaction. Browser may require a more direct click.", error);
-                    });
+                    }).catch(() => {});
                 }
             }
 
-            
             document.addEventListener('click', unlockAudio);
             document.addEventListener('keydown', unlockAudio);
 
-            // Register the vendor with its ID
-            const vendorId = "<%= vendor.id %>"; // Get vendorId from EJS
-            if (vendorId) {
-                socket.emit('register_vendor', vendorId);
-                console.log(`Attempting to register vendor with ID: ${vendorId}`);
-            } else {
-                console.error('Vendor ID not available for socket registration.');
+            const vendorId = "<%= vendor.id %>";
+            function registerVendorRoom() {
+                if (vendorId) socket.emit('register_vendor', vendorId);
             }
+            registerVendorRoom();
+            socket.on('connect', registerVendorRoom);
 
 
-            function refreshPage() {
-                window.location.reload();
-            }
-
-            
-            async function loadOrders(page = 1) {
-                try {
-                    const response = await fetch(`/api/admin/orders?page=${page}&limit=${ITEMS_PER_PAGE}`);
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch orders');
-                    }
-                    const data = await response.json();
-                    
-                    allOrdersGrid.innerHTML = ''; 
-                    
-                    if (data.orders && data.orders.length > 0) {
-                        data.orders.forEach(order => {
-                            
-                            if (order.status !== 'cancelled') {
-                                const orderCard = createOrderCard(order);
-                                allOrdersGrid.appendChild(orderCard);
-                            }
-                        });
-                    } else {
-                        allOrdersGrid.innerHTML = '<p>No orders found.</p>';
-                    }
-                    
-                    
-                    totalPages = data.total ? Math.ceil(data.total / ITEMS_PER_PAGE) : 0;
-                    updatePagination(page);
-
-                } catch (error) {
-                    console.error('Error loading orders:', error);
-                    allOrdersGrid.innerHTML = '<p>Could not load orders.</p>';
-                }
-            }
-
-            
             socket.on('new_order', (order) => {
                 if (isAudioUnlocked) {
-                    notificationSound.play().catch(e => console.error("Error playing sound.", e));
+                    notificationSound.play().catch(() => {});
                 }
-                showToastNotification(order);
-
-                
-                
-                
-                if (document.getElementById('dashboard').classList.contains('active')) {
-                    recentOrdersGrid.prepend(createOrderCard(order));
+                if (window.handleIncomingOrder) {
+                    window.handleIncomingOrder(order);
+                } else {
+                    showToastNotification(order);
                 }
             });
 
             
             socket.on('order_status_updated', (order) => {
-                
-                const orderCards = document.querySelectorAll(`#order-${order._id}`);
-                
+                // Use data attribute selector to match Admin.js cards
+                const orderCards = document.querySelectorAll(`[data-order-id="${order._id}"]`);
                 if (orderCards.length === 0 && order.status !== 'cancelled' && document.getElementById('orders').classList.contains('active')) {
-                    
-                    
-                    loadOrders(currentPage);
+                    if (typeof fetchAndRenderOrders === 'function') {
+                        fetchAndRenderOrders(currentPage);
+                    }
                     return;
                 }
-
                 orderCards.forEach(orderCard => {
                     if (order.status === 'cancelled') {
                         orderCard.style.transition = 'opacity 0.5s';
                         orderCard.style.opacity = '0';
                         setTimeout(() => orderCard.remove(), 500);
-                    } else {
+                    } else if (typeof createOrderCard === 'function') {
                         const updatedCard = createOrderCard(order);
                         orderCard.innerHTML = updatedCard.innerHTML;
                         orderCard.className = updatedCard.className;
@@ -417,38 +377,25 @@
                 const toast = document.createElement('div');
                 toast.className = 'toast-notification';
                 toast.id = `toast-${order._id}`;
-
-                const itemsHtml = order.items.map(item => 
-                    `<li>${item.quantity} x ${item.nameAtOrder || 'N/A'}</li>`
-                ).join('');
-
+                const itemsHtml = order.items.map(item => `<li>${item.quantity} x ${item.nameAtOrder || 'N/A'}</li>`).join('');
                 toast.innerHTML = `
                     <div class="toast-header">
                         <strong>New Order Received!</strong>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                     <div class="toast-body">
-                        <p>Order #${order._id.substring(0, 8)}...</p>
+                        <p>Order #${order._id.toString().slice(-6)}</p>
                         <ul>${itemsHtml}</ul>
                         <button class="btn btn-sm btn-success accept-toast-btn" data-order-id="${order._id}">Accept</button>
                         <button class="btn btn-sm btn-danger cancel-toast-btn" data-order-id="${order._id}">Cancel</button>
                     </div>
                 `;
-
                 notificationContainer.appendChild(toast);
-
-                
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 100); 
-
-                
+                setTimeout(() => toast.classList.add('show'), 100);
                 const hideTimeout = setTimeout(() => {
                     toast.classList.remove('show');
-                    setTimeout(() => toast.remove(), 300); 
+                    setTimeout(() => toast.remove(), 300);
                 }, 10000);
-
-                
                 toast.querySelector('.btn-close').addEventListener('click', () => {
                     clearTimeout(hideTimeout);
                     toast.classList.remove('show');
@@ -456,94 +403,41 @@
                 });
             }
 
-            
-            function createOrderCard(order) {
-                const card = document.createElement('div');
-                card.className = 'order-card';
-                card.id = `order-${order._id}`;
-                card.dataset.orderId = order._id;
-
-                const itemsHtml = order.items.map(item => 
-                    `<li>${item.quantity} x ${item.nameAtOrder || 'N/A'}</li>`
-                ).join('');
-
-                card.innerHTML = `
-                    <div class="order-header">
-                        <h5>Order #${order._id.substring(0, 8)}...</h5>
-                        <span class="order-status status-${order.status}">${order.status}</span>
-                    </div>
-                    <div class="order-body">
-                        <ul>${itemsHtml}</ul>
-                        <p><strong>Total:</strong> ${order.totalPrice.toFixed(2)} EGP</p>
-                    </div>
-                    <div class="order-footer">
-                        ${order.status === 'pending' ? 
-                            `<button class="btn btn-sm btn-success accept-order-btn" data-order-id="${order._id}">Accept</button>` : 
-                            ''}
-                        ${(order.status === 'pending' || order.status === 'preparing') ?
-                            `<button class="btn btn-sm btn-danger cancel-order-btn" data-order-id="${order._id}">Cancel</button>` :
-                            ''}
-                    </div>
-                `;
-                return card;
-            }
-
             function handleAccept(orderId) {
-                 
-                const hiddenOrderId = orderId; 
-                console.log(`Accepting order with hidden ID: ${hiddenOrderId}`);
-                socket.emit('accept_order', { orderId: hiddenOrderId });
+                socket.emit('accept_order', { orderId });
             }
-
             function handleCancel(orderId) {
-                console.log(`Cancelling order with ID: ${orderId}`);
-                socket.emit('cancel_order', { orderId: orderId });
+                socket.emit('cancel_order', { orderId });
             }
 
-            
             document.querySelector('.main-content').addEventListener('click', (e) => {
                 const target = e.target;
                 const orderId = target.dataset.orderId;
-
                 if (!orderId) return;
-
-                if (target.classList.contains('accept-order-btn')) {
-                    handleAccept(orderId);
-                } else if (target.classList.contains('cancel-order-btn')) {
-                    handleCancel(orderId);
-                }
+                if (target.classList.contains('accept-order-btn')) handleAccept(orderId);
+                else if (target.classList.contains('cancel-order-btn')) handleCancel(orderId);
             });
 
-            
             notificationContainer.addEventListener('click', (e) => {
                 const target = e.target;
                 const orderId = target.dataset.orderId;
                 const toast = document.getElementById(`toast-${orderId}`);
-
                 if (!orderId) return;
-
-                if (target.classList.contains('accept-toast-btn')) {
-                    handleAccept(orderId);
-                } else if (target.classList.contains('cancel-toast-btn')) {
-                    handleCancel(orderId);
-                }
-                
+                if (target.classList.contains('accept-toast-btn')) handleAccept(orderId);
+                else if (target.classList.contains('cancel-toast-btn')) handleCancel(orderId);
                 if (toast) {
                     toast.classList.remove('show');
                     setTimeout(() => toast.remove(), 300);
                 }
             });
 
-            
             (async () => {
-                
                 try {
                     const response = await fetch('/api/admin/recent-orders?limit=15');
                     if (!response.ok) throw new Error('Failed to fetch recent orders');
-                    
                     const orders = await response.json();
                     recentOrdersGrid.innerHTML = '';
-                    if (orders && orders.length > 0) {
+                    if (orders && orders.length > 0 && typeof createOrderCard === 'function') {
                         orders.forEach(order => {
                             if (order.status !== 'cancelled') {
                                 recentOrdersGrid.appendChild(createOrderCard(order));
@@ -553,19 +447,20 @@
                         recentOrdersGrid.innerHTML = '<p>No recent orders found.</p>';
                     }
                 } catch (error) {
-                    console.error('Error loading initial orders:', error);
                     recentOrdersGrid.innerHTML = '<p>Could not load recent orders.</p>';
                 }
 
-                
-                document.querySelector('[data-section="orders"]').addEventListener('click', () => {
-                    
-                    if (!document.getElementById('orders').classList.contains('active')) {
-                        loadOrders(currentPage);
-                    }
-                });
+                const ordersTab = document.querySelector('[data-section="orders"]');
+                if (ordersTab) {
+                    ordersTab.addEventListener('click', () => {
+                        if (!document.getElementById('orders').classList.contains('active')) {
+                            if (typeof fetchAndRenderOrders === 'function') fetchAndRenderOrders(currentPage);
+                        }
+                    });
+                }
             })();
         });
     </script>
 </body>
 </html>
+

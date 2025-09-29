@@ -1,7 +1,6 @@
 const { Server } = require('socket.io');
 const Order = require('./Models/orders'); 
 const { sendOrderStatusEmail } = require('./utils/emailService');
-const User = require('./Models/User');
 
 let io;
 
@@ -16,90 +15,93 @@ function init(httpServer) {
     io.on('connection', (socket) => {
         console.log('✅ A user connected with socket ID:', socket.id);
 
-        socket.on('register_vendor', (vendorId) => {
+        socket.on('register_vendor', async (vendorId) => {
             if (vendorId) {
-                socket.join(`vendor_${vendorId}`);
-                console.log(`Socket ${socket.id} joined room for vendor ${vendorId}`);
+                const room = `vendor_${vendorId}`;
+                socket.data.vendorId = String(vendorId);
+                socket.join(room);
+                console.log(`Socket ${socket.id} joined room ${room}`);
+                socket.emit('vendor_registered', { room });
+
+                // Best-effort: send any recent pending orders (last 3 minutes) to ensure popup visibility after reconnects
+                try {
+                    const since = new Date(Date.now() - 3 * 60 * 1000);
+                    const missed = await Order.find({
+                        vendorId: vendorId,
+                        status: 'pending',
+                        orderTime: { $gte: since }
+                    })
+                    .sort({ orderTime: 1 })
+                    .populate('items.menuItemId', 'name price')
+                    .populate('userId', 'name email');
+
+                    if (Array.isArray(missed) && missed.length) {
+                        missed.forEach(order => socket.emit('new_order', order));
+                        console.log(`Resent ${missed.length} recent pending orders to socket ${socket.id}`);
+                    }
+                } catch (err) {
+                    console.warn('Failed to send recent pending orders to vendor', vendorId, err.message);
+                }
             } else {
                 console.log(`Attempt to join vendor room with invalid vendorId by socket ${socket.id}`);
+                socket.emit('vendor_register_error', { message: 'Invalid vendorId' });
             }
         });
         
-        socket.on('accept_order', async (data) => {
+        async function updateOrderStatusSafely(socket, orderId, newStatus) {
             try {
-                const { orderId } = data;
-                const updatedOrder = await Order.findByIdAndUpdate(
-                    orderId,
-                    { status: 'preparing' },
+                const vendorId = socket.data.vendorId;
+                if (!vendorId) {
+                    socket.emit('order_error', { orderId, message: 'Unauthorized: vendor not registered' });
+                    return;
+                }
+
+                // Verify the order belongs to this vendor
+                const filter = { _id: orderId, vendorId };
+                const updatedOrder = await Order.findOneAndUpdate(
+                    filter,
+                    { status: newStatus },
                     { new: true }
                 ).populate('userId', 'email').populate('vendorId', 'name');
 
-                if (updatedOrder) {
-                    if (updatedOrder.userId && updatedOrder.userId.email) {
-                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
-                        const items = updatedOrder.items;
-                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'preparing', restaurantName, items);
-                    }
-                    io.emit('order_status_updated', updatedOrder);
-                    console.log(`Order ${orderId} status updated to preparing.`);
-                } else {
-                    console.log(`Order ${orderId} not found.`);
+                if (!updatedOrder) {
+                    socket.emit('order_error', { orderId, message: 'Order not found or not owned by this vendor' });
+                    return;
                 }
+
+                if (updatedOrder.userId && updatedOrder.userId.email) {
+                    const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
+                    const items = updatedOrder.items;
+                    try {
+                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, newStatus, restaurantName, items);
+                    } catch (e) {
+                        console.warn('Email send failed for order', updatedOrder._id.toString(), e.message);
+                    }
+                }
+
+                const room = `vendor_${updatedOrder.vendorId._id ? updatedOrder.vendorId._id.toString() : updatedOrder.vendorId.toString()}`;
+                io.to(room).emit('order_status_updated', updatedOrder);
+                socket.emit('order_updated', { orderId, status: newStatus });
+                console.log(`Order ${orderId} status updated to ${newStatus} and emitted to room ${room}.`);
             } catch (error) {
                 console.error('Error updating order status:', error);
+                socket.emit('order_error', { orderId, message: 'Internal server error' });
             }
+        }
+
+        socket.on('accept_order', async (data) => {
+            const { orderId } = data || {};
+            await updateOrderStatusSafely(socket, orderId, 'preparing');
         });
 
-        
         socket.on('cancel_order', async (data) => {
-            try {
-                const { orderId } = data;
-                const updatedOrder = await Order.findByIdAndUpdate(
-                    orderId,
-                    { status: 'cancelled' },
-                    { new: true }
-                ).populate('userId', 'email').populate('vendorId', 'name');
-
-                if (updatedOrder) {
-                    if (updatedOrder.userId && updatedOrder.userId.email) {
-                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
-                        const items = updatedOrder.items;
-                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'cancelled', restaurantName, items);
-                    }
-                    io.emit('order_status_updated', updatedOrder);
-                    console.log(`Order ${orderId} status updated to cancelled.`);
-                } else {
-                    console.log(`Order ${orderId} not found.`);
-                }
-            } catch (error) {
-                console.error('Error updating order status to cancelled:', error);
-            }
+            const { orderId } = data || {};
+            await updateOrderStatusSafely(socket, orderId, 'cancelled');
         });
 
-        
         socket.on('ready_for_pickup', async (data) => {
-            try {
-                const { orderId } = data;
-                const updatedOrder = await Order.findByIdAndUpdate(
-                    orderId,
-                    { status: 'ready for pickup' },
-                    { new: true }
-                ).populate('userId', 'email').populate('vendorId', 'name');
-
-                if (updatedOrder) {
-                    if (updatedOrder.userId && updatedOrder.userId.email) {
-                        const restaurantName = updatedOrder.vendorId && updatedOrder.vendorId.name ? updatedOrder.vendorId.name : '';
-                        const items = updatedOrder.items;
-                        await sendOrderStatusEmail(updatedOrder.userId.email, updatedOrder._id, 'ready for pickup', restaurantName, items);
-                    }
-                    io.emit('order_status_updated', updatedOrder);
-                    console.log(`Order ${orderId} status updated to ready for pickup.`);
-                } else {
-                    console.log(`Order ${orderId} not found.`);
-                }
-            } catch (error) {
-                console.error('Error updating order status to ready for pickup:', error);
-            }
+            const { orderId } = data || {};
+            await updateOrderStatusSafely(socket, orderId, 'ready for pickup');
         });
 
         socket.on('disconnect', () => {

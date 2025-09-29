@@ -1,4 +1,3 @@
-
 let restaurantStatus = 'closed';
 let orders = [];
 let menuItems = [];
@@ -283,7 +282,9 @@ async function fetchAndRenderRecentOrders() {
 async function fetchAndRenderOrders(page = 1) {
     try {
         const headers = getAuthHeaders();
-        const response = await fetch(`/api/admin/orders?page=${page}&limit=15`, {
+        const input = document.getElementById('ordersSearchInput');
+        const q = input && input.value.trim() ? `&q=${encodeURIComponent(input.value.trim())}` : '';
+        const response = await fetch(`/api/admin/orders?page=${page}&limit=15${q}`, {
             headers: headers
         });
 
@@ -305,7 +306,7 @@ async function fetchAndRenderOrders(page = 1) {
         }
 
         if (data.orders.length === 0) {
-            ordersGrid.innerHTML = '<p class="no-orders">No orders found</p>';
+            ordersGrid.innerHTML = q ? '<p class="no-orders">No matching orders found</p>' : '<p class="no-orders">No orders found</p>';
             paginationContainer.innerHTML = '';
             return;
         }
@@ -313,6 +314,7 @@ async function fetchAndRenderOrders(page = 1) {
         
         ordersGrid.innerHTML = '';
         data.orders.forEach(order => {
+            if (order.status === 'cancelled') return; // skip cancelled
             const orderCard = createOrderCard(order);
             ordersGrid.appendChild(orderCard);
         });
@@ -379,26 +381,43 @@ function updatePagination(currentPage, totalPages) {
 }
 
 
+function statusToClass(status) {
+    switch ((status || '').toLowerCase()) {
+        case 'pending': return 'status-pending';
+        case 'preparing': return 'status-preparing';
+        case 'ready for pickup': return 'status-ready';
+        case 'picked up': return 'status-completed';
+        case 'cancelled': return 'status-cancelled';
+        default: return '';
+    }
+}
+
+
 function createOrderCard(order) {
     const card = document.createElement('div');
     card.className = 'order-card';
     card.dataset.orderId = order._id;
+    const statusClass = statusToClass(order.status);
     card.innerHTML = `
         <div class="order-header">
             <h3>Order #${order._id.toString().slice(-6)}</h3>
             <span class="order-time">${new Date(order.orderTime).toLocaleString()}</span>
         </div>
-        <div class="order-status status-${order.status}">
+        <div class="order-status ${statusClass}">
             ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
         </div>
         <div class="order-items">
-            ${order.items.map(item => `
+            ${order.items.map(item => {
+                const name = item.nameAtOrder || (item.menuItemId && item.menuItemId.name) || 'Item';
+                const unitPrice = (typeof item.priceAtOrder === 'number') ? item.priceAtOrder : ((item.menuItemId && item.menuItemId.price) || 0);
+                return `
                 <div class="order-item">
                     <span class="order-item-quantity">${item.quantity}x</span>
-                    <span class="order-item-name">${item.nameAtOrder}</span>
-                    <span class="order-item-price">${(item.priceAtOrder * item.quantity).toFixed(2)} EGP</span>
+                    <span class="order-item-name">${name}</span>
+                    <span class="order-item-price">${(unitPrice * item.quantity).toFixed(2)} EGP</span>
                 </div>
-            `).join('')}
+                `;
+            }).join('')}
         </div>
         <div class="order-footer">
             <div class="customer-info">
@@ -452,7 +471,7 @@ function showOrderModal(order) {
                     </div>
                     <div class="order-detail-item">
                         <span class="order-detail-label">Status</span>
-                        <span class="order-detail-value status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                        <span class="order-detail-value ${statusToClass(order.status)}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
                     </div>
                     <div class="order-detail-item">
                         <span class="order-detail-label">Payment Status</span>
@@ -834,6 +853,197 @@ async function confirmDelete() {
 }
 
 
+let incomingQueue = [];
+let showingIncoming = false;
+const POPUP_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
+
+function ensureHighlightStyle() {
+    if (document.getElementById('order-highlight-style')) return;
+    const style = document.createElement('style');
+    style.id = 'order-highlight-style';
+    style.textContent = `
+        .order-card.order-highlight { 
+            animation: orderFlash 1600ms ease-out 1; 
+        }
+        @keyframes orderFlash {
+            0% { box-shadow: 0 0 0 rgba(49,208,151,0); background: #eafff5; }
+            30% { box-shadow: 0 0 0 rgba(49,208,151,0.35); background: #d9ffef; }
+            60% { box-shadow: 0 0 0 rgba(49,208,151,0.2); background: #eafff5; }
+            100% { box-shadow: none; background: transparent; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function addOrderCardToGrid(order, gridId) {
+    ensureHighlightStyle();
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    const card = createOrderCard(order);
+    grid.prepend(card);
+    // transient highlight
+    requestAnimationFrame(() => {
+        card.classList.add('order-highlight');
+        setTimeout(() => card.classList.remove('order-highlight'), 1700);
+    });
+}
+
+function addOrderToLists(order) {
+    addOrderCardToGrid(order, 'recentOrdersGrid');
+    addOrderCardToGrid(order, 'allOrdersGrid');
+}
+
+function persistQueue() {
+    try {
+        const data = incomingQueue.map(o => ({ _id: o._id, ts: o.__arrivalTs || Date.now(), order: o }));
+        sessionStorage.setItem('vendor_incoming_queue', JSON.stringify(data));
+    } catch (_) {}
+}
+
+function loadQueueFromStorage() {
+    try {
+        const raw = sessionStorage.getItem('vendor_incoming_queue');
+        if (!raw) return;
+        const arr = JSON.parse(raw);
+        const now = Date.now();
+        const pending = arr.filter(x => now - x.ts < POPUP_TIMEOUT_MS).map(x => ({ ...x.order, __arrivalTs: x.ts }));
+        incomingQueue.push(...pending);
+        sessionStorage.removeItem('vendor_incoming_queue');
+    } catch (_) {}
+}
+
+async function showIncomingOrderModal(order) {
+    showingIncoming = true;
+    const existing = document.querySelector('.incoming-order-modal');
+    if (existing) existing.remove();
+
+    // Play notification sound if possible
+    try {
+        const notificationSound = document.getElementById('notificationSound');
+        if (notificationSound) await notificationSound.play().catch(() => {});
+    } catch (_) {}
+
+    const modal = document.createElement('div');
+    modal.className = 'incoming-order-modal';
+    modal.innerHTML = `
+        <div class="incoming-modal-backdrop"></div>
+        <div class="incoming-modal">
+            <div class="incoming-header">
+                <h3>New Order #${order._id.toString().slice(-6)}</h3>
+            </div>
+            <div class="incoming-body">
+                <div class="incoming-items">
+                    ${order.items.map(item => `
+                        <div class="incoming-item">
+                            <span class="q">${item.quantity}x</span>
+                            <span class="n">${item.nameAtOrder || (item.menuItemId && item.menuItemId.name) || 'Item'}</span>
+                            <span class="p">${(item.priceAtOrder * item.quantity).toFixed(2)} EGP</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="incoming-total">Total: <strong>${order.totalPrice.toFixed(2)} EGP</strong></div>
+                <div class="incoming-timer">Auto-adding to list in <span id="incoming-countdown">180</span>s</div>
+            </div>
+            <div class="incoming-actions">
+                <button class="btn btn-success" id="incoming-accept"><i class="fas fa-check"></i> Accept</button>
+                <button class="btn btn-danger" id="incoming-cancel"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    `;
+
+    // Minimal styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .incoming-order-modal{position:fixed;inset:0;z-index:1050;display:flex;align-items:center;justify-content:center}
+        .incoming-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45)}
+        .incoming-modal{position:relative;background:#fff;border-radius:10px;max-width:560px;width:92%;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .15s ease-out;padding:16px}
+        .incoming-header{margin-bottom:8px}
+        .incoming-items{max-height:240px;overflow:auto;margin-bottom:8px}
+        .incoming-item{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid #eee}
+        .incoming-total{margin:8px 0}
+        .incoming-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+        .incoming-timer{font-size:12px;color:#666}
+        @keyframes pop{from{transform:scale(.97);opacity:.8}to{transform:scale(1);opacity:1}}
+    `;
+document.body.appendChild(style);
+
+    document.body.appendChild(modal);
+
+    // Countdown
+    let secs = 180;
+    const countdownEl = modal.querySelector('#incoming-countdown');
+    const interval = setInterval(() => {
+        secs -= 1;
+        if (countdownEl) countdownEl.textContent = String(secs);
+        if (secs <= 0) {
+            clearInterval(interval);
+        }
+    }, 1000);
+
+    let timeoutId = setTimeout(() => {
+        // Add to lists as pending
+        addOrderToLists(order);
+        close();
+    }, POPUP_TIMEOUT_MS);
+
+    function close() {
+        clearTimeout(timeoutId);
+        clearInterval(interval);
+        modal.remove();
+        showingIncoming = false;
+        // Process next in queue
+        if (incomingQueue.length) {
+            const next = incomingQueue.shift();
+            persistQueue();
+            showIncomingOrderModal(next);
+        }
+    }
+
+    modal.querySelector('#incoming-accept').addEventListener('click', async () => {
+        try {
+            await updateOrderStatus(order._id, 'preparing');
+            addOrderToLists(order);
+            close();
+        } catch (e) {
+            showNotification(e.message || 'Failed to accept order', 'error');
+        }
+    });
+    modal.querySelector('#incoming-cancel').addEventListener('click', async () => {
+        try {
+            await updateOrderStatus(order._id, 'cancelled');
+            addOrderToLists(order);
+            close();
+        } catch (e) {
+            showNotification(e.message || 'Failed to cancel order', 'error');
+        }
+    });
+}
+
+function handleIncomingOrder(order) {
+    order.__arrivalTs = Date.now();
+    if (showingIncoming) {
+        incomingQueue.push(order);
+        persistQueue();
+        return;
+    }
+    showIncomingOrderModal(order);
+}
+
+// Expose to global for inline script to call
+window.handleIncomingOrder = handleIncomingOrder;
+
+// Rebuild any pending popups after reload
+document.addEventListener('DOMContentLoaded', () => {
+    ensureHighlightStyle();
+    loadQueueFromStorage();
+    if (incomingQueue.length && !showingIncoming) {
+        const next = incomingQueue.shift();
+        persistQueue();
+        showIncomingOrderModal(next);
+    }
+});
+
+
 document.addEventListener('DOMContentLoaded', () => {
     
     menuItemModal = new bootstrap.Modal(document.getElementById('menuItemModal'));
@@ -864,4 +1074,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }, 30000); 
+
+
+    // Attach Orders search listeners (debounced)
+    const input = document.getElementById('ordersSearchInput');
+    const clearBtn = document.getElementById('ordersClearSearch');
+    if (input) {
+        const onSearch = debounce(() => fetchAndRenderOrders(1), 300);
+        input.addEventListener('input', onSearch);
+    }
+    if (clearBtn && input) {
+        clearBtn.addEventListener('click', () => {
+            if (input.value) {
+                input.value = '';
+                fetchAndRenderOrders(1);
+            }
+            input.focus();
+        });
+    }
 });
+
+function debounce(fn, wait = 300) {
+    let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+}

@@ -127,6 +127,10 @@ const sendResetPasswordEmail = async (email, token) => {
 
 
 const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '', items = []) => {
+  // Normalize orderId and create a vendor-style short ID (last 6 chars)
+  const orderIdStr = (orderId && typeof orderId.toString === 'function') ? orderId.toString() : String(orderId || '');
+  const shortId = orderIdStr ? orderIdStr.slice(-6) : '';
+
   let subject, html;
   let orderDetailsHtml = '';
   if (items && items.length > 0) {
@@ -156,21 +160,24 @@ const sendOrderStatusEmail = async (email, orderId, status, restaurantName = '',
   if (status === 'preparing') {
     subject = 'Your Order Has Been Accepted!';
     html = `<h1>Order Accepted</h1>
-      <p>Your order from <b>${restaurantName} #${orderId}</b> has been <b>accepted</b> and is being prepared.</p>
+      <p>Your order from <b>${restaurantName} #${shortId}</b> has been <b>accepted</b> and is being prepared.</p>
       ${orderDetailsHtml}
-      <p>Thank you for ordering with UniBite!</p>`;
+      <p>Thank you for ordering with UniBite!</p>
+      <p style="color:#888;font-size:12px;margin-top:16px;">Order ID: ${orderIdStr}</p>`;
   } else if (status === 'cancelled') {
     subject = 'Your Order Has Been Declined';
     html = `<h1>Order Declined</h1>
-      <p>We're sorry, but your order from <b>${restaurantName} #${orderId}</b> has been <b>declined</b>.</p>
+      <p>We're sorry, but your order from <b>${restaurantName} #${shortId}</b> has been <b>declined</b>.</p>
       ${orderDetailsHtml}
-      <p>If you have questions, please contact support.</p>`;
+      <p>If you have questions, please contact support.</p>
+      <p style="color:#888;font-size:12px;margin-top:16px;">Order ID: ${orderIdStr}</p>`;
   } else if (status === 'ready for pickup') {
     subject = 'Your Order is Ready for Pickup!';
     html = `<h1>Order Ready for Pickup</h1>
-      <p>Your order from <b>${restaurantName} #${orderId}</b> is now <b>ready for pickup</b>.</p>
+      <p>Your order from <b>${restaurantName} #${shortId}</b> is now <b>ready for pickup</b>.</p>
       ${orderDetailsHtml}
-      <p>Please proceed to the restaurant to collect your order and pay. Enjoy your meal!</p>`;
+      <p>Please proceed to the restaurant to collect your order and pay. Enjoy your meal!</p>
+      <p style="color:#888;font-size:12px;margin-top:16px;">Order ID: ${orderIdStr}</p>`;
   } else {
     return false;
   }

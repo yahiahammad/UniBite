@@ -3,6 +3,8 @@ const MenuItem = require('../Models/MenuItems');
 const Vendor = require('../Models/Vendor');
 const jwt = require('jsonwebtoken');
 const { sendOrderStatusEmail } = require('../utils/emailService');
+const { getIO } = require('../socket');
+const User = require('../Models/User');
 
 
 exports.renderDashboard = async (req, res) => {
@@ -205,17 +207,45 @@ exports.getAllOrders = async (req, res) => {
     try {
         const vendorId = req.user.id;
         const page = parseInt(req.query.page) || 1;
-        const limit = 15;
+        const limit = parseInt(req.query.limit) || 15;
         const skip = (page - 1) * limit;
+        const q = (req.query.q || '').trim();
 
-        const orders = await Order.find({ vendorId })
+        // Base filter
+        const filter = { vendorId };
+
+        // If search query provided, build $or conditions
+        if (q) {
+            const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); // escape regex special chars
+            const orConditions = [
+                { status: { $regex: regex } },
+                { notes: { $regex: regex } },
+                { 'items.nameAtOrder': { $regex: regex } },
+                // Match partial ObjectId string (e.g., last 6 shown to vendor)
+                { $expr: { $regexMatch: { input: { $toString: '$_id' }, regex: q, options: 'i' } } }
+            ];
+
+            // Attempt to match users by name/email and include their IDs in OR
+            try {
+                const matchingUsers = await User.find({ $or: [{ name: regex }, { email: regex }] }).select('_id').lean();
+                if (matchingUsers && matchingUsers.length) {
+                    orConditions.push({ userId: { $in: matchingUsers.map(u => u._id) } });
+                }
+            } catch (_) {
+                // best-effort; ignore user lookup errors
+            }
+
+            filter.$or = orConditions;
+        }
+
+        const orders = await Order.find(filter)
             .sort({ orderTime: -1 })
             .skip(skip)
             .limit(limit)
             .populate('items.menuItemId')
             .populate('userId', 'name email');
 
-        const total = await Order.countDocuments({ vendorId });
+        const total = await Order.countDocuments(filter);
 
         res.json({
             orders,
@@ -275,19 +305,16 @@ exports.updateOrderStatus = async (req, res) => {
         const { status } = req.body;
         const vendorId = req.user.id;
         
-        
         const validStatuses = ['pending', 'preparing', 'ready for pickup', 'picked up', 'cancelled'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: 'Invalid status' });
         }
 
-        
         const order = await Order.findOne({ _id: orderId, vendorId });
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
 
-        
         order.status = status;
         if (status === 'picked up') {
             order.pickupTime = new Date();
@@ -296,16 +323,22 @@ exports.updateOrderStatus = async (req, res) => {
         }
         await order.save();
 
-        
+        // Email user for key status changes
         if (status === 'preparing' || status === 'cancelled' || status === 'ready for pickup') {
             await order.populate('userId', 'email');
             await order.populate('vendorId', 'name');
-            const userEmail = order.userId.email;
-            const restaurantName = order.vendorId && order.vendorId.name ? order.vendorId.name : '';
+            const userEmail = order.userId?.email;
+            const restaurantName = order.vendorId?.name || '';
             const items = order.items;
-            console.log('Sending order status email to:', userEmail, 'for order:', order._id, 'status:', status);
-            await sendOrderStatusEmail(userEmail, order._id, status, restaurantName, items);
+            if (userEmail) {
+                try { await sendOrderStatusEmail(userEmail, order._id, status, restaurantName, items); } catch (e) { console.warn('Email send failed:', e.message); }
+            }
         }
+
+        // Emit to vendor room for live updates
+        const io = getIO();
+        const roomName = `vendor_${vendorId}`;
+        io.to(roomName).emit('order_status_updated', order);
 
         res.json({ message: 'Order status updated successfully' });
     } catch (error) {
