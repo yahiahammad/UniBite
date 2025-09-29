@@ -7,6 +7,10 @@ const PAYMOB_INTEGRATION_ID = process.env.PAYMOB_INTEGRATION_ID;
 const PAYMOB_API_URL = process.env.PAYMOB_API_URL;
 const PAYMOB_IFRAME_ID = process.env.PAYMOB_IFRAME_ID;
 const PAYMOB_HMAC_SECRET = process.env.PAYMOB_HMAC_SECRET;
+// Unified Checkout (Intention API) config
+const PAYMOB_PUBLIC_KEY = process.env.PAYMOB_PUBLIC_KEY;
+const PAYMOB_SECRET_KEY = process.env.PAYMOB_SECRET_KEY; // sk_test... token for Authorization header
+const PAYMOB_USE_UNIFIED = String(process.env.PAYMOB_USE_UNIFIED || 'true').toLowerCase() === 'true';
 
 async function getAuthToken() {
     try {
@@ -114,12 +118,32 @@ function verifyPaymobHmac(params) {
     return calculated === hmac;
 }
 
+// Helper: create intention for Unified Checkout
+async function createUnifiedIntention(amountCents, currency, billingData, paymentMethods, redirectionUrl, notificationUrl, extras = {}, customer = {}) {
+    const url = 'https://accept.paymob.com/v1/intention/';
+    const headers = {
+        Authorization: `Token ${PAYMOB_SECRET_KEY}`,
+        'Content-Type': 'application/json'
+    };
+    const payload = {
+        amount: amountCents,
+        currency,
+        payment_methods: paymentMethods,
+        items: [],
+        billing_data: billingData,
+        customer,
+        extras,
+        redirection_url: redirectionUrl,
+        notification_url: notificationUrl,
+        expiration: 3600
+    };
+    const response = await axios.post(url, payload, { headers });
+    return response.data; // includes client_secret, payment_keys[], intention_order_id, id
+}
+
 // Create payment starting from a local order ID
 async function createPayment(req, res) {
     try {
-        if (!PAYMOB_API_KEY || !PAYMOB_INTEGRATION_ID || !PAYMOB_API_URL || !PAYMOB_IFRAME_ID) {
-            return res.status(500).json({ success: false, message: 'Payment gateway not configured' });
-        }
         const { orderId, billingData: billingDataInput } = req.body;
         if (!orderId) return res.status(400).json({ success: false, message: 'orderId is required' });
 
@@ -134,14 +158,57 @@ async function createPayment(req, res) {
         }
 
         const amountCents = Math.round(Number(order.totalPrice) * 100);
-        const authToken = await getAuthToken();
-
-        // Create Paymob order with local order id as merchant_order_id
-        const paymobOrder = await createOrder(authToken, amountCents, String(order._id));
         const billingData = buildBillingDataFromUser(req.user, billingDataInput || {});
+        const currency = 'EGP';
+
+        // Build absolute callback URLs from request
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const redirectionUrl = `${baseUrl}/payments/callback`;
+        const notificationUrl = `${baseUrl}/payments/webhook`;
+
+        // Prefer Unified Checkout when configured
+        if (PAYMOB_USE_UNIFIED && PAYMOB_PUBLIC_KEY && PAYMOB_SECRET_KEY && PAYMOB_INTEGRATION_ID) {
+            try {
+                const methods = [Number(PAYMOB_INTEGRATION_ID)];
+                const intention = await createUnifiedIntention(
+                    amountCents,
+                    currency,
+                    billingData,
+                    methods,
+                    redirectionUrl,
+                    notificationUrl,
+                    { merchant_order_id: String(order._id) },
+                    { first_name: billingData.first_name, last_name: billingData.last_name, email: billingData.email }
+                );
+
+                order.paymentProvider = 'paymob_unified';
+                order.providerOrderId = String(intention.intention_order_id || intention.order_id || '');
+                await order.save();
+
+                const clientSecret = intention.client_secret;
+                if (!clientSecret) throw new Error('Missing client_secret from intention');
+
+                return res.status(200).json({
+                    success: true,
+                    paymentUrl: `https://accept.paymob.com/unifiedcheckout/?publicKey=${encodeURIComponent(PAYMOB_PUBLIC_KEY)}&clientSecret=${encodeURIComponent(clientSecret)}`,
+                    providerOrderId: order.providerOrderId,
+                    mode: 'unified'
+                });
+            } catch (unifiedErr) {
+                console.error('Unified checkout initiation failed, falling back to legacy:', unifiedErr.response?.data || unifiedErr.message);
+                // fallthrough to legacy
+            }
+        }
+
+        // Legacy Accept Iframe flow
+        if (!PAYMOB_API_KEY || !PAYMOB_INTEGRATION_ID || !PAYMOB_API_URL || !PAYMOB_IFRAME_ID) {
+            return res.status(500).json({ success: false, message: 'Payment gateway not configured' });
+        }
+
+        const authToken = await getAuthToken();
+        const paymobOrder = await createOrder(authToken, amountCents, String(order._id));
         const paymentKey = await createPaymentKey(authToken, paymobOrder.id, amountCents, billingData);
 
-        // Persist provider metadata on order
         order.paymentProvider = 'paymob';
         order.providerOrderId = String(paymobOrder.id);
         order.paymentKey = paymentKey;
@@ -150,7 +217,8 @@ async function createPayment(req, res) {
         return res.status(200).json({
             success: true,
             paymentUrl: `https://accept.paymob.com/api/acceptance/iframes/${PAYMOB_IFRAME_ID}?payment_token=${paymentKey}`,
-            providerOrderId: paymobOrder.id
+            providerOrderId: paymobOrder.id,
+            mode: 'iframe'
         });
     } catch (error) {
         console.error('Payment initiation failed:', error.response?.data || error.message);
