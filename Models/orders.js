@@ -11,7 +11,9 @@ const OrderSchema = new mongoose.Schema({
       priceAtOrder: Number,
     }
   ],
-  totalPrice: { type: Number, required: true },
+  totalPrice: { type: Number, required: true }, // subtotal (items only)
+  serviceFee: { type: Number, default: 0 }, // 10 EGP + 5% of subtotal
+  totalDue: { type: Number, default: 0 }, // subtotal + serviceFee, used for payment
   status: {
     type: String,
     enum: ['pending', 'preparing', 'ready for pickup', 'picked up', 'cancelled'],

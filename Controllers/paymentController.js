@@ -180,8 +180,20 @@ async function createPayment(req, res) {
         if (order.paymentStatus === 'paid') {
             return res.status(200).json({ success: true, alreadyPaid: true, redirect: `/order/confirmation?id=${order._id}` });
         }
+        // Only credit orders can proceed with online payment
+        if (order.paymentMethod && order.paymentMethod !== 'credit') {
+            return res.status(400).json({ success: false, message: `Online payment is only available for credit card orders (this order is '${order.paymentMethod}').` });
+        }
 
-        const amountCents = Math.round(Number(order.totalPrice) * 100);
+        // Amount to charge = subtotal + fee
+        let subtotal = Number(order.totalPrice) || 0;
+        let serviceFee = Number(order.serviceFee) || 0;
+        let totalDue = Number(order.totalDue) || 0;
+        if (!totalDue || totalDue <= 0) {
+            serviceFee = Math.round((10 + 0.05 * subtotal) * 100) / 100;
+            totalDue = Math.round((subtotal + serviceFee) * 100) / 100;
+        }
+        const amountCents = Math.round(totalDue * 100);
 
         // Load full user from DB to ensure accurate name and phone
         let dbUser = null;
@@ -289,6 +301,7 @@ async function paymobCallback(req, res) {
 
         if (success) {
             order.paymentStatus = 'paid';
+            order.paymentMethod = 'credit';
             order.transactionId = String(providerTxId || '');
             await order.save();
             return res.redirect(`/order/confirmation?id=${order._id}`);
@@ -326,6 +339,7 @@ async function paymobWebhook(req, res) {
 
         if (success) {
             order.paymentStatus = 'paid';
+            order.paymentMethod = 'credit';
             order.transactionId = String(providerTxId || '');
             await order.save();
         }

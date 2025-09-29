@@ -35,6 +35,12 @@ function isCardSelected() {
     return !!(card && card.checked);
 }
 
+function getSelectedPaymentMethod() {
+    const card = document.getElementById('card');
+    if (card && card.checked) return 'credit';
+    return 'cash';
+}
+
 
 function renderCheckout() {
     const cart = getCart();
@@ -74,8 +80,17 @@ function renderCheckout() {
         container.appendChild(div);
     });
 
-    document.getElementById('subtotal').textContent = subtotal + ' EGP';
-    document.getElementById('total').textContent = subtotal + ' EGP';
+    // Calculate service fee and total
+    const serviceFee = Math.round((10 + 0.05 * subtotal) * 100) / 100;
+    const total = Math.round((subtotal + serviceFee) * 100) / 100;
+
+    const subtotalEl = document.getElementById('subtotal');
+    const feeEl = document.getElementById('service-fee');
+    const totalEl = document.getElementById('total');
+
+    if (subtotalEl) subtotalEl.textContent = `${subtotal} EGP`;
+    if (feeEl) feeEl.textContent = `${serviceFee} EGP`;
+    if (totalEl) totalEl.textContent = `${total} EGP`;
 }
 
 
@@ -88,10 +103,9 @@ async function confirmOrder() {
         }
 
         const cartObj = getCartObj();
-        
         const notes = document.querySelector('.notes-input').value;
+        const paymentMethod = getSelectedPaymentMethod();
 
-        
         const response = await fetch('/api/orders/submit', {
             method: 'POST',
             headers: {
@@ -100,16 +114,15 @@ async function confirmOrder() {
             body: JSON.stringify({
                 items: cart,
                 notes: notes,
-                vendorId: cartObj.vendorId
+                vendorId: cartObj.vendorId,
+                paymentMethod
             })
         });
 
         const data = await response.json();
 
         if (data.success) {
-            const useCard = isCardSelected();
-            if (useCard) {
-                // Initiate payment with Paymob
+            if (paymentMethod === 'credit') {
                 const payResp = await fetch('/api/orders/create-payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -123,13 +136,11 @@ async function confirmOrder() {
                 }
 
                 if (payData.success && payData.paymentUrl) {
-                    // Redirect to Paymob iframe URL
                     window.location.href = payData.paymentUrl;
                 } else {
                     alert('Could not initiate payment. Please try cash or try again.');
                 }
             } else {
-                // Cash on pickup: clear cart and show confirmation
                 localStorage.removeItem('cartObj');
                 window.location.href = `/order/confirmation?id=${data.orderId}`;
             }

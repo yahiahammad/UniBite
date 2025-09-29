@@ -77,9 +77,9 @@ exports.submitOrder = async (req, res) => {
         }
         
         
-        let totalPrice = 0;
+        let subtotal = 0;
         const orderItems = items.map(item => {
-            totalPrice += item.price * item.quantity;
+            subtotal += item.price * item.quantity;
             return {
                 menuItemId: item.id,
                 quantity: item.quantity,
@@ -88,11 +88,17 @@ exports.submitOrder = async (req, res) => {
             };
         });
 
+        // Calculate fees: 10 EGP + 5% of subtotal
+        const serviceFee = Math.round((10 + 0.05 * subtotal) * 100) / 100;
+        const totalDue = Math.round((subtotal + serviceFee) * 100) / 100;
+
         const order = new Order({
             userId: userId,
             vendorId: firstMenuItem.vendorId, 
             items: orderItems,
-            totalPrice,
+            totalPrice: subtotal,
+            serviceFee,
+            totalDue,
             notes: notes || '',
             status: 'pending',
             paymentStatus: 'unpaid',
@@ -115,11 +121,8 @@ exports.submitOrder = async (req, res) => {
         } else {
             console.error('Vendor ID not found on populated order, cannot emit new_order to specific vendor.');
             console.error('Order details:', JSON.stringify(populatedOrder, null, 2));
-            // Fallback or error handling if necessary, though this case should ideally not happen
-            // For now, we prevent a global emit if the vendorId is missing.
         }
 
-        
         res.json({ success: true, orderId: order._id });
     } catch (error) {
         console.error('Error submitting order:', error);
