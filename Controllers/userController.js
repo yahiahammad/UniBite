@@ -70,44 +70,53 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body;
 
   try {
-    // Validate MIU email domain
-    if (!email.endsWith(ALLOWED_EMAIL_DOMAIN)) {
+
+    // Validate MIU email domain (case-insensitive, trimmed)
+    const domain = (process.env.ALLOWED_EMAIL_DOMAIN || ALLOWED_EMAIL_DOMAIN || '@miuegypt.edu.eg').toLowerCase();
+    const emailStr = (email || '').toString().trim().toLowerCase();
+    if (!emailStr.endsWith(domain)) {
+      console.warn('[REGISTER] Invalid domain:', emailStr);
       return res.status(400).json({
         success: false,
         message: `Please use your MIU email address (${ALLOWED_EMAIL_DOMAIN})`
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: emailStr });
     if (existingUser) {
+      console.warn('[REGISTER] Duplicate email:', emailStr);
       return res.status(400).json({ 
         success: false,
         message: 'User with this email already exists.' 
       });
     }
 
-    
+    // Create user with normalized email and phone number
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; 
 
     const newUser = new User({
       name,
-      email,
+      email: emailStr,
       password,
+      phoneNumber: phone || null,
       verificationToken,
       verificationTokenExpires
     });
 
     await newUser.save();
+    console.log('[REGISTER] User saved');
 
-    
-    const emailSent = await sendVerificationEmail(email, verificationToken);
+    // Send verification email to normalized address
+    const emailSent = await sendVerificationEmail(emailStr, verificationToken);
+    console.log('[REGISTER] Email send result:', emailSent);
     if (!emailSent) {
-      
+      // Rollback user if email couldn't be sent
       await User.findByIdAndDelete(newUser._id);
+      console.error('[REGISTER] Verification email failed, user rolled back:');
       return res.status(500).json({ 
         success: false,
         message: 'Error sending verification email. Please try again.' 

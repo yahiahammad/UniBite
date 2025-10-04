@@ -92,17 +92,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ name, email, password, phone })
                 });
 
-                const result = await response.json();
+                let result;
+                const ct = response.headers.get('content-type') || '';
+                if (ct.includes('application/json')) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    result = { message: text.slice(0, 200) || 'Unexpected response' };
+                }
 
                 if (response.ok) {
-                    alert(result.message);
+                    alert(result.message || 'Registered successfully! Please verify your email.');
                     window.location.href = '/login';
                 } else {
-                    alert(`Error: ${result.message}`);
+                    const msg = result && result.message ? result.message : `Registration failed (HTTP ${response.status})`;
+                    alert(`Error: ${msg}`);
                 }
             } catch (error) {
-                alert('An error occurred during registration.');
-                console.error('Signup Error:', error);
+                console.error('Signup Error (network or parse):', error);
+                alert('An error occurred during registration. Please try again.');
             } finally {
                 
                 submitButton.classList.remove('btn-loading');
