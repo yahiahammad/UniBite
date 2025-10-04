@@ -38,18 +38,22 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", function (e) {
       e.preventDefault()
 
-      
+
       const email = document.getElementById("email").value
       const password = document.getElementById("password").value
       const remember = document.getElementById("remember").checked
 
-      
-      if (!email.endsWith("@miuegypt.edu.eg")) {
-        showError("email", "Please use your MIU email address (@miuegypt.edu.eg)")
+                  // Validate MIU email using shared configuration
+      if (!window.UniBiteConfig || typeof window.UniBiteConfig.isValidEmail !== "function") {
+        showError("email", "Email validation configuration is missing. Please try again later.")
+        return
+      }
+      if (!window.UniBiteConfig.isValidEmail(email)) {
+        showError("email", window.UniBiteConfig.getEmailErrorMessage())
         return
       }
 
-      
+
       login(email, password, remember)
     })
   }

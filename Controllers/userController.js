@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendVerificationEmail, sendResetPasswordEmail } = require('../utils/emailService');
 
+// Email validation configuration
+const ALLOWED_EMAIL_DOMAIN = process.env.ALLOWED_EMAIL_DOMAIN || '@miuegypt.edu.eg';
+
 
 
 exports.loginUser = async (req, res) => {
@@ -70,7 +73,14 @@ exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    
+    // Validate MIU email domain
+    if (!email.endsWith(ALLOWED_EMAIL_DOMAIN)) {
+      return res.status(400).json({
+        success: false,
+        message: `Please use your MIU email address (${ALLOWED_EMAIL_DOMAIN})`
+      });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ 

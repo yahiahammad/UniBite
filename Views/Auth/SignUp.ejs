@@ -73,10 +73,13 @@
     </div>
 </div>
 
-<%- include('../partials/Footer') %>
-
-<script src="/JavaScript/signup.js"></script>
+<!--
+    IMPORTANT: EmailValidation.js must be loaded before signup.js.
+    signup.js depends on functions/variables defined in EmailValidation.js.
+    Do not change the order of these script tags unless you refactor the dependency.
+-->
 <script src="/JavaScript/EmailValidation.js"></script>
+<script src="/JavaScript/signup.js"></script>
 <script src="/JavaScript/auth.js"></script>
 
 </body>

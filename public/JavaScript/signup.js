@@ -55,6 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const phone = document.getElementById('phone').value;
 
             
+                                    // Validate MIU email using shared configuration
+            if (
+                !window.UniBiteConfig ||
+                typeof window.UniBiteConfig.isValidEmail !== 'function' ||
+                typeof window.UniBiteConfig.getEmailErrorMessage !== 'function'
+            ) {
+                alert('Email validation configuration is missing. Please try again later.');
+                return;
+            }
+            if (!window.UniBiteConfig.isValidEmail(email)) {
+                alert(window.UniBiteConfig.getEmailErrorMessage());
+                return;
+            }
+
             if (!passwordRegex.test(password)) {
                 alert('Password must be at least 8 characters long and contain uppercase, lowercase, number and special character');
                 return;
